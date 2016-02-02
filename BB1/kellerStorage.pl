@@ -102,11 +102,22 @@ filterAlphabeticVariants(L,L).
 
 sRetrieval([S],S).
 
-sRetrieval([Sem|Store],S):-
+/* sRetrieval([Sem|Store],S):-
    selectFromList(bo([Q|NestedStore],X),Store,TempStore),
    appendLists(NestedStore,TempStore,NewStore),
-   sRetrieval([app(Q,lam(X,Sem))|NewStore],S).
+   sRetrieval([app(Q,lam(X,Sem))|NewStore],S). */
+   
+sRetrieval([Sem|Store],S):-
+   selectFromList(bo([Q|NestedStore],X),Store,TempStore),
+   \+ X == av,
+   appendLists(NestedStore,TempStore,NewStore),
+   sRetrieval([app(Q,lam(X,Sem))|NewStore],S).   
 
+sRetrieval([Sem|Store],S):-
+   selectFromList(bo([Q|NestedStore],X),Store,TempStore),
+   X == av, %nl, write(Store), nl, 
+   appendLists(NestedStore,TempStore,NewStore),
+   sRetrieval([app(Q,Sem)|NewStore],S).      
 
 /*========================================================================
    Info

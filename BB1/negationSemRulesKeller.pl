@@ -1,6 +1,6 @@
 /*************************************************************************
 
-    File: semRulesCooper.pl
+    File: semRulesKeller.pl
     Copyright (C) 2004,2005,2006 Patrick Blackburn & Johan Bos
 
     This file is part of BB1, version 1.3 (November 2006).
@@ -38,8 +38,7 @@ combine(s:S,[then:S]).
 combine(s:S,[or:S]).
 combine(s:S,[np:[A|S1],vp:[B|S2]]):-
    appendLists(S1,S2,S3),
-   sRetrieval([app(A,B)|S3],Retrieved), %
-   %Retrieved = [app(A,B)|S3],          % uncomment this and comment previous in order to see the store 
+   sRetrieval([app(A,B)|S3],Retrieved),
    betaConvert(Retrieved,S).
 
 combine(sinv:S,[av:[A],np:[B|S1],vp:[C|S2]]):-
@@ -50,40 +49,41 @@ combine(sinv:S,[av:[A],np:[B|S1],vp:[C|S2]]):-
 combine(q:Q,[whnp:[A|S1],vp:[B|S2]]):-
    sRetrieval([app(A,B)|S2],VP),
    sRetrieval([VP|S1],Retrieved),
-   betaConvert(Retrieved,Q),
-   Q=que(_,_,_).
+   betaConvert(Retrieved,Q).
 
 combine(q:Q,[sinv:Q]):-
    Q=que(_,_,_).
 
 combine(np:A,[pn:A]).
 combine(np:A,[qnp:A]).
-combine(np:[lam(P,app(P,X)),bo(app(A,B),X)|S],[det:[A],n:[B|S]]).
+combine(np:[lam(P,app(P,X)),bo([app(A,B)|S],X)],[det:[A],n:[B|S]]).
 combine(np:[app(A,B)|S],[det:[A],n:[B|S]]).
 combine(np:[app(app(B,A),C)|S3],[np:[A|S1],coord:[B],np:[C|S2]]):-
    appendLists(S1,S2,S3).
 
-combine(whnp:[lam(P,app(P,X)),bo(app(A,B),X)|S],[det:[A],n:[B|S]]).
-combine(whnp:[lam(P,app(P,X)),bo(A,X)],[qnp:[A]]).
+combine(whnp:[lam(P,app(P,X)),bo([app(A,B)|S],X)],[det:[A],n:[B|S]]).
+combine(whnp:[lam(P,app(P,X)),bo([A],X)],[qnp:[A]]).
 
 combine(n:[app(A,B)|S],[adj:[A],n:[B|S]]).
 combine(n:A,[noun:A]).
 combine(n:[app(B,A)|S],[noun:[A],nmod:[B|S]]).
 combine(n:[app(app(B,A),C)|S3],[n:[A|S1],coord:[B],n:[C|S2]]):-
-   appendLists(S1,S2,S3).
+	appendLists(S1,S2,S3).
 
 combine(nmod:A,[pp:A]).
 combine(nmod:A,[rc:A]).
 combine(nmod:[lam(P,app(A,app(B,P)))|S3],[pp:[A|S1],nmod:[B|S2]]):-
    appendLists(S1,S2,S3).
 
-combine(vp:[app(A,B)|S],[av:[A],vp:[B|S]]).
+%combine(vp:[app(A,B)|S],[av:[A],vp:[B|S]]). %-- testing negation in store
+combine(vp:[B,bo([A|S],av)],[av:[A],vp:[B|S]]). %-- testing negation in store - Notice that storing here isn't optional
 combine(vp:[app(A,B)|S],[cop:[A],np:[B|S]]).
 combine(vp:A,[iv:A]).
 combine(vp:[app(A,B)|S],[tv:[A],np:[B|S]]).
 combine(vp:[app(app(B,A),C)|S3],[vp:[A|S1],coord:[B],vp:[C|S2]]):-
-   appendLists(S1,S2,S3).
+	appendLists(S1,S2,S3).
 
 combine(pp:[app(A,B)|S],[prep:[A],np:[B|S]]).
 
 combine(rc:[app(A,B)|S],[relpro:[A],vp:[B|S]]).
+

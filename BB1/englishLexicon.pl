@@ -147,6 +147,10 @@ lexEntry(iv,[symbol:walk,syntax:[walk],inf:inf,num:sg]).
 lexEntry(iv,[symbol:walk,syntax:[walks],inf:fin,num:sg]).
 lexEntry(iv,[symbol:walk,syntax:[walk],inf:fin,num:pl]).
 
+/*Exercise 3.3.2*/
+lexEntry(iv,[symbol:okay,syntax:[is,okay], inf:fin,num:sg]).
+lexEntry(iv,[symbol:okay,syntax:[are,okay], inf:fin,num:pl]).
+
 
 /*========================================================================
    Transitive Verbs
@@ -208,6 +212,9 @@ lexEntry(tv,[symbol:shoot,syntax:[shot],inf:inf,num:sg]).
 lexEntry(tv,[symbol:shoot,syntax:[shot],inf:fin,num:sg]).
 lexEntry(tv,[symbol:shoot,syntax:[shoots],inf:fin,num:sg]).
 lexEntry(tv,[symbol:shoot,syntax:[shoot],inf:fin,num:pl]).
+
+/*Exercise 3.3.2*/
+lexEntry(tv,[symbol:doneWith,syntax:[is,done,with],inf:fin,num:sg]).
 
 
 /*========================================================================

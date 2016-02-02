@@ -81,11 +81,17 @@ semLex(adj,M):-
         sem:[lam(P,lam(X,and(F,app(P,X))))]],
    compose(F,Sym,[X]).
 
-semLex(av,M):-
+/*semLex(av,M):-
    M = [pol:neg,
         sem:[lam(P,lam(X,not(app(P,X))))]];
    M = [pol:pos,
-        sem:[lam(P,lam(X,app(P,X)))]].
+        sem:[lam(P,lam(X,app(P,X)))]].*/ % testing negation in store
+		
+semLex(av,M):-
+   M = [pol:neg,
+        sem:[lam(P,not(P))]];
+   M = [pol:pos,
+        sem:[lam(P,P)]].		
 
 semLex(coord,M):-
    M = [type:conj,

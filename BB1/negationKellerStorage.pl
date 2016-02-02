@@ -1,6 +1,6 @@
 /*************************************************************************
 
-    File: cooperStorage.pl
+    File: kellerStorage.pl
     Copyright (C) 2004,2005,2006 Patrick Blackburn & Johan Bos
 
     This file is part of BB1, version 1.3 (November 2006).
@@ -21,12 +21,12 @@
 
 *************************************************************************/
 
-:- module(cooperStorage,[info/0,
-                         infix/0,
-                         prefix/0,             
-                         cooperStorage/0,
-			 cooperStorage/2,
-			 cooperStorageTestSuite/0]).
+:- module(negationKellerStorage,[infix/0,
+                         prefix/0,
+                         info/0,
+                         negationKellerStorage/0,
+			 negationKellerStorage/2,
+			 negationKellerStorageTestSuite/0]).
 
 :- use_module(readLine,[readLine/1]).
 
@@ -42,45 +42,45 @@
 
 :- use_module(betaConversion,[betaConvert/2]).
 
-:- use_module(sentenceTestSuite,[sentence/2]).
-
 :- [englishGrammar].
 
 :- [englishLexicon].
 
-:- [semLexStorage].
+:- use_module(sentenceTestSuite,[sentence/2]).
 
-:- [semRulesCooper].
+:- [negationSemLexStorage].
+
+:- [negationSemRulesKeller].
 
 
 /*========================================================================
    Driver Predicates
 ========================================================================*/
 
-cooperStorage:-
+negationKellerStorage:-
    readLine(Sentence),
    setof(Sem,t([sem:Sem],Sentence,[]),Sems1),
    filterAlphabeticVariants(Sems1,Sems2),
    printRepresentations(Sems2).
 
-cooperStorage(Sentence,Sems2):-
-   setof(Sem,t([sem:Sem],Sentence,[]),Sems1)
-   , filterAlphabeticVariants(Sems1,Sems2).
+negationKellerStorage(Sentence,Sems2):-
+   setof(Sem,t([sem:Sem],Sentence,[]),Sems1),
+   filterAlphabeticVariants(Sems1,Sems2).
 
 
 /*========================================================================
    Test Suite Predicates
 ========================================================================*/
 
-cooperStorageTestSuite:-
-   nl, write('>>>>> COOPER STORAGE ON SENTENCE TEST SUITE <<<<< '), nl,
+negationKellerStorageTestSuite:-
+   nl, write('>>>>> KELLER + NEGATION STORAGE ON SENTENCE TEST SUITE <<<<< '), nl,
    sentence(Sentence,Readings),
    format('~nSentence: ~p (~p readings)',[Sentence,Readings]),
-   cooperStorage(Sentence,Sems),
+   negationKellerStorage(Sentence,Sems),
    printRepresentations(Sems),
    fail.
 
-cooperStorageTestSuite.
+kellerStorageTestSuite.
 
 
 /*========================================================================
@@ -102,26 +102,39 @@ filterAlphabeticVariants(L,L).
 
 sRetrieval([S],S).
 
+/* sRetrieval([Sem|Store],S):-
+   selectFromList(bo([Q|NestedStore],X),Store,TempStore),
+   appendLists(NestedStore,TempStore,NewStore),
+   sRetrieval([app(Q,lam(X,Sem))|NewStore],S). */
+   
 sRetrieval([Sem|Store],S):-
-   selectFromList(bo(Q,X),Store,NewStore),
-   sRetrieval([app(Q,lam(X,Sem))|NewStore],S).
+   selectFromList(bo([Q|NestedStore],X),Store,TempStore),
+   \+ X == av,
+   appendLists(NestedStore,TempStore,NewStore),
+   sRetrieval([app(Q,lam(X,Sem))|NewStore],S).   
 
+sRetrieval([Sem|Store],S):-
+   selectFromList(bo([Q|NestedStore],X),Store,TempStore),
+   X == av, %nl, write(Store), nl, 
+   appendLists(NestedStore,TempStore,NewStore),
+   sRetrieval([app(Q,Sem)|NewStore],S).      
 
 /*========================================================================
    Info
 ========================================================================*/
 
 info:-
-   format('~n> ------------------------------------------------------------------- <',[]),
-   format('~n> cooperStorage.pl, by Patrick Blackburn and Johan Bos                <',[]),
-   format('~n>                                                                     <',[]),
-   format('~n> ?- cooperStorage.            - parse a typed-in sentence            <',[]),
-   format('~n> ?- cooperStorage(S,F).       - parse a sentence and return formulas <',[]),
-   format('~n> ?- cooperStorageTestSuite.   - run the test suite                   <',[]),
-   format('~n> ?- infix.                    - switches to infix display mode       <',[]),
-   format('~n> ?- prefix.                   - switches to prefix display mode      <',[]),
-   format('~n> ?- info.                     - shows this information               <',[]),
-   format('~n> ------------------------------------------------------------------- <',[]),
+   format('~n> --------------------------------------------------------------------- <',[]),
+   format('~n> negationKellerStorage.pl, by Guilherme Passos,           original     <',[]),
+   format('~n> kellerStorage.pl by Patrick Blackburn and Johan Bos,                  <',[]),
+   format('~n>                                                                       <',[]),
+   format('~n> ?- negationKellerStorage.            - parse a typed-in sentence      <',[]),
+   format('~n> ?- negationKellerStorage(S,F). - parse a sentence and return formulas <',[]),
+   format('~n> ?- negationKellerStorageTestSuite.   - run the test suite             <',[]),
+   format('~n> ?- infix.                    - switches to infix display mode         <',[]),
+   format('~n> ?- prefix.                   - switches to prefix display mode        <',[]),
+   format('~n> ?- info.                     - show this information                  <',[]),
+   format('~n> --------------------------------------------------------------------- <',[]),
    format('~n~n',[]).
 
 
