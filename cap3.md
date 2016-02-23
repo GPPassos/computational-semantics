@@ -35,11 +35,11 @@ I've discovered that this problem happens when both NPs are stored and when *nee
 Conclusion: This is a problem of nested NP, which is solved by Keller Storage. In this case, this issue happens when internal NP is retrieved before the external NP.
 
 ####3.3.4####
-There are 5 readings for this sentence. Cooper storage assigns 3 readings for this sentence. If storage is not optional, then only 2.
+There are 6 readings for this sentence. Cooper storage assigns 3 readings for this sentence. If storage is not optional, then only 2.
 
 The readings that are missing are `some(A,and(woman(A),not(all(B,imp(boxer(B),love(B,A))))))` and `not(all(A,imp(boxer(A),some(B,and(woman(B),love(A,B))))))`.
 
-I've modified Keller Storage files in order to include negation in stores: consult `negationKellerStorage.pl`, `negationSemLexStorage.pl` and `negationSemRulesKeller.pl`.
+I've modified Keller Storage files in order to include negation in stores: consult `negationKellerStorage.pl`, `negationSemLexStorage.pl` and `negationSemRulesKeller.pl`. This one can find 5 readings.
 
 
 ###Notes###
@@ -79,13 +79,47 @@ see exercise 3.3.4.
 
 ## Hole Semantics##
 
+### Questions ###
+
 - (p. 137) 
 > More generally, we don't want to generate any plugging where two nodes with the same parent dominate a common node.
 
-I'm not sure what this means. At the example, *l2* and *h1* dominate *l3*, but they don't share a parent: actually, *l2* is the parent of *h1*.
+Does this make sense for this example? At the example, *l2* and *h1* dominate *l3*, but they don't share a parent: actually, *l2* is the parent of *h1*.
+In fact, even the code won't prohibit this kind of plugging!
 
-What about example on pages 140 and 141, where `l1 <= h`, `l2 <= h` and l1 is 'inside' l2?
+I've seen where this makes sense (see original USR for `A woman that knows every boxer`).
+
+
+:- parent(l2,h1).
+:- parent(l2,l3).
+:- admissiblePlugging([plug(h1,l3)]).
+
+If it's sufficient and necessary to build a tree, perhaps what should be done is to affirm that every node which has a parent has only one parent. We can do this counting how many parents each node has (and it should be less or equal than one), but it's not very elegant.
+
+- What about example on pages 140 and 141, where `l1 <= h`, `l2 <= h` and l1 is 'inside' l2? -- [ANSWER]: dominance relation! It is transitive!
+
+- (p. 142) In proper noun, why there is no `leq(L,H)`?
+
+- Is it necessary to add `\+ memberList(parent(X,Y),L)` to the second clause (and the analogue to the third clause) of `dom/3`?
+
+### Exercises ###
+#### Exercise 3.4.1. ####
+There's a bijection between formulas and trees. It seems that there's a bijection between pluggins and trees.
+
+#### Exercise 3.4.2 ####
+This happens because in the first case, the search starts with a node that is in the cycle, which means that prolog searching won't make the same query twice. In the second case, prolog will first query for `dom(d,d)` and, using the second clause, will ask if `dom(a,d)`. Then, while in this query, eventually it'll query for `dom(c,d)`, matching `parent(c,Y)` with `parent(c,a)` and once again query for `dom(a,d)`. This will make every `dom(a,d)` query fall in a loop where once again the same query is made. Using an accumulator is sufficient to make it impossible that a query is made inside itself.
+
+#### Exercise 3.4.3 ####
+
+You just need to change relative pronoun's semantic to
+`semLex(relpro,M):-
+   M = [sem:lam(V,lam(N,lam(X,lam(H,lam(L,some(H1,some(L1,some(L2,and(hole(H1),and(label(L1),
+                and(label(L2),and(and(L,L1,H1),and(leq(L,H),and(leq(L2,H1),
+                    and(app(app(app(V,X),H1),L2),app(app(app(N,X),H),L1))))))))))))))))].`
 
 ### Notes ###
 
 - The notation `>=` suggests an (partial) order. This is a bit unfortunate, as the edges of the tree representation don't correspond to the `>=` relation (for example, because `>=` is possible only between a label and a hole, not between labels). Besides, every (partial) order corresponds to a DAG (just as every DAG corresponds to a (partial) order), however not every DAG corresponds to a tree.
+	- Nevermind, the dominance relation is a tree.
+
+- (p. 142) Text is wrong: in `SemLex(tv,M)`, it should be `pred2(L,Sym,X,Y)` (code is correct)

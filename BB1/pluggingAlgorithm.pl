@@ -40,6 +40,7 @@
 :- dynamic some/3, all/3, que/4.
 :- dynamic not/2, or/3, imp/3, and/3.
 :- dynamic pred1/3, pred2/4, eq/3.
+%:- dynamic parent/2.
 
 
 /*========================================================================
@@ -108,6 +109,7 @@ dom(L,X,Z):-
 
 plugHoles([],_,Plugs):-
    admissiblePlugging(Plugs).
+%   write(Plugs).
 
 plugHoles([H|Holes],Labels1,Plugs):-
    admissiblePlugging(Plugs),

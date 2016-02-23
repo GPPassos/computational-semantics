@@ -78,10 +78,17 @@ semLex(cop,M):-
          sem:lam(Z,lam(X,app(Z,lam(Y,lam(H,lam(L,some(L1,and(label(L1),some(H1,and(hole(H1),and(not(L1,H1),
                  and(eq(L,Y,X),and(leq(L,H1),leq(L1,H))))))))))))))].
 
-semLex(relpro,M):-
+/*semLex(relpro,M):-
    M = [sem:lam(V,lam(N,lam(X,lam(H,lam(L,some(H1,some(L1,some(L2,and(hole(H1),and(label(L1),
                 and(label(L2),and(and(L,L1,H1),and(leq(L,H),and(leq(L2,H1),
                     and(app(app(app(V,X),H),L2),app(app(app(N,X),H),L1))))))))))))))))].
+					
+					Modified for exercise 3.4.3*/
+					
+semLex(relpro,M):-
+   M = [sem:lam(V,lam(N,lam(X,lam(H,lam(L,some(H1,some(L1,some(L2,and(hole(H1),and(label(L1),
+                and(label(L2),and(and(L,L1,H1),and(leq(L,H),and(leq(L2,H1),
+                    and(app(app(app(V,X),H1),L2),app(app(app(N,X),H),L1))))))))))))))))].
 
 semLex(prep,M):-
    M = [symbol:Sym,
