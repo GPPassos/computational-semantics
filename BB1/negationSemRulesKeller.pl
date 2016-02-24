@@ -38,6 +38,7 @@ combine(s:S,[then:S]).
 combine(s:S,[or:S]).
 combine(s:S,[np:[A|S1],vp:[B|S2]]):-
    appendLists(S1,S2,S3),
+   %betaConvert([app(A,B)|S3],Opa),print(Opa),nl,
    sRetrieval([app(A,B)|S3],Retrieved),
    betaConvert(Retrieved,S).
 
@@ -76,7 +77,7 @@ combine(nmod:[lam(P,app(A,app(B,P)))|S3],[pp:[A|S1],nmod:[B|S2]]):-
    appendLists(S1,S2,S3).
 
 %combine(vp:[app(A,B)|S],[av:[A],vp:[B|S]]). %-- testing negation in store
-combine(vp:[B,bo([A|S],av)],[av:[A],vp:[B|S]]). %-- testing negation in store - Notice that storing here isn't optional
+combine(vp:[B,bo([A],av)|S],[av:[A],vp:[B|S]]). %-- testing negation in store - Notice that storing here isn't optional
 combine(vp:[app(A,B)|S],[cop:[A],np:[B|S]]).
 combine(vp:A,[iv:A]).
 combine(vp:[app(A,B)|S],[tv:[A],np:[B|S]]).

@@ -11,13 +11,13 @@
 		- A leitura com o "ou" mais externo é equivalente à com o "every" outscoping. Até aí, ok. Entretanto, a leitura com o "exists" outscoping tem interpretação de que a frase é falsa se não existirem homens (ainda que todas as mulheres dancem)! Isso parece errado.
 	- *Mia or a man dances*
 		- Idem ao problema acima. Entretanto, nesse caso está no código que há apenas uma leituras, quando as duas interpretações não são logicamente equivalentes (se nenhum homem existir...)
-	
-###Exercises###
 
-####3.3.1####
+### Exercises ###
+
+#### 3.3.1 ####
 A mesma fórmula é repetida mais de uma vez, previsivelmente. Isso ocorre pois há estratégias diferentes nos pontos de bifurcação os quais podem levar para mesmas fórmulas.
 
-####3.3.2####
+#### 3.3.2 ####
 Added to englishLexicon.pl:
 `lexEntry(iv,[symbol:okay,syntax:[is,okay], inf:fin,num:sg]).`
 `lexEntry(iv,[symbol:okay,syntax:[are,okay], inf:fin,num:pl]).`
@@ -34,7 +34,7 @@ I've discovered that this problem happens when both NPs are stored and when *nee
 
 Conclusion: This is a problem of nested NP, which is solved by Keller Storage. In this case, this issue happens when internal NP is retrieved before the external NP.
 
-####3.3.4####
+#### 3.3.4 ####
 There are 6 readings for this sentence. Cooper storage assigns 3 readings for this sentence. If storage is not optional, then only 2.
 
 The readings that are missing are `some(A,and(woman(A),not(all(B,imp(boxer(B),love(B,A))))))` and `not(all(A,imp(boxer(A),some(B,and(woman(B),love(A,B))))))`.
@@ -42,7 +42,7 @@ The readings that are missing are `some(A,and(woman(A),not(all(B,imp(boxer(B),lo
 I've modified Keller Storage files in order to include negation in stores: consult `negationKellerStorage.pl`, `negationSemLexStorage.pl` and `negationSemRulesKeller.pl`. This one can find 5 readings.
 
 
-###Notes###
+### Notes ###
 
 - Scope ambiguities sometimes seem not to happen in natural language. In `Every worker has a mother`, it seems clear which is the correct interpretation. In `Every man loves a woman`, it's a bit less clear but I suppose people would mostly answer that the universal outscope is correct. However, in `Every student did not pass an exam.`, it seems more natural to favor the existential outscope
 
@@ -60,7 +60,7 @@ for a more natural reading. I did the same with the undefined determiner and pre
 ## Keller Storage ##
 
 > And now there is almost nothing to do. First, we don't need to alter the semantic macros at all; we can continue to use the file semLexStorage.pl unchanged. Second, only two of the semantic rules need to be changed, namely those that deal with noun phrases:
-> 
+>
 > `combine(np:[app(A,B)|S],[det:[A],n:[B|S]]).`
 > `combine(np:[lam(P,app(P,X)),bo([app(A,B)|S],X)],[det:[A],n:[B|S]]).`
 
@@ -81,7 +81,7 @@ see exercise 3.3.4.
 
 ### Questions ###
 
-- (p. 137) 
+- (p. 137)
 > More generally, we don't want to generate any plugging where two nodes with the same parent dominate a common node.
 
 Does this make sense for this example? At the example, *l2* and *h1* dominate *l3*, but they don't share a parent: actually, *l2* is the parent of *h1*.
@@ -111,7 +111,7 @@ This happens because in the first case, the search starts with a node that is in
 
 #### Exercise 3.4.3 ####
 
-You just need to change relative pronoun's semantic to
+You just need to change the semantic of relative pronouns to
 `semLex(relpro,M):-
    M = [sem:lam(V,lam(N,lam(X,lam(H,lam(L,some(H1,some(L1,some(L2,and(hole(H1),and(label(L1),
                 and(label(L2),and(and(L,L1,H1),and(leq(L,H),and(leq(L2,H1),
@@ -119,7 +119,12 @@ You just need to change relative pronoun's semantic to
 
 ### Notes ###
 
-- The notation `>=` suggests an (partial) order. This is a bit unfortunate, as the edges of the tree representation don't correspond to the `>=` relation (for example, because `>=` is possible only between a label and a hole, not between labels). Besides, every (partial) order corresponds to a DAG (just as every DAG corresponds to a (partial) order), however not every DAG corresponds to a tree.
+- ~~The notation `>=` suggests an (partial) order. This is a bit unfortunate, as the edges of the tree representation don't correspond to the `>=` relation (for example, because `>=` is possible only between a label and a hole, not between labels). Besides, every (partial) order corresponds to a DAG (just as every DAG corresponds to a (partial) order), however not every DAG corresponds to a tree.~~
 	- Nevermind, the dominance relation is a tree.
 
 - (p. 142) Text is wrong: in `SemLex(tv,M)`, it should be `pred2(L,Sym,X,Y)` (code is correct)
+
+- Hole semantics only gives a reading of `Butch kills a criminal or shoots Vincent` such that this sentence is false if there are no criminals. This seems to me counterintuitive.
+
+- There's a mistake in `semLexHole.pl`, at `semLex(coord,M)`: the representations of `conj` and `disj` are the same. I fixed it by changing the one for `disj` to:
+`   M = [type:disj, sem:lam(C1,lam(C2,lam(X,lam(H,lam(L,some(L1,some(L2,and(label(L1),and(label(L2), and(or(L,L1,L2),and(leq(L,H),and(app(app(app(C1,X),H),L1), app(app(app(C2,X),H),L2)))))))))))))].`

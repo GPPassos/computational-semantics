@@ -116,6 +116,6 @@ semLex(coord,M):-
                     app(app(app(C2,X),H),L2)))))))))))))];  
    M = [type:disj,
         sem:lam(C1,lam(C2,lam(X,lam(H,lam(L,some(L1,some(L2,and(label(L1),and(label(L2),
-                and(and(L,L1,L2),and(leq(L,H),and(app(app(app(C1,X),H),L1),
+                and(or(L,L1,L2),and(leq(L,H),and(app(app(app(C1,X),H),L1),
                     app(app(app(C2,X),H),L2)))))))))))))].
 
