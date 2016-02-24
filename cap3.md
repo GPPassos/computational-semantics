@@ -39,7 +39,7 @@ There are 6 readings for this sentence. Cooper storage assigns 3 readings for th
 
 The readings that are missing are `some(A,and(woman(A),not(all(B,imp(boxer(B),love(B,A))))))` and `not(all(A,imp(boxer(A),some(B,and(woman(B),love(A,B))))))`.
 
-I've modified Keller Storage files in order to include negation in stores: consult `negationKellerStorage.pl`, `negationSemLexStorage.pl` and `negationSemRulesKeller.pl`. This one can find 5 readings.
+I've modified Keller Storage files in order to include negation in stores: consult `negationKellerStorage.pl`, `negationSemLexStorage.pl` and `negationSemRulesKeller.pl`. This one can find all 6 readings. It is, though, ad hoc in a sense.
 
 
 ### Notes ###
