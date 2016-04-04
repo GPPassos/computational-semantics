@@ -216,6 +216,10 @@ vp([coord:no,inf:I,num:Num,gap:G,sem:VP])-->
    np([coord:_,num:_,gap:G,sem:NP]), 
    {combine(vp:VP,[tv:TV,np:NP])}.
 
+vp([coord:no,inf:Inf,num:Num,gap:[],sem:VP])--> %exercise 2.5.3
+   cop([inf:Inf,num:Num,sem:Cop]), 
+   pp([sem:PP]), 
+   {combine(vp:VP,[cop:Cop,pp:PP])}.
 
 /*========================================================================
    Prepositional Phrases

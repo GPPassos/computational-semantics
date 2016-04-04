@@ -59,6 +59,7 @@ lexEntry(noun,[symbol:person,syntax:[person]]).
 lexEntry(noun,[symbol:husband,syntax:[husband]]).
 lexEntry(noun,[symbol:joke,syntax:[joke]]).
 lexEntry(noun,[symbol:man,syntax:[man]]).
+lexEntry(noun,[symbol:motorbike,syntax:[motorbike]]).
 lexEntry(noun,[symbol:needle,syntax:[needle]]).
 lexEntry(noun,[symbol:owner,syntax:[owner]]).
 lexEntry(noun,[symbol:piercing,syntax:[piercing]]).
@@ -235,6 +236,7 @@ lexEntry(prep,[symbol:about,syntax:[about]]).
 lexEntry(prep,[symbol:in,syntax:[in]]).
 lexEntry(prep,[symbol:of,syntax:[of]]).
 lexEntry(prep,[symbol:with,syntax:[with]]).
+lexEntry(prep,[symbol:on,syntax:[on]]).
 
 
 /*========================================================================

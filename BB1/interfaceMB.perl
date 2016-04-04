@@ -32,7 +32,7 @@ my $readparadox = 0;
 my $model = "";
 
 if ($mace_selected) {
-   open(MACE_OUTPUT, "mace -t 30 -n1 -N$domainsize -P < mace.in 2>/dev/null |");
+   open(MACE_OUTPUT, "mace2 -t 30 -n1 -N$domainsize -P < mace.in 2>/dev/null |");
    $readmace=1;
 } 
 

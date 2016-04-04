@@ -63,6 +63,7 @@ combine(nmod:lam(P,app(A,app(B,P))),[pp:A,nmod:B]).
 combine(vp:app(app(B,A),C),[vp:A,coord:B,vp:C]).
 combine(vp:app(A,B),[av:A,vp:B]).
 combine(vp:app(A,B),[cop:A,np:B]).
+combine(vp:app(A,lam(P,some(X,app(app(B,P),X)))),[cop:A,pp:B]). %exercise 2.5.3
 combine(vp:A,[iv:A]).
 combine(vp:app(A,B),[tv:A,np:B]).
 
