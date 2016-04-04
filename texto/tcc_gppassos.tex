@@ -1,0 +1,164 @@
+\documentclass[12pt, a4paper, twoside]{article}
+\usepackage[brazil, english]{babel}  % adequacao para o portugues Brasil
+\usepackage[utf8]{inputenc}
+\usepackage[lmargin=3cm,rmargin=3cm,tmargin=2.5cm,bmargin=2.5cm]{geometry}
+%\usepackage[top=2.5cm, bottom=2cm, left=3cm, right=2cm]{geometry}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage{indentfirst}
+\usepackage[noload]{qtree}
+\usepackage{hyperref}
+\usepackage{todonotes}
+
+\usepackage{wrapfig}
+\usepackage{graphicx}
+\usepackage{float}
+\usepackage{pslatex}
+\usepackage{tikz}
+\usepackage{amsthm,amsfonts,amssymb,amssymb,amsxtra,empheq,marvosym}
+\usepackage{titling} % thetitle, theauthor etc
+\usepackage{lipsum} %lorem ipsum
+
+
+\usepackage[nottoc,notlot,notlof,numbib]{tocbibind} % coloca as referências na table of content; numerada, se tiver o numbib
+
+
+%\usepackage[alf]{abntex2cite}
+\usepackage[round, authoryear]{natbib}
+
+%Comandos
+\newcommand{\todonow}[1]{\todo[color=blue!20]{#1}}
+\renewcommand{\baselinestretch}{1.5} 
+\setlength{\parindent}{1cm}
+
+\newcommand{\expr}[1]{``\textit{#1}''}
+\babeltags{eng = english}
+\newcommand{\teng}[1]{\textit{\texteng{#1}}}
+\newcommand{\expreng}[1]{\expr{\teng{#1}}}
+
+%opening
+\title{Semântica Computacional para Textos Normativos} \newcommand{\usetitle}{Semântica Computacional para Textos Normativos}
+\author{Guilherme Paulino Passos} \newcommand{\useauthor}{\Guilherme Paulino Passos}
+\newcommand{\supervisor}{Alexandre Rademaker}
+\date{2016}
+
+\begin{document}
+
+%--- FOLHAS DE CAPA
+\begin{titlepage}
+ \begin{center}
+  { \large FUNDAÇÃO GETULIO VARGAS}\\[0.3cm]
+  { \large ESCOLA DE MATEMÁTICA APLICADA - FGV/EMAp}\\[0.5cm]
+  { \large CURSO DE GRADUAÇÃO EM MATEMÁTICA APLICADA}\\[0.3cm]
+  %{ \large MATEMÁTICA APLICADA}\\[0.3cm]
+ 
+  \vspace{55 mm}
+
+  {\bf \large Semântica Computacional para Textos Normativos}\\[1.2cm]
+ % {\bf \large Redes Complexas}\\[1.7cm]
+
+  { por}\\[0.6cm]
+  {\large {\theauthor}}\\[0.1cm]
+
+
+  \vspace{7cm}
+
+  { Rio de Janeiro}\\[0.1cm]
+  {\thedate}\\[0.6cm]
+%  { FUNDAÇÃO GETULIO VARGAS}\\[0.1cm]
+ % { VARGAS}\\[0.1cm]
+ \end{center}
+\end{titlepage}
+
+\begin{titlepage}
+ 
+ \begin{center}
+  {\large FUNDAÇÃO GETULIO VARGAS}\\[0.3cm]
+  {\large ESCOLA DE MATEMÁTICA APLICADA - FGV/EMAp}\\[0.5cm]
+  {\large CURSO DE GRADUAÇÃO EM MATEMÁTICA APLICADA}\\[0.3cm]
+
+
+  \vspace{20 mm}
+
+
+  {\large Semântica Computacional para Textos Normativos}\\[2.1cm]
+
+  
+  %\bf "Declaro ser o único autor do presente projeto de monografia que refere-se ao
+  "Declaro ser o único autor do presente projeto de monografia que refere-se ao
+plano de trabalho a ser executado para continuidade da monografia e ressalto
+que não recorri a qualquer forma de colaboração ou auxílio de terceiros para
+realizá-lo a não ser nos casos e para os fins autorizados pelo professor orientador"
+
+  \vspace{3.5cm}
+  
+  \line(1,0){220}\\[0.1cm]
+  {\bf Guilherme Paulino Passos}\\[2cm]
+  {\bf Orientador: Prof. Dr. \supervisor}\\[3cm]
+
+
+  {Rio de Janeiro}\\[0.1cm]
+  {2015}
+ \end{center}
+\end{titlepage}
+
+\begin{titlepage}
+ \begin{center}
+ 
+  {\bf \large \uppercase{Guilherme Paulino Passos}}\\[0.3cm]
+
+  \vspace{25 mm}
+
+  {\bf \large Semântica Computacional para Textos Normativos}\\[3cm]
+
+  {“Monografia apresentada à Escola de Matemática Aplicada  - FGV/EMAp como requisito parcial para a obtenção do grau de Bacharel em Matemática Aplicada.”}\\[3cm]
+ % {como requisito parcial para continuidade ao trabalho de monografia.}\\[6cm]
+ % {em Matemática Aplicada”}\\[6cm]
+
+
+  {Aprovado em \ \line(1,0){20} \ \ de \line(1,0){62} \ \ de \line(1,0){30} \ .}\\[0.1cm]
+  {Grau atribuido à Monografia: \line(1,0){20} \ . }\\[3cm]
+  
+  
+  {\line(1,0){250}}\\
+  {\bf Professor Orientador: Prof. Dr. \supervisor}\\[0.1cm]
+  {\bf Escola de Matemática Aplicada}\\[0.1cm]
+  {\bf Fundação Getulio Vargas}\\[1.5cm]
+  
+    {\line(1,0){250}}\\
+    {\bf Professor Tutor: Prof. Dr. Paulo Cezar Pinto Carvalho}\\[0.1cm]
+    {\bf Escola de Matemática Aplicada}\\[0.1cm]
+    {\bf Fundação Getulio Vargas}
+ \end{center}
+\end{titlepage}
+
+\newpage\null\thispagestyle{empty}\newpage
+%todo: Ver onde colocar epígrafe, dedicatória e agradecimentos
+%----
+%todo: Ver todos do tcc1.tex
+
+
+\tableofcontents
+
+\newpage
+
+\section{Introdução}
+\todo{Não esquecer de dizer que a linguagem-objeto natural será o inglês}
+\newpage
+\section{Representação semântica}
+\label{sec:rep}
+\input{representacao.tex}
+
+\newpage
+\section{...}
+
+\newpage
+\section{Conclusão}
+
+
+\newpage
+\bibliographystyle{plainnat}
+\bibliography{tcc_gppassos}
+
+\end{document}

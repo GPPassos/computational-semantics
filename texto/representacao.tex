@@ -1,0 +1,41 @@
+%Hole Semantics: Semântica de Vãos? Semântica de Buracos? Semântica de Lacunas?
+
+\subsection{Introdução}
+
+Desejamos associar a cada expressão de linguagem natural um significado formal, simbólico. Além disso, desejamos fazê-lo de modo algorítmico, que possa ser reproduzido por um computador.
+\todo{Conferir se falo de lógica aqui ou se puxo isso para a introdução.}
+
+A linguagem formal que utilizaremos para representar o significado de frases é \textit{lógica de primeira ordem}. \citet{Jurafsky:2009} apresentam como propriedades interessantes para representações: verificabilidade, representações não ambíguas, existência de uma forma canônica, capacidade de inferência e uso de variáveis e expressividade. Todas estas são possuídas pela lógica de primeira ordem. %todo: discutir essas propriedades?
+Também uma interessante propriedade da lógica de primeira ordem é sua relativa intuitividade. Bastando explicar o que significam os símbolos conectivos (como $\land$ (significando \expr{e}) e $\rightarrow$ (significando \expr{se \dots então \dots})), bem como os quantificadores ($\forall$ (\expr{para todo})  e $\exists$ (\expr{existe}), uma expressão formal em lógica é compreensível . \todo{é verdade?}
+
+Ainda que tenhamos escolhido a lógica de primeira ordem para ser a linguagem das representações semânticas para frases, isto não nos informa qual deve ser a representação semântica de palavras e expressões menores. Talvez algumas poderiam ser feitas por termos, mas não está de todo claro qual seria o significado de uma expressão como \expreng{to run} (\expr{correr}) ou \expreng{that walks} (\expr{que anda}).
+
+Em nossos pressupostos, adotamos o \textit{Princípio da Composicionalidade}. Segundo o mesmo, o significado de expressões complexas é função das expressões mais simples que a compõem. Em um exemplo como \expreng{Caim kills Abel}, isto nos informa que o significado desta frase depende do significado de \expreng{Caim}, \expreng{kills} e \expreng{Abel}. Entretanto, isto não nos diz como funciona esta dependência, ou a função que leva o significado das expressões simples ao da expressão complexa.
+
+Por exemplo, podemos entender que o significado de \expreng{kills} é o predicado binário \texttt{kill(\dots , \dots)}, onde convencionamos que o primeiro argumento é o agressor (isto é, aquele que mata) e o segundo argumento é a vítima (aquele que é morto). Também podemos entender os significados de \expreng{Caim} e \expreng{Abel} como as constantes \texttt{caim} e \texttt{abel}, respectivamente. Assim, apesar de \texttt{kill(abel,caim} ser formada com o significado destes três termos, respeitando a composicionalidade, esta não é a expressão que queremos, e sim \texttt{kill(caim,abel)}.
+
+O que nos falta é a \textit{sintaxe}. A sintaxe é o conjunto de regras e processos que organizam a estrutura de frases. \todo[inline]{achar uma boa referência} Assim, as palavras em uma frase existem em relação a uma certa estrutura, que é essencial para capturar o significado. No inglês, com a estrutura \textit{Sujeito - Verbo - Predicado}, entendemos que \expreng{Caim kills Abel} significa \texttt{kill(caim,abel)}, e não \texttt{kill(abel,caim)}.
+
+O foco deste trabalho não é na sintaxe, de modo que utilizamos uma sintaxe simples: a gramática é implementada pelo mecanismo de Gramática de Cláusulas Definidas (\textit{Definite Clause Grammar} - DCG). A análise sintática é feita na forma de uma árvore cujos nós que são folhas são categorias sintáticas básicas (tais como sujeito (\teng{noun}), verbo transitivo (\teng{transitive verb}) e quantificador (\teng{quantifier}, considerado caso particular de \teng{determiner}). Já os nós que não são folhas representam categorias sintáticas complexas (tais como sintagma nominal (\teng{noun phrase}) ou sintagma verbal (\teng{verb phrase}). \cite[p.~58]{BlackburnBos:2005}
+
+Um exemplo de tal árvore, para a frase \expreng{\teng{Caim kills Abel}}, seria:
+
+\Tree [.{\teng{Caim kills Abel} (\teng{Sentence}) } 
+[.{\teng{Caim} (\teng{NP})} {\teng{Caim} (\teng{PN})} ]
+[.{\teng{kills Abel} (\teng{VP})}
+{\teng{kills} (\teng{TV})} [.{\teng{Abel} (\teng{NP})} {\teng{Abel} (\teng{PN})} ] ]
+] \\
+
+Aqui, temos as classes sintáticas:\\
+\teng{NP} -- \teng{noun phrase} (sintagma nominal)\\
+\teng{PN} -- \teng{proper noun} (nome próprio)\\
+\teng{VP} -- \teng{verb phrase} (sintagma verbal)\\
+\teng{TV} -- \teng{transitive verb} (verbo transitivo)
+
+\subsection{Cálculo Lambda}
+
+\subsection{Armazenamento de Cooper}
+
+\subsection{Armazenamento de Keller}
+
+\subsection{\textit{Hole Semantics}}
