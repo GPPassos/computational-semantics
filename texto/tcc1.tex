@@ -1,0 +1,250 @@
+\documentclass[12pt, a4paper, twoside]{article}
+\usepackage[brazil]{babel}  % adequacao para o portugues Brasil
+\usepackage[utf8]{inputenc}
+\usepackage[lmargin=3cm,rmargin=3cm,tmargin=2.5cm,bmargin=2.5cm]{geometry}
+%\usepackage[top=2.5cm, bottom=2cm, left=3cm, right=2cm]{geometry}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage{indentfirst}
+\usepackage[noload]{qtree}
+\usepackage{hyperref}
+\usepackage[disable]{todonotes}
+
+\usepackage{wrapfig}
+\usepackage{graphicx}
+\usepackage{float}
+\usepackage{pslatex}
+\usepackage{tikz}
+\usepackage{amsthm,amsfonts,amssymb,amssymb,amsxtra,empheq,marvosym}
+
+
+\usepackage[nottoc,notlot,notlof,numbib]{tocbibind} % coloca as referências na table of content; numerada, se tiver o numbib
+
+
+%\usepackage[alf]{abntex2cite}
+\usepackage[round, authoryear]{natbib}
+
+\newcommand{\todonow}[1]{\todo[color=blue!20]{#1}}
+\renewcommand{\baselinestretch}{1.5} 
+\setlength{\parindent}{1cm}
+
+%opening
+\title{Semântica Computacional para Textos Normativos} \newcommand{\usetitle}{Semântica Computacional para Textos Normativos}
+\author{Guilherme Paulino Passos} \newcommand{\useauthor}{\Guilherme Paulino Passos}
+\newcommand{\supervisor}{Alexandre Rademaker}
+
+
+\begin{document}
+
+%--- FOLHAS DE CAPA
+\begin{titlepage}
+ \begin{center}
+  { \large FUNDAÇÃO GETULIO VARGAS}\\[0.3cm]
+  { \large ESCOLA DE MATEMÁTICA APLICADA - FGV/EMAp}\\[0.5cm]
+  { \large CURSO DE GRADUAÇÃO EM MATEMÁTICA APLICADA}\\[0.3cm]
+  %{ \large MATEMÁTICA APLICADA}\\[0.3cm]
+ 
+  \vspace{55 mm}
+
+  {\bf \large Semântica Computacional para Textos Normativos}\\[1.2cm]
+ % {\bf \large Redes Complexas}\\[1.7cm]
+
+  { por}\\[0.6cm]
+  {\large Guilherme Paulino Passos}\\[0.1cm]
+
+
+  \vspace{7cm}
+
+  { Rio de Janeiro}\\[0.1cm]
+  { 2015}\\[0.6cm]
+  { FUNDAÇÃO GETULIO VARGAS}\\[0.1cm]
+ % { VARGAS}\\[0.1cm]
+ \end{center}
+\end{titlepage}
+
+\begin{titlepage}
+ 
+ \begin{center}
+  {\large FUNDAÇÃO GETULIO VARGAS}\\[0.3cm]
+  {\large ESCOLA DE MATEMÁTICA APLICADA - FGV/EMAp}\\[0.5cm]
+  {\large CURSO DE GRADUAÇÃO EM MATEMÁTICA APLICADA}\\[0.3cm]
+
+
+  \vspace{20 mm}
+
+
+  {\large Semântica Computacional para Textos Normativos}\\[2.1cm]
+
+  
+  \bf "Declaro ser o único autor do presente projeto de monografia que refere-se ao
+plano de trabalho a ser executado para continuidade da monografia e ressalto
+que não recorri a qualquer forma de colaboração ou auxílio de terceiros para
+realizá-lo a não ser nos casos e para os fins autorizados pelo professor orientador"
+
+  \vspace{3.5cm}
+  
+  \line(1,0){220}\\[0.1cm]
+  {\bf Guilherme Paulino Passos}\\[2cm]
+  {\bf Orientador: \supervisor}\\[3cm]
+
+
+  {Rio de Janeiro}\\[0.1cm]
+  {2015}
+ \end{center}
+\end{titlepage}
+
+\begin{titlepage}
+ \begin{center}
+ 
+  {\bf \large \uppercase{Guilherme Paulino Passos}}\\[0.3cm]
+
+  \vspace{25 mm}
+
+  {\bf \large Semântica Computacional para Textos Normativos}\\[4.1cm]
+
+  {“Projeto de Monografia apresentado à Escola de Matemática Aplicada  - FGV/EMAp como requisito parcial para continuidade ao trabalho de monografia.”}\\[5cm]
+ % {como requisito parcial para continuidade ao trabalho de monografia.}\\[6cm]
+ % {em Matemática Aplicada”}\\[6cm]
+
+
+  {Aprovado em \ \line(1,0){20} \ \ de \line(1,0){62} \ \ de \line(1,0){30} \ .}\\[0.1cm]
+  {Grau atribuido ao Projeto de Monografia: \line(1,0){20} \ . }\\[3cm]
+  
+  
+  {\line(1,0){250}}\\
+  {\bf Professor Orientador: \supervisor}\\[0.1cm]
+  {\bf Escola de Matemática Aplicada}\\[0.1cm]
+  {\bf Fundação Getulio Vargas}
+ \end{center}
+\end{titlepage}
+
+\newpage\null\thispagestyle{empty}\newpage
+%----
+
+
+\tableofcontents
+
+\newpage
+
+\section{Introdução}
+\subsection{Processamento de Linguagem Natural} \todo[inline]{NLP deveria estar grifado?}
+
+O estudo computacional da linguagem, conhecido como Processamento de Linguagem Natural (PLN ou, pela sigla em inglês, NLP) ou Lingüística Computacional, é um campo de intenso desenvolvimento nas últimas décadas, tendo fortes impactos na tecnologia atual. Exemplos bem sucedidos são a Siri, um assistente do sistema operacional iOS que interage com o usuário utilizando linguagem natural; serviços de tradução automática, como o do Google, que apresentam constante melhora; e também diversas empresas relacionadas a inteligência de marketing ou empresarial (\textit{marketing intelligence} e \textit{business intelligence}) destinadas a fazer análise de dados a partir de textos em linguagem natural, isto é, textos escritos por humanos para se comunicar com outros humanos, usando uma linguagem desenvolvida naturalmente (e não uma linguagem artificial).
+
+\todo[inline]{melhorar essa introdução, achar referências, talvez pesquisar um paperzinho de história de NLP} O uso de modelos matemáticos de diferentes formas e tradições foi um passo essencial para o desenvolvimento da ciência, bem como para a levar o conhecimento adquirido a aplicações. Historicamente, ocorreu uma tensão (ou, ao menos, um distanciamento) entre dois paradigmas em NLP: o simbólico e o probabilístico. Tal divisão existiu de modo particularmente notável do fim da década de 50 ao fim da de 60. Desta época, do paradigma simbólico participaram o trabalho de Noam Chomsky em linguagens formais e sintaxe gerativa, o trabalho de lingüistas e cientistas da computação em algoritmos de análise sintática (\textit{parsing}), bem como os da área de inteligência artificial, como sistemas baseados em lógica formal e correspondência de padrões (\textit{pattern matching}), influenciados pelo famoso \textit{Logic Theorist} de Allen Newell, Herbert Simon e Cliff Shaw, um exemplo de sistema baseado em lógica e raciocínio automático. Na tradição estocástica, dois exemplos são o trabalho de Bledson e Browning de um sistema bayesiano para reconhecimento ótico de caracteres, bem como o uso de métodos bayesianos por Mosteller e Wallace para atribuir autoria de trechos d'\textit{O Federalista}. Já nas décadas de 70 e 80, houve grande desenvolvimento de algoritmos de reconhecimento de fala, como o uso de Cadeias Ocultas de Markov. \citep[pp.10-11]{Jurafsky:2009} A tensão entre as abordagens mostra sinais ainda hoje. \todo[inline]{comentar da relação disso com racionalismo/empirismo?}
+
+A lingüística possui diversas sub-áreas. Algumas delas são: \todo[inline]{trocar isso por uma lista exaustiva ou quase isso, baseada em algum livro de lingüística} a morfologia (o estudo da formação e composição de palavras), a sintaxe (o estudo de como as palavras se combinam para formar orações e frases), a semântica (o estudo do significado) e a pragmática (o estudo de como o contexto influencia no significado). Nesse trabalho, olharemos particularmente para a semântica.
+
+\subsection{Textos Normativos}
+A palavra ``norma'' não é daquelas de significado mais claro. Entretanto, explicações de seu sentido normalmente recorrem às idéias de regra, comando, obrigação, dever ou, de modo mais geral, a alguma orientação para acreditar, agir ou sentir.\footnote{Para um clássico da análise filosófica sobre normas, bem como um texto de grande importância para a lógica deôntica, veja \citet{Wright:63}} Desse modo, podemos dizer que textos normativos são textos cujo conteúdo é normativo, ou que tratam de normas. Não faltam exemplos de textos normativos em nosso cotidiano: contratos, acordos, promessas, ordens, textos que expressam críticas ou padrões de corretude (moral, estética), decisões judiciais, leis, etc.
+
+A análise computacional desse tipo de texto busca o desenvolvimento de ferramentas úteis para os meios e práticas que se relacionam fortemente com normas. Um exemplo claro é o meio jurídico, o qual acreditamos que ainda usufrui muito pouco de avanços tecnológicos atuais. Exemplos de tarefas para os quais se espera que a análise semântica possa ser útil são a verificação de \textit{compliance}, a de consistência entre leis, a adequação de contratos a outros documentos, a comparação entre decisões judiciais, etc.
+
+\subsection{Semântica Computacional}
+No estudo computacional da semântica, uma idéia central é a de que é possível capturar o significado de expressões de linguagem natural a partir de estruturas formais. Esta área é conhecida por \textsl{semântica formal}. A idéia é relacionar estruturas lingüísticas com conhecimento sobre o mundo, que é representado de alguma maneira. São todas questões da semântica formal: a escolha de qual o modo de representar, quais as propriedades da representação e como associar palavras e frases a estruturas. O uso de estruturas formais tem utilidade para lingüistas por permitir que discutam significado de modo mais rigoroso, menos ambíguo. Esta tradição deriva diretamente dos trabalhos de Richard Montague. \citep[p. xii]{BlackburnBos:2005} 
+
+Entretanto, um modo de expandir essa análise é caminhar em direção à chamada \textsl{semântica computacional} que, de modo sucinto, é a área que busca realizar as tarefas da semântica formal por uso de um computador. Isso expande a utilidade de modelos formais para além da análise por um humano. As representações formais tornam possível que um computador consiga acessar o significado e trabalhar com ele, o utilizando para finalidade distintas. Em especial, para a atividade de \textit{inferência}, isto é, tornar explícita informação que estava implícita. Portanto, são objetivos centrais da área a automatização de construção de representações a partir de textos em linguagem natural, bem como a automatização da extração de inferências a partir de representações formais já feitas.
+
+\subsection{Implicação textual}
+Um problema atual motivador para a semântica computacional é o de \textsl{implicação textual}  (\textit{textual entailment}). Dados dois fragmentos de texto, a tarefa é reconhecer se o significado de um pode ser inferido a partir do significado do outro. Mais especificamento, dado um par de expressões textuais --- $T$, o texto base, e $H$, a hipótese --- dizemos que $T$ acarreta $H$ se o significado de $H$ pode ser inferido do significado de $T$, de acordo com o que seria tipicamente interpretado por falantes da língua. \citep[p.1]{TextEnt}
+
+Dois exemplos são:
+
+\begin{center}
+\begin{tabular}{|p{5cm}|p{5cm}|c|}
+\hline Texto & Hipótese & Implicação Textual \\ 
+\hline  Sessões no Clube Caverna pagaram aos Beatles £15 à noite e £5 na hora do almoço. & Os Beatles tocaram no Clube Caverna na hora do almoço. & Verdadeiro \\ 
+\hline A American Airlines começou a demitir centenas de comissários de bordo na terça-feira após um juiz ter rejeitado a proposta da União de bloquear as perdas de empregos. & A American Airlines chamará de volta centenas de comissários de bordo para aumentar o número de vôos que opera. &  Falso \\
+\hline
+\end{tabular} 
+\end{center}
+
+
+%---
+\newpage
+\section{Desenvolvimento da Abordagem}
+
+No trabalho desenvolvido até agora, seguimos o desenvolvimento de \citet{BlackburnBos:2005}.
+
+\subsection{Lógica de Primeira Ordem}
+Um modo de representação que possui diversas propriedades desejáveis é o uso de uma linguagem lógica como, por exemplo, \textsl{lógica de primeira ordem} (abreviado como \textit{FOL}, de \textit{First Order Logic}). \citet{Jurafsky:2009} apresentam como propriedades interessantes para representações: verificabilidade, representações não ambíguas, existência de uma forma canônica, capacidade de inferência e uso de variáveis e expressividade. Todas estas são possuídas pela lógica de primeira ordem.
+
+
+\subsection{Cálculo Lambda}
+
+O princípio da composicionalidade é aquele segundo o qual o significado de uma expressão complexa é uma função do significado das partes que a constituem. Tal princípio possui raízes em Gottlob Frege, na filosofia da linguagem. \cite[p.94]{BlackburnBos:2005} Não é, contudo, sem controvérsia.\footnote{Para um exemplo de crítica a tal princípio, destacando exemplos em que uma mesma palavra, ao ser combinada com outras, gera um significado distinto que não pode ser (ao menos claramente) explicado apenas pelas partes, vide \citet[pp.110, 151]{Manning:1999}.} Entretanto, além de ser intuitivamente plausível, é possível construir sistemas interessantes a partir dele. É de se notar que o princípio não nos diz \textit{como} é essa função, de modo a construir o conteúdo semântico da expressão complexa. A abordagem estudada é a de que ela pode ser montada a partir da \textit{estrutura sintática} da expressão. Portanto, a análise sintática das expressões é elemento importante para nossa análise semântica. Apesar disso, o enfoque desse trabalho será na semântica, de modo que um modelo sintático simples será adotado. Aqui, será usado o modelo de Gramática de Cláusulas Definidas, de modo que a sintaxe pode ser modelada como uma gramática livre de contexto.
+
+O princípio da composicionalidade sugere e se relaciona de modo natural com uma estrutura que reflita o conceito de composição entre expressões. Com efeito, o exemplo a ser seguido aqui é o formalismo do \textsl{cálculo lambda}. Este é uma extensão das expressões de primeira ordem, inserindo os símbolos $\lambda$ (acompanhado de uma variável), representando uma abstração, e $@$, que representa uma aplicação, isto é, uma substituição de uma variável abstraída por uma outra expressão. Isso é melhor compreendido com um exemplo simples. Uma expressão de lambda calculus é:
+\begin{equation*}
+\lambda x. matar(caim,x)
+\end{equation*}
+Essa expressão abstrai sobre o objeto $x$. Podemos transformá-la em uma verdadeira expressão de primeira ordem aplicando $abel$ a ela. Isto é:
+\begin{equation*}
+\lambda x. matar(caim,x) @ abel
+\end{equation*}
+Estamos aplicando $abel$ sobre a abstração em $x$. Assim, retirandos o prefixo $\lambda x .$ e substituímos todas as ocorrências de $x$ por $abel$. Assim, temos:
+\begin{equation*}
+matar(caim,abel)
+\end{equation*}
+Essa operação é chamada \textsl{redução beta}, ou \textsl{conversão beta}. É interessante fazer um novo exemplo para mostrar as operações podem ser mais complexas. Cada etapa representa um passo da redução beta.
+\begin{equation*}
+\begin{split}
+& \lambda x.(x@abel) @ \lambda y. homem(y) \\
+& \lambda y. homem(y) @ abel \\
+& homem(abel)
+\end{split}
+\end{equation*}
+Em uma beta redução do formato $\mathcal{F}@\mathcal{A}$, $\mathcal{F}$ é dito o \textit{funtor} e $\mathcal{A}$ é o \textit{argumento}. Vale notar que o símbolo usado na variável sendo abstraída é irrelevante. Assim, $\lambda x . homem(x)$ é equivalente a $\lambda y. homem(y)$. Tais expressões são ditas \textsl{alfa-equivalentes}.
+ 
+Relativa a isso, outra operação relevante é a de \textsl{conversão alfa}. Se aplicarmos a conversão beta do modo que descrevemos, teremos problemas de captura de variável. Desse modo, a conversão alfa a uma expressão $\mathcal{E}$ é a operação de achar uma expressão alfa-equivalente a $\mathcal{E}$, usando apenas variáveis novas. Mais especificamente, antes de realizar uma redução beta, aplica-se a conversão alfa ao funtor, de modo que este não tenha nenhuma variável ligada que seja representada pelo mesmo símbolo que uma variável no argumento (seja a variável do funtor ligada pelo prefixo $\lambda$, seja por algum dos quantificadores de primeira ordem $\forall$ ou $\exists$).
+
+Agora vejamos como o cálculo lambda pode ser usado para representar o princípio da composicionalidade, ligando sintaxe a semântica. Suponha que tenhamos uma gramática que pode ser representada pela seguinte gramática de cláusulas definidas:
+
+\begin{align*}
+& s \rightarrowtail np, vp & vp \rightarrowtail tv, np \\
+& np \rightarrowtail pn & tv \rightarrowtail [mata] \\
+& pn \rightarrowtail [Caim] & pn \rightarrowtail [Abel] \\
+\end{align*}
+
+Aqui, $s$ representa frase (\textit{sentence}); $np$, sintagma nominal (\textit{noun phrase}), $vp$, sintagma verbal (\textit{verbal phrase}); $pn$, nome próprio (\textit{proper name}) e $tv$, verbo transitivo (\textit{transitive verb}). Podemos mostrar que a frase ``\textit{Caim mata Abel}'' é gramatical, para essa estrutura. Sendo $s$ o símbolo de início:
+\begin{align*}
+s \Rightarrow np\ vp \Rightarrow pn\ vp \Rightarrow Caim\ vp \Rightarrow Caim\ tv\ np \Rightarrow \\ Caim\ mata\ np \Rightarrow Caim\ mata\ pn \Rightarrow Caim\ mata\ Abel
+\end{align*} 
+
+Na forma de árvore de \textit{parsing}, temos: \\
+
+\Tree [.{Caim mata Abel (\textit{Sentence}) } 
+[.{Caim (\textit{NP})} {Caim (\textit{PN})} ]
+[.{mata Abel (\textit{VP})}
+{mata (\textit{TV})} [.{Abel (\textit{NP})} {Abel (\textit{PN})} ] ]
+] \\
+
+Agora, o que nos importa é associar a cada folha dessa árvore uma expressão de cálculo lambda, de modo que, subindo a árvore, o nó pai seja uma aplicação de um de seus filhos no outro. Assim é para o exemplo abaixo: \\
+
+\Tree [.{Caim mata Abel (\textit{Sentence}) \\ $matar(Caim,Abel)$} {Caim (\textit{NP}) \\ $\lambda u . u@ Caim$} [.{mata Abel (\textit{VP}) \\ $\lambda z . matar(z,Abel)$} {mata (\textit{VT}) \\ $\lambda w . \lambda z . w@\lambda x . matar(z,x)$} {Abel (\textit{NP}) \\ $\lambda u . u@Abel$} ] ] \\
+
+A partir daí, são desenvolvidas técnicas para lidar com certos tipos de ambigüidade: as chamadas ambigüidades de escopo. Em apertada síntese, são ambigüidades relativas à posição dos quantificadores na representação lógica. Os métodos aqui usados são baseados em armazenamentos, que a cada expressão na construção semântica (e na decomposição sintática), atribui não um único significado possível (isso é, uma única representação), mas um conjunto de significados.
+
+\newpage
+
+\section{Próximos Passos}
+
+Até então, estamos estudando o que já foi desenvolvido para semântica formal. Entretanto, uma série de perguntas emergem:
+Existem ferramentas análogas para o português? Por exemplo, existe uma representação gramatical do português como uma linguagem livre de contexto? Podemos usar representações gramaticais mais expressivas do que gramáticas livres de contexto mantendo os métodos aprendidos? Além de representação gramatical, é preciso de conhecimento léxico. Existem ferramentas já disponíveis para isso no caso do português? Uma vez que a capacidade de fazer boas inferências depende de uma boa represesentação de (bastante) conhecimento prévio, qual seria um bom banco para usarmos? O bom uso integrado dessas ferramentas produz bons resultados para o problema da inferência textual?
+
+Além disso, nos resta integrar o aprendido com o caso particular dos textos normativos. Qual é um bom modo de representar o conteúdo normativo? Quais as fraquezas e os sucessos de sistemas de lógica deôntica disponíveis? Podemos integrar alguma dessas com a abordagem da semântica computacional para produzir boas inferências em sistemas normativos?
+
+Para além da representação semântica de frases individualmente, uma continuação do estudo de semântica computacional levaria às representações de discurso. A teoria de representação de discurso (\textit{Discourse Representation Theory}) é uma proposta que expande da semântica à pragmática, permitindo que o significado seja extraído com base também em contexto. Dois livros que apresentam tal teoria são: \citet{BlackburnBos:DRT} e \citet{vanEijck:2010}.
+
+\newpage
+
+%\bibliographystyle{abntex2-alf}
+\bibliographystyle{plainnat}
+\bibliography{tcc1}
+
+\todo{Pegar o Jurafsky na biblioteca e conferir as páginas das citações, uma vez que o pdf é do draft}
+
+
+
+\end{document}
