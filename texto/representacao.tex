@@ -12,11 +12,11 @@ Ainda que tenhamos escolhido a lógica de primeira ordem para ser a linguagem da
 
 Em nossos pressupostos, adotamos o \textit{Princípio da Composicionalidade}. Segundo o mesmo, o significado de expressões complexas é função das expressões mais simples que a compõem. Em um exemplo como \expreng{Caim kills Abel}, isto nos informa que o significado desta frase depende do significado de \expreng{Caim}, \expreng{kills} e \expreng{Abel}. Entretanto, isto não nos diz como funciona esta dependência, ou a função que leva o significado das expressões simples ao da expressão complexa.
 
-Por exemplo, podemos entender que o significado de \expreng{kills} é o predicado binário \texttt{kill(\dots , \dots)}, onde convencionamos que o primeiro argumento é o agressor (isto é, aquele que mata) e o segundo argumento é a vítima (aquele que é morto). Também podemos entender os significados de \expreng{Caim} e \expreng{Abel} como as constantes \texttt{caim} e \texttt{abel}, respectivamente. Assim, apesar de \texttt{kill(abel,caim} ser formada com o significado destes três termos, respeitando a composicionalidade, esta não é a expressão que queremos, e sim \texttt{kill(caim,abel)}.
+Por exemplo, podemos entender que o significado de \expreng{kills} é o predicado binário \code{kill(\dots , \dots)}, onde convencionamos que o primeiro argumento é o agressor (isto é, aquele que mata) e o segundo argumento é a vítima (aquele que é morto). Também podemos entender os significados de \expreng{Caim} e \expreng{Abel} como as constantes \code{caim} e \code{abel}, respectivamente. Assim, apesar de \code{kill(abel,caim} ser formada com o significado destes três termos, respeitando a composicionalidade, esta não é a expressão que queremos, e sim \code{kill(caim,abel)}.
 
-O que nos falta é a \textit{sintaxe}. A sintaxe é o conjunto de regras e processos que organizam a estrutura de frases. \todo[inline]{achar uma boa referência} Assim, as palavras em uma frase existem em relação a uma certa estrutura, que é essencial para capturar o significado. No inglês, com a estrutura \textit{Sujeito - Verbo - Predicado}, entendemos que \expreng{Caim kills Abel} significa \texttt{kill(caim,abel)}, e não \texttt{kill(abel,caim)}.
+O que nos falta é a \textit{sintaxe}. A sintaxe é o conjunto de regras e processos que organizam a estrutura de frases. \todo[inline]{achar uma boa referência} Assim, as palavras em uma frase existem em relação a uma certa estrutura, que é essencial para capturar o significado. No inglês, com a estrutura \textit{Sujeito - Verbo - Predicado}, entendemos que \expreng{Caim kills Abel} significa \code{kill(caim,abel)}, e não \code{kill(abel,caim)}.
 
-O foco deste trabalho não é na sintaxe, de modo que utilizamos uma sintaxe simples: a gramática é implementada pelo mecanismo de Gramática de Cláusulas Definidas (\textit{Definite Clause Grammar} - DCG). A análise sintática é feita na forma de uma árvore cujos nós que são folhas são categorias sintáticas básicas (tais como sujeito (\teng{noun}), verbo transitivo (\teng{transitive verb}) e quantificador (\teng{quantifier}, considerado caso particular de \teng{determiner}). Já os nós que não são folhas representam categorias sintáticas complexas (tais como sintagma nominal (\teng{noun phrase}) ou sintagma verbal (\teng{verb phrase}). \cite[p.~58]{BlackburnBos:2005}
+O foco deste trabalho não é na sintaxe, de modo que utilizamos uma sintaxe simples: a gramática é implementada pelo mecanismo de Gramática de Cláusulas Definidas (\textit{Definite Clause Grammar} - DCG). A análise sintática é feita na forma de uma árvore cujos nós que são folhas são categorias sintáticas básicas (tais como sujeito (\teng{noun}), verbo transitivo (\teng{transitive verb}) e quantificador (\teng{quantifier}, considerado caso particular de \teng{determiner}). Já os nós que não são folhas representam categorias sintáticas complexas (tais como sintagma nominal (\teng{noun phrase}) ou sintagma verbal (\teng{verb phrase}). \cite[p.~58]{BlackburnBos:2005} %Fossem apenas as classes gramaticais, seria uma Gramática Livre de Contexto. Porém, a Gramática de Cláusulas Definidas aceita o uso de algumas restrições, indo além de tal formalismo,como restrições de concordância de número. %Talvez mesmo assim seja possível converter em uma Context Free Grammar (CFG).
 
 Um exemplo de tal árvore, para a frase \expreng{\teng{Caim kills Abel}}, seria:
 
@@ -32,9 +32,63 @@ Aqui, temos as classes sintáticas:\\
 \teng{VP} -- \teng{verb phrase} (sintagma verbal)\\
 \teng{TV} -- \teng{transitive verb} (verbo transitivo)
 
+A decomposição parece lingüisticamente razoável, bem como útil para a compreensão do significado. Resta saber, assim, como podemos elaborar a construção da semântica de uma frase completa a partir de tal análise sintática e dos significados dos termos mais elementares. Essa idéia nos seguirá pelo restante do trabalho, permitindo separar nossas análises, bem como nossos códigos, pela seguinte idéia: a sintaxe da nossa linguagem natural objeto pode ser separada em léxico, a análise de palavras ou expressões em si, como unidades básicas; e em gramática, a análise de como as classes sintáticas se compõem para formar novas, bem como outras relações de concordância (como concordância de gênero ou de número). Já a semântica também pode ser tratada a nível de léxico, em que cada classe sintática básica terá um modelo próprio de interpretação semântica; bem como a nível de gramática, em que a semântica de uma expressão complexa será formada por uma forma de composição entre as semânticas das expressões que a constituem.
+
 \subsection{Cálculo Lambda}
 
+Para realizar um método sistemático de composição dos significados, é introduzido o formalismo do \textit{cálculo lambda}. Aqui, ele será uma extensão da linguagem da lógica de primeira ordem. Dois símbolos novos serão introduzidos: o símbolo de abstração \expr{$\lambda$} e o de aplicação \expr{$@$}.
+
+O símbolo \expr{$\lambda$} será um operador sobre variáveis, permitindo a ``captura'' das mesmas, do mesmo modo a que um quantificador (como \expr{$\forall$}). Por exemplo, sendo \code{man(x)} uma fórmula de primeira ordem, \code{\lambda x.man(x)} é uma fórmula do nosso cálculo lambda, em que a variável $x$ está capturada pelo operador $\lambda$; alternativamente, $\lambda x.$ está \textsl{abstraindo sobre} $x$. 
+
+Por sua vez, o símbolo \expr{$@$}, que conecta duas fórmulas de cálculo lambda, representa uma \textit{aplicação}. Assim, se $F$ e $A$ são duas fórmulas de cálculo lambda, $F@A$ é também uma fórmula de cálculo lambda, chamada uma \textit{aplicação funcional} de $F$ em $A$, ou uma aplicação na qual $F$ é um \textsl{funtor} e $A$ é o \textsl{argumento}. Por exemplo, em \code{\lambda x. man(x)@john}, o funtor é \code{\lambda x. man(x)} e o argumento é \code{john}.
+
+Uma expressão de aplicação funcional representa o comando de aplicar o argumento no funtor, que usualmente será prefixado por uma abstração. A interpretação desse comando é: retire o prefixo de abstração do funtor e, em toda ocorrência da variável abstraída, a substitua pelo argumento da aplicação. Por exemplo, em \code{\lambda x. man(x)@john}, o funtor é \code{\lambda x. man(x)} e a interpretação do comando é de retirar o prefixo \code{\lambda x.} e substituir toda ocorrência de \code{x} no funtor pelo argumento \code{john}, o que produz o resultado de \code{man(john)}. Transformar uma aplicação em sua fórmula resultante após o processo de aplicação é uma operação chamada de \textit{$\beta$-redução}, \textit{$\beta$-conversão} ou \textit{$\lambda$-conversão}. \cite[p.~67]{BlackburnBos:2005}
+
+Destacamos que aplicações podem ser subfórmulas de outras fórmulas, com a $\beta$-redução da fórmula maior sendo a $\beta$-redução de suas subfórmulas, bem como que não é necessário ser um termo ou uma variável para ser um argumento de uma aplicação. Veja este exemplo:
+É bem formada a fórmula $(\lambda P. P@mia)@\lambda x.woman(x)$. Em uma primeira etapa de $\beta$-redução, chegamos à fórmula $\lambda x.woman(x)@mia$ e aí, mais uma vez realizando a operação, chegamos à sua $\beta$-redução final $woman(mia)$.
+
+Um cuidado a se ter é que pode ser necessário trocar o símbolo das variáveis em uma aplicação. É suficiente trocar todas as variáveis ligadas (isto é, capturadas por um operador) do funtor por variáveis novas, não utilizadas até então. A operação de substituir todas as variáveis ligadas por outras é chamada de \textit{$\alpha$-conversão}, enquanto se uma fórmula pode ser gerada através de $\alpha$-conversão de outra, as duas fórmulas são ditas \textit{$\alpha$-equivalentes}. Para um exemplo em que não realizar a $\alpha$-conversão antes de uma $\beta$-conversão pode gerar problemas, basta realizar a $\beta$-conversão da seguinte expressão: $\lambda x .\exists y. not\_equal(x,y) @ y$. O resultado incorreto seria $\exists y. not\_equal(y,y)$, enquanto o resultado adequado seria $\exists y. not\_equal(z,y)$.
+
+Desse modo, temos o cálculo lambda como uma ``linguagem de cola'', permitindo fazer composições de expressões até gerar verdadeiras expressões de primeira ordem. A abordagem então é criar, de algum modo, a representação semântica a nível de léxico (isto é, a nível de classes sintáticas básicas), bem como montar a representação semântica a nível da gramática, pela composição de termos mais simples, de algum modo compatível com a semântica a nível lexical. Vejamos alguns exemplos:
+
+Para nomes próprios (\teng{proper names}), a semântica é: \code{\lambda u. u @ symbol}, onde \code{symbol} representa o símbolo do nome próprio (por exemplo, \code{john}).
+
+Por sua vez, para verbos transitivos temos a semântica \code{\lambda k. \lambda y. k@(\lambda x. symbol(y,x))}, onde mais uma vez \code{symbol} reprenta o símbolo específico da palavra (por exemplo, \code{kill}).
+
+Pensemos agora no sintagma verbal (\teng{verb phrase}) \expreng{kills Abel}. Um modo natural de pensar na composição é, sendo $A$ a expressão semântica de \expr{kill} e $B$, a de \expr{Abel}, realizar a aplicação $A@B$. Com efeito, fazendo isso teríamos:
+\begin{align*}
+&(\lambda k. \lambda y. k@(\lambda x. kill(y,x))) @ \lambda u. u@abel \\
+& \lambda y. ((\lambda u. u@abel)@(\lambda x. kill(y,x))) \\
+& \lambda y. (\lambda x.kill(y,x)@abel) \\
+& \lambda y. kill(y,abel)
+\end{align*}
+
+Agora, podemos juntar o sintagma nominal (e também nome próprio) \expreng{Caim} e o sintagma verbal \expreng{kills Abel}, aplicando a semântica do segundo na do primeiro, de onde teríamos:
+\begin{align*}
+&(\lambda u. u@caim)@(\lambda y.kill(y,abel)) \\
+& (\lambda y. kill(y,abel))@caim \\
+& kill(caim,abel)
+\end{align*}
+
+Assim, chegamos a uma representação da frase \expreng{Caim kills Abel} que é uma expressão de lógica de primeira ordem, utilizando o cálculo lambda como ferramenta para composição sistemática do sentido de expressões menores.
+
 \subsection{Armazenamento de Cooper}
+Apesar deste método produzir resultados interessantes, ele não é suficiente. Uma característica particular é que, do modo que realizamos, cada decomposição sintática está associada a apenas uma possibilidade semântica. Isto não quer dizer que o modelo até então não consegue tratar de ambigüidades.
+
+Em primeiro lugar, as ambigüidades lexicais podem ser tratadas colocando em nosso sistema todos os sentidos possíveis de determinada expressão. Assim, homógrafos (palavras com a mesma grafia mas significados distintos) podem ser considerados como entradas distintas em nosso banco de dados da semântica lexical. Um uso interessante da linguagem Prolog está no fato de que a mesma possibilita a geração de diversos resultados possíveis, pelo mecanismo de \teng{\textit{backtracking}}. Assim, a implementação em Prolog permite que a semântica a nível léxico seja capturada. Em segundo lugar, ambigüidades por diferentes possibilidades de decomposição sintática de uma mesa frase também podem ser tratadas pelo modelo até então. Novamente, a implementação se beneficia do mecanismo de \teng{\textit{backtracking}} do Prolog, de modo que diferentes decomposições sintáticas e seus significados associados podem ser gerados sucessivamente.
+
+Entretanto, podemos apontar um tipo de ambigüidade que, até então, nosso modelo é incapaz de tratar: as ditas \textit{ambigüidades de escopo}. As ambigüidades de escopo são melhor explicadas através de exemplo. Analise a frase: \expreng{Every judge hates an attorney.}%ocorrem quando há dúvidas a respeito da precedência, ou da ``captura'', de um conteúdo semântico em relação a outros.
+
+Esta frase parece ter duas interpretações possíveis: na primeira, para cada juiz existe um advogado odiado por aquele. Possivelmente, são advogados distintos. Já na segunda leitura, existe um advogado que é odiado por todos os juízes: isto é, o mesmo advogado!
+
+Essa dúvida parece ser gerada pelo \textit{escopo} dos quantificadores \expreng{every} e \expreng{a}. Caso o quantificador \expreng{every} seja \textit{mais externo} (ou \textit{\teng{out-scoping}}) ao quantificador \expreng{a}, então teremos a primeira leitura. Neste caso, também dizemos que o quantificador \expreng{every} tem \textit{escopo sobre} o quantificador \expreng{a}. Por outro lado, caso o quantificador \expreng{a} tenha escopo sobre o quantificador \expreng{every}, a leitura será a segunda. Perceba que, ao que parece, as ambigüidades de escopo não são geradas por, realmente, análises sintáticas distintas, mas sim por uma dificuldade de atribuição de significado à uma decomposição sintática em particular.
+
+Notemos também que a ocorrência de quantificadores gera seus problemas na função sintática de sintagma nominal (\teng{noun phrase}), pois a combinação quantificador e substantivo (\teng{determiner + noun}) ocorre apenas nela. Isso sugere que alteremos o modo pelo qual tratamos a semântica dos sintagmas nominais com quantificadores.
+
+Para tal problema, a solução computacional proposta é o uso de \textit{armazenamentos}. Nesta abordagem, a representação semântica de cada expressão deixa de ser a de uma simples fórmula em cálculo lambda, para ser a de uma representação de múltiplas formas possíveis.
+
+Em particular, começaremos com o \textit{armazenamento de Cooper}. Esta é uma técnica desenvolvida por Robin Cooper para ... \cite[p.~113]{BlackburnBos:2005}
+
 
 \subsection{Armazenamento de Keller}
 
