@@ -72,24 +72,128 @@ Agora, podemos juntar o sintagma nominal (e também nome próprio) \expreng{Caim
 
 Assim, chegamos a uma representação da frase \expreng{Caim kills Abel} que é uma expressão de lógica de primeira ordem, utilizando o cálculo lambda como ferramenta para composição sistemática do sentido de expressões menores.
 
-\subsection{Armazenamento de Cooper}
+\subsubsection{Dificuldades -- Ambigüidades de Escopo}
 Apesar deste método produzir resultados interessantes, ele não é suficiente. Uma característica particular é que, do modo que realizamos, cada decomposição sintática está associada a apenas uma possibilidade semântica. Isto não quer dizer que o modelo até então não consegue tratar de ambigüidades.
 
 Em primeiro lugar, as ambigüidades lexicais podem ser tratadas colocando em nosso sistema todos os sentidos possíveis de determinada expressão. Assim, homógrafos (palavras com a mesma grafia mas significados distintos) podem ser considerados como entradas distintas em nosso banco de dados da semântica lexical. Um uso interessante da linguagem Prolog está no fato de que a mesma possibilita a geração de diversos resultados possíveis, pelo mecanismo de \teng{\textit{backtracking}}. Assim, a implementação em Prolog permite que a semântica a nível léxico seja capturada. Em segundo lugar, ambigüidades por diferentes possibilidades de decomposição sintática de uma mesa frase também podem ser tratadas pelo modelo até então. Novamente, a implementação se beneficia do mecanismo de \teng{\textit{backtracking}} do Prolog, de modo que diferentes decomposições sintáticas e seus significados associados podem ser gerados sucessivamente.
 
-Entretanto, podemos apontar um tipo de ambigüidade que, até então, nosso modelo é incapaz de tratar: as ditas \textit{ambigüidades de escopo}. As ambigüidades de escopo são melhor explicadas através de exemplo. Analise a frase: \expreng{Every judge hates an attorney.}%ocorrem quando há dúvidas a respeito da precedência, ou da ``captura'', de um conteúdo semântico em relação a outros.
+Entretanto, podemos apontar um tipo de ambigüidade que, até então, nosso modelo é incapaz de tratar: as ditas \textit{ambigüidades de escopo}. \cite[p.~105-109]{BlackburnBos:2005} As ambigüidades de escopo são melhor explicadas através de exemplos.
 
-Esta frase parece ter duas interpretações possíveis: na primeira, para cada juiz existe um advogado odiado por aquele. Possivelmente, são advogados distintos. Já na segunda leitura, existe um advogado que é odiado por todos os juízes: isto é, o mesmo advogado!
+Analisemos a frase: 
+\begin{align*}
+\text{\expreng{Every man loves a woman.}}
+\end{align*}%ocorrem quando há dúvidas a respeito da precedência, ou da ``captura'', de um conteúdo semântico em relação a outros.
+
+Esta frase parece ter duas interpretações possíveis: na primeira, para cada homem existe uma mulher amada por aquele. Possivelmente, são mulheres distintas. Já na segunda leitura, existe uma mulher específica que é amada por todos os homens.
 
 Essa dúvida parece ser gerada pelo \textit{escopo} dos quantificadores \expreng{every} e \expreng{a}. Caso o quantificador \expreng{every} seja \textit{mais externo} (ou \textit{\teng{out-scoping}}) ao quantificador \expreng{a}, então teremos a primeira leitura. Neste caso, também dizemos que o quantificador \expreng{every} tem \textit{escopo sobre} o quantificador \expreng{a}. Por outro lado, caso o quantificador \expreng{a} tenha escopo sobre o quantificador \expreng{every}, a leitura será a segunda. Perceba que, ao que parece, as ambigüidades de escopo não são geradas por, realmente, análises sintáticas distintas, mas sim por uma dificuldade de atribuição de significado à uma decomposição sintática em particular.
 
-Notemos também que a ocorrência de quantificadores gera seus problemas na função sintática de sintagma nominal (\teng{noun phrase}), pois a combinação quantificador e substantivo (\teng{determiner + noun}) ocorre apenas nela. Isso sugere que alteremos o modo pelo qual tratamos a semântica dos sintagmas nominais com quantificadores.
+Que o nosso sistema atual não é capaz de representar esse tipo de ambigüidade pode ser visto pelo fato de que a representação semântica é única, dados o sentido dos termos mais simples e a decomposição sintática. Precisamos, assim, aprimorar o modelo.
 
-Para tal problema, a solução computacional proposta é o uso de \textit{armazenamentos}. Nesta abordagem, a representação semântica de cada expressão deixa de ser a de uma simples fórmula em cálculo lambda, para ser a de uma representação de múltiplas formas possíveis.
+Para termos um olhar em direção à solução, podemos notar que a ocorrência de quantificadores gera seus problemas na função sintática de sintagma nominal (\teng{noun phrase}), pois a combinação quantificador e substantivo (\teng{determiner + noun}) ocorre apenas nela. Isso sugere que alteremos o modo pelo qual tratamos a semântica dos sintagmas nominais com quantificadores.
 
-Em particular, começaremos com o \textit{armazenamento de Cooper}. Esta é uma técnica desenvolvida por Robin Cooper para ... \cite[p.~113]{BlackburnBos:2005}
+\subsection{Armazenamento de Cooper}
 
+Para o problema das ambigüidades de escopo, a solução computacional proposta é o uso de \textit{armazenamentos}. Nesta abordagem, a representação semântica de cada expressão deixa de ser a de uma simples fórmula em cálculo lambda, para ser a de uma representação de múltiplas formas possíveis.
+
+Em particular, começaremos com o \textit{armazenamento de Cooper}. Esta é uma técnica desenvolvida por Robin Cooper para lidar com ambigüidades de escopo de quantificadores. \cite[p.~113]{BlackburnBos:2005} Intuitivamente, a idéia está em adicionar a possibilidade de substituir uma representação mais detalhada de um sintagma nominal por uma nova variável e ``armazenar'' a representação completa deste sintagma nominal para uso posterior. Ao fim, as representações podem ser ``resgatadas'' do armazenamento, em qualquer ordem. Ao se ``resgatar'' uma representação após alguma outra, o quantificador do sintagma nominal resgatado posteriormente poderá ter escopo mais externo do que um quantificador da representação ``resgatada'' anteriormente. Desse modo, ao se possibilitar os ``resgates'' em ordens distintas, diferentes representações são formadas.
+
+Agora, cada expressão (isto é, cada nó da árvore de análise sintática (\teng{parse})) é associada a uma $n$-upla chamada ``armazenamento''. O primeiro elemento do armazenamento será uma fórmula de cálculo lambda, bem como antes. É uma representação ``nuclear'' da expressão. Com efeito, chamaremos este elemento de \textit{núcleo} do armazenamento. Por sua vez, os outros elementos da $n$-upla serão pares $(\beta, i)$, em que $\beta$ é uma representação semântica para um sintagma nominal e $i$ é um indice para este sintagma. Estes pares são denominados \textit{operadores de ligação indexados} (\teng{indexed binding operators}).
+
+Com mais detalhes, \textit{a priori} as representações não diferem muito de como eram. Os nós das folhas, não sendo nenhum um sintagma nominal quantificado, são análogos ao modo anterior, sendo armazenamentos com apenas uma entrada. Já um nó não-terminal pode ter sua representação montada de um modo ``usual'': ele tem como núcleo uma combinação dos núcleos de cada um de seus filhos na árvore; isto é, é a combinação dos núcleos dos armazenamentos dos termos que compõem a expressão mais complexa. Esta combinação é exatamente do mesmo modo como era feito até então. O restante do armazenamento do nó não-terminal é a justaposição (\teng{append}) do restante dos armazenamentos de cada um dos termos filhos. Em suma: quando a expressão é composta por outras na análise sintática, tudo ocorre de modo análogo a como ocorria na representação ``pura'' por cálculo lambda, preservando os operadores de ligação indexados de todas as sub-expressões que compõem a expressão maior.
+
+Caso o nó não-terminal não seja um sintagma nominal quantificado, a represnetação ``usual'' é a sua única possível. Entretanto, o processo possui uma diferença quando o nó não-terminal é um sintagma nominal quantificado. Além da composição ``usual'' para outros nós, há uma segunda representação possível. Isso merece ser destacado:
+
+\begin{oframed}\textbf{Armazenagem (Cooper)}\\
+Seja o armazenamento $\langle\phi, (\beta, j), \dots, (\beta', k)\rangle$ a representação semântica ``usual'' para um sintagma nominal quantificado. O armazenamento $\langle\lambda u.(u@z_i), (\phi, i), (\beta, j), \dots, (\beta', k)\rangle $, onde $i$ é um índice único\footnotemark também é uma representação para este sintagma nominal quantificado.
+\end{oframed}
+\footnotetext{{isto é, não utilizado até então}}
+
+Isto significa que sintagmas nominais quantificados podem ter suas representações montadas de dois modos. Neste ponto, nosso algoritmo terá uma escolha de aplicar ou não a regra de armazenagem. Ao se desejar saber a representação de uma frase em específico, esperaremos que nosso sistema nos retorne todas as representações possíveis. Perceba também que a regra não é recursiva. Há apenas duas opções: manter a representação ``usual'' ou realizar a operação de armazenagem.
+
+Após todo este processo, teremos uma frase cuja representação é um armazenamento. É necessário lidar com isto de algum modo, pois o que desejamos é que uma frase possa ser representada por expressões de lógica de primeira ordem, não por um armazenamento. Aqui é que poderemos ``resgatar'' nossos operadores de ligação indexado, que foram previamente armazenados. Para isso, usaremos a seguinte regra de resgate:
+
+\begin{oframed} \textbf{Resgate (Cooper)}\\
+Sejam $\sigma_1$ e $\sigma_2$ duas seqüências (possivelmente vazias) de operadores de ligação. Se o armazenamento $\langle\phi, \sigma_1, (\beta, i), \sigma_2\rangle$ a uma frase (\teng{sentence}), então o armazenamento $\langle\beta @ \lambda z_i . \phi , \sigma_1, \sigma_2 \rangle$ também é associado a esta frase.
+\end{oframed}
+
+Um armazenamento composto apenas por um núcleo, após sucessivas aplicações da regra de resgate, será uma fórmula bem formada de primeira ordem, como desejávamos.
+
+Para visualizarmos este processo, vamos para um exemplo:
+
+%\begin{center}
+\Tree [.{\teng{Every man loves a woman} (\teng{Sentence}) } 
+[.{\teng{Every man} (\teng{NP})} {\teng{Every} (\teng{Determiner})} {\teng{man} (\teng{Noun})} ]
+[.{\teng{loves a woman} (\teng{VP})}
+{\teng{loves} (\teng{TV})} [.{\teng{a woman} (\teng{NP})} {\teng{a} (\teng{Determiner})} {\teng{woman} (\teng{Noun})} ] ]
+] \\ 
+%\end{center}
+
+Esta é a árvore de análise sintática. Construindo os significados a partir das folhas e subindo, uma das possíveis árvores que podemos alcançar é:
+\todo[inline]{converter essas árvores para tikz, para poder aumentar a fonte}
+\scriptsize
+%\footnotesize
+\Tree [.{\teng{Every man loves a woman} (\teng{Sentence}) \\ $\langle love(z_1,z_2), $\\$ (\lambda q. \forall x(man(x) \rightarrow q@x), 1),$\\$ (\lambda q. \exists x(woman(x) \land q@x),2) \rangle$ } 
+[.{\teng{Every man} (\teng{NP}) \\$\langle \lambda u . u@z_1 ,$\\$ (\lambda q. \forall x(man(x) \rightarrow q@x), 1) \rangle$} {\teng{Every} (\teng{Determiner}) \\ $\langle \lambda p . \lambda q. \forall x(p@x \rightarrow q@x) \rangle$} {\teng{man} (\teng{Noun}) \\ $\langle \lambda x. man(x) \rangle$} ]
+[.{\teng{loves a woman} (\teng{VP}) \\ $\langle \lambda x. love(x,z_2),$\\$ (\lambda q. \exists x(woman(x) \land q@x),2) \rangle$}
+{\teng{loves} (\teng{TV}) \\ $\langle \lambda k. \lambda x. k @ (\lambda y. love(x,y)) \rangle$} [.{\teng{a woman} (\teng{NP}) \\ $\langle \lambda u. u@z_2 ,$\\$ (\lambda q. \exists x(woman(x) \land q@x),2) \rangle$} {\teng{a} (\teng{Determiner}) \\ $\langle \lambda p. \lambda q. \exists x (p@x \land q@x) \rangle$} {\teng{woman} (\teng{Noun}) \\ $\langle \lambda x. woman(x) \rangle$} ] ]
+]
+\normalsize
+
+Agora, o que resta é converter o armazenamento representativo da frase completa nas possíveis fórmulas de primeira ordem através da operação de resgate. 
+
+\begin{align*}
+ \text{Inicialmente:} \\
+ \langle love(z_1,z_2),& \\ &(\lambda q. \forall x(man(x) \rightarrow q@x), 1),  (\lambda q. \exists x(woman(x) \land q@x),2) \rangle \\
+ \text{Resgatando o operador de ligação 1:}  \\
+ \langle \lambda q. \forall x(man(x) \rightarrow q@x) &@ (\lambda z_1 . love(z_1,z_2)),  \\&(\lambda q. \exists x(woman(x) \land q@x),2)\rangle \\
+ \beta\text{-convertendo:} \\
+ \langle \forall x (man(x) \rightarrow love(x,z_2)), &\\&(\lambda q. \exists x(woman(x) \land q@x),2)\rangle \\
+ \text{Resgatando o operador de ligação 2:} \\
+ \langle (\lambda q. \exists x(woman(x) \land q@x))@&(\forall x (man(x) \rightarrow love(x,z_2))) \rangle  \\
+ \alpha\text{-convertendo e }  \beta\text{-convertendo:} \\
+ \langle \exists x (woman(x) \land \forall y(man(y) &\rightarrow love(y,x))) \rangle  \\
+\end{align*}
+
+Assim, chegamos a uma das duas interpretações: a de que todos os homens amam uma mesma mulher. Se resgatarmos o operador de ligação 2 e só depois resgatarmos o operador de ligação 1, teremos a outra leitura: $\forall y(man(y) \rightarrow \exists x (woman (x) \land love(y,x)))$
+
+Portanto, desenvolvemos um método sistemático que pode capturar as ambigüidades de escopo, produzindo as leituras possíveis. O que nos resta agora é a pergunta: será que nosso método é de fato capaz de capturar todas as ambigüidades de escopo? Infelizmente, deve estar claro que não. Iremos apontar duas frases nas quais o método não é suficiente.
+
+\subsubsection{Dificuldades}
+
+A primeira frase é: \expreng{Every man doesn't love a woman}. A presença da negação traz elementos interessantes. Em primeiro lugar, ela em si é uma fonte possível de ambigüidades de escopo. Entretanto, o método de armazenamento de Cooper não tratou a negação de nenhum modo especial. Além disso, esse exemplo mostra o interesse em manter a operação de armazenamento como opcional. Esta frase pode ser interpretado de seis modos:
+\begin{enumerate}
+\item $\neg \forall x (man(x) \rightarrow \exists y (woman(y) \land love(x,y))) $
+\item $\neg \exists y(woman(y) \land \forall x(man(x) \rightarrow love(x,y)))$
+\item $\forall x (man(x) \rightarrow \neg \exists y (woman(y) \land love(x,y)))$
+\item $\exists y(woman(y) \land \neg \forall x(man(x) \rightarrow love(x,y)))$
+\item $\forall x (man(x) \rightarrow \exists y (woman(y) \land \neg love(x,y)))$
+\item $\exists y(woman(y) \land \forall x(man(x) \rightarrow \neg love(x,y)))$
+\end{enumerate}
+
+Apesar disso, nosso método apenas gerará três desses modos: 3, 5 e 6. Assim, a presença da negação de fato afeta a capacidade de nosso sistema produzir todas as interpretações.
+
+Por sua vez, a segunda frase é: \expreng{Every criminal with a gun is dangerous.} Aplicando nosso método, teremos os seguintes resultados:
+\begin{enumerate}
+\item $\forall x((criminal(x) \land \exists y (gun(y) \land with(x,y))) \rightarrow smoke(x))$
+\item $\exists y(gun(y) \land \forall x(criminal(x) \land with(x,y) \rightarrow smoke(x)))$
+\item $\forall x((criminal(x) \land with(x,y)) \rightarrow \exists z(gun(z) \land smoke(x))) $
+\end{enumerate}
+
+Apesar dos resultados 1 e 2 serem perfeitamente razoáveis, sendo as interpretações que desejávamos, a interpretação 3 possui uma variável livre, não sendo uma sentença de primeira ordem. Isso nos mostra que há um problema com o nosso método. Como isso surgiu?
+
+Realizando nosso procedimento e optando sempre por colocar a representação do sintagma nominal no armazenamento, montaremos a árvore: 
+%(.......)
+
+%Isto nos mostra o problema de sintagmas nominais aninhados ....
 
 \subsection{Armazenamento de Keller}
+Para lidar especificamente com o segundo problema do armazenamento de Cooper, Bill Keller propôs uma alteração: permitir armazenamentos aninhados. Assim, cada operador de ligação passa a ser composto não mais por uma fórmula de cálculo lambda e um índice único, mas sim por um armazenamento e um índice único. Isto altera a regra de armazenagem:
+
+\begin{oframed}\textbf{Armazenagem (Keller)}\\
+Sendo $\sigma$ uma seqüência de operadores de ligação, se o armazenamento $\langle\phi, \sigma\rangle$ é a representação semântica ``usual'' para um sintagma nominal quantificado, então o armazenamento $\langle\lambda u.(u@z_i), (\langle \phi, \sigma \rangle, i) \rangle $, onde $i$ é um índice único, também é uma representação para este sintagma nominal quantificado.
+\end{oframed}
+
+Por sua vez, também o resgate é alterado. Um operador de ligação só pode ser resgatado para aplicação do núcleo do armazenamento se todos os armazenamentos externos a ele já tiverem sido aplicados. Isto garante que, caso os sintagmas nominais estejam aninhados, então o sintagma nominal mais interno só terá seu operador resgatado após o resgate do sintagma nominal mais externo.
 
 \subsection{\textit{Hole Semantics}}

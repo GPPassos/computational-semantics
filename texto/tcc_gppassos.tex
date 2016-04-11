@@ -1,11 +1,10 @@
 \documentclass[12pt, a4paper, twoside]{article}
-\usepackage[brazil, english]{babel}  % adequacao para o portugues Brasil
+\usepackage[T1]{fontenc}
 \usepackage[utf8]{inputenc}
+\usepackage[brazil, english]{babel}  % adequacao para o portugues Brasil
 \usepackage[lmargin=3cm,rmargin=3cm,tmargin=2.5cm,bmargin=2.5cm]{geometry}
 %\usepackage[top=2.5cm, bottom=2cm, left=3cm, right=2cm]{geometry}
-\usepackage{amsmath}
-\usepackage{amsfonts}
-\usepackage{amssymb}
+\usepackage{amsmath, amsthm,amsfonts,amssymb,amsxtra,empheq,marvosym}
 \usepackage{indentfirst}
 \usepackage[noload]{qtree}
 \usepackage{hyperref}
@@ -14,15 +13,17 @@
 \usepackage{wrapfig}
 \usepackage{graphicx}
 \usepackage{float}
-\usepackage{pslatex}
 \usepackage{tikz}
-\usepackage{amsthm,amsfonts,amssymb,amssymb,amsxtra,empheq,marvosym}
 \usepackage{titling} % thetitle, theauthor etc
 \usepackage{lipsum} %lorem ipsum
+\usepackage{framed} % cria boxes
+\usepackage{times}
 
+%\usepackage{palatino} 
 
 \usepackage[nottoc,notlot,notlof,numbib]{tocbibind} % coloca as referências na table of content; numerada, se tiver o numbib
 
+% \renewcommand{\familydefault}{\sfdefault}
 
 %\usepackage[alf]{abntex2cite}
 \usepackage[round, authoryear]{natbib}
