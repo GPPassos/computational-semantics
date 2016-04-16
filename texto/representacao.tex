@@ -191,9 +191,18 @@ Realizando nosso procedimento e optando sempre por colocar a representação do 
 Para lidar especificamente com o segundo problema do armazenamento de Cooper, Bill Keller propôs uma alteração: permitir armazenamentos aninhados. Assim, cada operador de ligação passa a ser composto não mais por uma fórmula de cálculo lambda e um índice único, mas sim por um armazenamento e um índice único. Isto altera a regra de armazenagem:
 
 \begin{oframed}\textbf{Armazenagem (Keller)}\\
-Sendo $\sigma$ uma seqüência de operadores de ligação, se o armazenamento $\langle\phi, \sigma\rangle$ é a representação semântica ``usual'' para um sintagma nominal quantificado, então o armazenamento $\langle\lambda u.(u@z_i), (\langle \phi, \sigma \rangle, i) \rangle $, onde $i$ é um índice único, também é uma representação para este sintagma nominal quantificado.
+Sendo $\sigma$ uma seqüência (possivelmente vazia) de operadores de ligação, se o armazenamento $\langle\phi, \sigma\rangle$ é a representação semântica ``usual'' para um sintagma nominal quantificado, então o armazenamento $\langle\lambda u.(u@z_i), (\langle \phi, \sigma \rangle, i) \rangle $, onde $i$ é um índice único, também é uma representação para este sintagma nominal quantificado.
 \end{oframed}
 
-Por sua vez, também o resgate é alterado. Um operador de ligação só pode ser resgatado para aplicação do núcleo do armazenamento se todos os armazenamentos externos a ele já tiverem sido aplicados. Isto garante que, caso os sintagmas nominais estejam aninhados, então o sintagma nominal mais interno só terá seu operador resgatado após o resgate do sintagma nominal mais externo.
+Por sua vez, também o resgate é alterado. Um operador de ligação só pode ser resgatado para aplicação do núcleo do armazenamento se todos os armazenamentos externos a ele já tiverem sido aplicados. Isto garante que, caso os sintagmas nominais estejam aninhados, então o sintagma nominal mais interno só terá seu operador resgatado após o resgate do sintagma nominal mais externo, evitando o tipo de problema que observamos. Portanto, nossa regra é:
+
+\begin{oframed}\textbf{Resgate (Keller)}\\
+Sejam $\sigma$, $\sigma_1$ e $\sigma_2$ seqüências (possivelmente vazias) de operadores de ligação. Se o armazenamento $\langle \phi, \sigma_1, ((\beta, \sigma), i), \sigma_2 \rangle$ é uma representação para uma frase (\teng{sentence}), então $\langle (\beta @ \lambda z_i . \phi ), \sigma_1, \sigma, \sigma_2 \rangle$ também o é.
+\end{oframed}
+
+Podemos então aplicar isto para o nosso exemplo:
+%todo: árvore em tikz
+
+
 
 \subsection{\textit{Hole Semantics}}
