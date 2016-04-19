@@ -161,19 +161,7 @@ Portanto, desenvolvemos um método sistemático que pode capturar as ambigüidad
 
 \subsubsection{Dificuldades}
 
-A primeira frase é: \expreng{Every man doesn't love a woman}. A presença da negação traz elementos interessantes. Em primeiro lugar, ela em si é uma fonte possível de ambigüidades de escopo. Entretanto, o método de armazenamento de Cooper não tratou a negação de nenhum modo especial. Além disso, esse exemplo mostra o interesse em manter a operação de armazenamento como opcional. Esta frase pode ser interpretado de seis modos:
-\begin{enumerate}
-\item $\neg \forall x (man(x) \rightarrow \exists y (woman(y) \land love(x,y))) $
-\item $\neg \exists y(woman(y) \land \forall x(man(x) \rightarrow love(x,y)))$
-\item $\forall x (man(x) \rightarrow \neg \exists y (woman(y) \land love(x,y)))$
-\item $\exists y(woman(y) \land \neg \forall x(man(x) \rightarrow love(x,y)))$
-\item $\forall x (man(x) \rightarrow \exists y (woman(y) \land \neg love(x,y)))$
-\item $\exists y(woman(y) \land \forall x(man(x) \rightarrow \neg love(x,y)))$
-\end{enumerate}
-
-Apesar disso, nosso método apenas gerará três desses modos: 3, 5 e 6. Assim, a presença da negação de fato afeta a capacidade de nosso sistema produzir todas as interpretações.
-
-Por sua vez, a segunda frase é: \expreng{Every criminal with a gun is dangerous.} Aplicando nosso método, teremos os seguintes resultados:
+A primeira frase é: \expreng{Every criminal with a gun is dangerous.} Aplicando nosso método, teremos os seguintes resultados:
 \begin{enumerate}
 \item $\forall x((criminal(x) \land \exists y (gun(y) \land with(x,y))) \rightarrow smoke(x))$
 \item $\exists y(gun(y) \land \forall x(criminal(x) \land with(x,y) \rightarrow smoke(x)))$
@@ -187,8 +175,20 @@ Realizando nosso procedimento e optando sempre por colocar a representação do 
 
 %Isto nos mostra o problema de sintagmas nominais aninhados ....
 
+Por sua vez, a segunda frase é:  \expreng{Every man doesn't love a woman}. A presença da negação traz elementos interessantes. Em primeiro lugar, ela em si é uma fonte possível de ambigüidades de escopo. Entretanto, o método de armazenamento de Cooper não tratou a negação de nenhum modo especial. Além disso, esse exemplo mostra o interesse em manter a operação de armazenamento como opcional. Esta frase pode ser interpretado de seis modos:
+\begin{enumerate}
+\item $\neg \forall x (man(x) \rightarrow \exists y (woman(y) \land love(x,y))) $
+\item $\neg \exists y(woman(y) \land \forall x(man(x) \rightarrow love(x,y)))$
+\item $\forall x (man(x) \rightarrow \neg \exists y (woman(y) \land love(x,y)))$
+\item $\exists y(woman(y) \land \neg \forall x(man(x) \rightarrow love(x,y)))$
+\item $\forall x (man(x) \rightarrow \exists y (woman(y) \land \neg love(x,y)))$
+\item $\exists y(woman(y) \land \forall x(man(x) \rightarrow \neg love(x,y)))$
+\end{enumerate}
+
+Apesar disso, nosso método apenas gerará três desses modos: 3, 5 e 6. Assim, a presença da negação de fato afeta a capacidade de nosso sistema produzir todas as interpretações.
+
 \subsection{Armazenamento de Keller}
-Para lidar especificamente com o segundo problema do armazenamento de Cooper, Bill Keller propôs uma alteração: permitir armazenamentos aninhados. Assim, cada operador de ligação passa a ser composto não mais por uma fórmula de cálculo lambda e um índice único, mas sim por um armazenamento e um índice único. Isto altera a regra de armazenagem:
+Para lidar especificamente com o primeiro problema do armazenamento de Cooper, Bill Keller propôs uma alteração: permitir armazenamentos aninhados. Assim, cada operador de ligação passa a ser composto não mais por uma fórmula de cálculo lambda e um índice único, mas sim por um armazenamento e um índice único. Isto altera a regra de armazenagem:
 
 \begin{oframed}\textbf{Armazenagem (Keller)}\\
 Sendo $\sigma$ uma seqüência (possivelmente vazia) de operadores de ligação, se o armazenamento $\langle\phi, \sigma\rangle$ é a representação semântica ``usual'' para um sintagma nominal quantificado, então o armazenamento $\langle\lambda u.(u@z_i), (\langle \phi, \sigma \rangle, i) \rangle $, onde $i$ é um índice único, também é uma representação para este sintagma nominal quantificado.
@@ -203,6 +203,13 @@ Sejam $\sigma$, $\sigma_1$ e $\sigma_2$ seqüências (possivelmente vazias) de o
 Podemos então aplicar isto para o nosso exemplo:
 %todo: árvore em tikz
 
+\dots
 
+
+Assim, o problema dos sintagmas nominais é resolvido. Apesar disso, o segundo problema apontado, do escopo das negações, persiste. As interpretações geradas são as mesmas de antes, pelo armazenamento de Cooper.  Portanto, o método de Keller aprimora os resultados de Cooper, sem resolver todas os obstáculos gerados por ambigüidades de escopo.
 
 \subsection{\textit{Hole Semantics}}
+
+Apesar de ser possível criar um novo mecanismo para capturar a ambigüidade de escopo gerada pela negação \todo{comentar o modo pelo qual eu fiz isso?}, abordagens \textit{ad hoc} para novas dificuldades não são muito desejadas, criando uma falta de harmonização dos métodos usados, possivelmente proliferando uma diversidade de construções muito distintas entre si. Se possível, gostaríamos de possuir uma abordagem mais uniforme.
+
+Em razão destas dificuldades, e também de modo a ganhar maior flexibilidade em restrições semânticas, analisaremos uma outra forma de representação semântica, não baseada em armazenamentos.
