@@ -239,17 +239,21 @@ A lógica de primeira ordem utilizada é \textit{tipada}, havendo três tipos. O
 Dizemos que algo é um \textit{nó} se for um buraco ou um rótulo. Dizemos que algo é um \textit{meta-termo} da URL caso seja uma \textit{meta-variável} ou uma constante da URL.
 
 Agora, iremos definir as USRs básicas:
+
+%\begin{defn}[USR básica] \leavevmode
 \begin{enumerate}
-\item Se $l$ é um rótulo e $h$ é um buraco, então $l \leq h$ é uma USR básica. \label{dom-const}
+\item Se $l$ é um rótulo e $h$ é um buraco, então $l \leq h$ é uma USR básica. \label{om-const}
 \item Se $l$ é um rótulo e $n$ e $n'$ são nós, então $l\textsc{:not}(n)$, $l\textsc{:imp}(n,n')$, $l\textsc{:and}(n,n')$ e $l\textsc{:or}(n,n')$ são USRs básicas.
 \item Se $l$ é um rótulo enquanto $t$ e $t'$ são meta-termos, então $l\textsc{:eq}(t,t')$ é uma USR básica.
 \item Se $l$ é um rótulo, $S$ é um símbolo $n$-ário na linguagem SRL e $t_1$, \dots, $t_n$ são meta-termos, então $l\textsc{:S}(t_1,\dots, t_n)$ é uma USR básica.
 \item Se $l$ é um rótulo, $v$ é uma meta-variável, $n$ é um nó,	então $l\textsc{:some}(v,n)$ e $l\textsc{:all}(v,n)$ são USR básicas.
 \item Nada mais é uma USR.
 \end{enumerate}
+%\end{defn}
 
 Observe aqui que o espaço a mais criado pela subida de aridade nos predicados e conectivos é preenchido pela variáveis de rótulo. Observe que o item \ref{dom-const} é o único que utiliza o símbolo de $\leq$. USRs básicas desta forma são ditas \textit{restrições de dominância}. Por fim, podemos definir o restante das USRs:
 
+%\begin{defn}[USR]\leavevmode
 \begin{enumerate}
 \item Toda USR básica é uma USR.
 \item Se $\phi$ é uma USR e $n$ é um nó, então $\exists n \phi$ é uma USR.
@@ -257,5 +261,26 @@ Observe aqui que o espaço a mais criado pela subida de aridade nos predicados e
 \item se $\phi$ e $\psi$ são USRs, então $\phi \land \psi$ é uma USR.
 \item Nada mais é uma USR.
 \end{enumerate}
+%\end{defn}
 
-É de ser notado que nem todos os conectivos e formas da lógica da primeira ordem foram empregados nesta definição. Na realidade, apenas são fórmulas conjuntos pequenos de formas conjuntivas e existencialmente fechadas. \cite[p.~131]{BlackburnBos:2005}
+É de ser notado que nem todos os conectivos e formas da lógica da primeira ordem foram empregados nesta definição. Na realidade, apenas são fórmulas conjuntos pequenos de formas conjuntivas e existencialmente fechadas. Entretanto, esse fragmento da linguagem é suficiente para nossos propósitos. \cite[p.~131]{BlackburnBos:2005}
+
+Podemos avançar então para um exemplo. Consideremos a frase \expreng{Mia does not love a man}. Uma interpretação é aquela na qual Mia não ama um homem específico, que pode ser formalizada como $\exists x: man(x) \land \neg love(mia,x)$. Outra, é aquela na qual Mia não ama homem algum, isto é, $\neg (\exists x: man(x) \land love(mia,x))$. Montando a árvore de cada interpretação, teremos:
+
+\dots
+
+A representação subespecificada para esta frase é:
+
+\dots
+
+Podemos ver a intuição desta representação. As linhas pontilhados representam restrições de dominância entre buracos e nós. Por sua vez, as linhas preenchidas mostram quais nós são pais de outros. A relação de parentesco também representa dominância: se um nó é pai de outro, é certo que o filho não pode ter escopo mais externo que o pai, uma vez que deve ser subfórmula do mesmo. Entretanto, neste caso a posição está fixa: necessariamente a relação de parentesco será aquela. Por sua vez, na dominância entre buracos e nós, não é isto que occore. Basta que o nó dominado esteja no escopo do nó dominante, não necessariamente sendo filho do mesmo. Ou seja, basta ser descendente.
+
+Agora, a nossa análise de frases é feita ainda decompondo sintaticamente, e então, para cada termo, criando uma representação na forma de uma USR. Ainda utilizamos o cálculo lambda para fazer combinações de expressões. A representação final da frase é feita por combinações das representações das partes que as constituem. Por exemplo, a representação para as palavras \dots é \dots
+
+Agora, possuindo a USR da frase, precisamos ser capazes de construir as árvores possíveis. Isso é feito por meio de \textit{encaixes}. Para cada buraco, achamos um rótulo candidato para preenchê-lo: este rótulo será encaixado no buraco. Mais formalmente, um encaixe é uma função injetiva dos buracos aos rótulos. Entretanto, nem todo encaixe nos satisfaz. Evidentemente, queremos satisfazer duas condições: queremos que o resultados seja uma árvore (portanto, acíclica e conexa), bem como queremos que, se existe uma restrição de dominância de um buraco $H$ sobre um rótulo $L$ (ou seja, se $L \leq H$), então $L$ será descendente de $H$ na árvore.
+
+Para o exemplo que vimos, dois encaixes são possíveis: \dots
+
+Assim, duas árvores são formadas, cada uma gerando uma interpretação possível:
+
+\dots

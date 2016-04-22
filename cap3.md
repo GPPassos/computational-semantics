@@ -81,20 +81,22 @@ see exercise 3.3.4.
 
 ### Questions ###
 
-- (p. 137)
+- (p. 137) [!!!]
 > More generally, we don't want to generate any plugging where two nodes with the same parent dominate a common node.
 
-Does this make sense for this example? At the example, *l2* and *h1* dominate *l3*, but they don't share a parent: actually, *l2* is the parent of *h1*.
-In fact, even the code won't prohibit this kind of plugging!
+Does this make sense for this example figure? At the example, *l2* and *h1* dominate *l3*, but they don't share a parent: actually, *l2* is the parent of *h1*.
+What prohibits this kind of plug is the fact that *l2* does have a parent and, at pluggings, we only choose labels without parents: `findall(L,(label(L),\+ parent(_,L)),Labels),   plugHoles(Holes,Labels,[])`
 
 I've seen where this makes sense (see original USR for `A woman that knows every boxer`).
 
+If you manually assert this:
+`:- parent(l2,h1).`
+`:- parent(l2,l3).`
+`:- admissiblePlugging([plug(h1,l3)]).` This code will cause no problem for `admissible pluggins`. (This seems like a serious problem, as it's the only case left to show that this restriction implies that, if there's a dominance constraint, then it's satisfied. Probably it just doesn't happen as it is, but theoretically, or changing lexical or grammatical semantic representations, it'll show up).
 
-:- parent(l2,h1).
-:- parent(l2,l3).
-:- admissiblePlugging([plug(h1,l3)]).
+However, disabling `\+ ( parent(A,B), parent(A,C), \+ B=C, dom(B,D), dom(C,D)).` as a condition will cause all sorts of troubles: we'll obtain pluggings in which even though some hole H dominates a label L, L won't be under H at the parent tree (after plugging). I'm convinced this works, but it's not clear to me why this is sufficient (but I see why it's necessary: if this isn't respected, then some node will be simultaneously at two branches).
 
-If it's sufficient and necessary to build a tree, perhaps what should be done is to affirm that every node which has a parent has only one parent. We can do this counting how many parents each node has (and it should be less or equal than one), but it's not very elegant.
+If it's sufficient and necessary to build a tree (I guess it is), perhaps what should be done is to affirm that every node which has a parent has only one parent. We can do this counting how many parents each node has (and it should be less or equal than one), but it's not very elegant. 
 
 - What about example on pages 140 and 141, where `l1 <= h`, `l2 <= h` and l1 is 'inside' l2? -- [ANSWER]: dominance relation! It is transitive!
 
@@ -104,7 +106,7 @@ If it's sufficient and necessary to build a tree, perhaps what should be done is
 
 ### Exercises ###
 #### Exercise 3.4.1. ####
-There's a bijection between formulas and trees. It seems that there's a bijection between pluggins and trees.
+There's a bijection between formulas and trees. It seems that there's a bijection between pluggings and trees.
 
 #### Exercise 3.4.2 ####
 This happens because in the first case, the search starts with a node that is in the cycle, which means that prolog searching won't make the same query twice. In the second case, prolog will first query for `dom(d,d)` and, using the second clause, will ask if `dom(a,d)`. Then, while in this query, eventually it'll query for `dom(c,d)`, matching `parent(c,Y)` with `parent(c,a)` and once again query for `dom(a,d)`. This will make every `dom(a,d)` query fall in a loop where once again the same query is made. Using an accumulator is sufficient to make it impossible that a query is made inside itself.
