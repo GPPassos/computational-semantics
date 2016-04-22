@@ -77,6 +77,8 @@ Apesar deste método produzir resultados interessantes, ele não é suficiente. 
 
 Em primeiro lugar, as ambigüidades lexicais podem ser tratadas colocando em nosso sistema todos os sentidos possíveis de determinada expressão. Assim, homógrafos (palavras com a mesma grafia mas significados distintos) podem ser considerados como entradas distintas em nosso banco de dados da semântica lexical. Um uso interessante da linguagem Prolog está no fato de que a mesma possibilita a geração de diversos resultados possíveis, pelo mecanismo de \teng{\textit{backtracking}}. Assim, a implementação em Prolog permite que a semântica a nível léxico seja capturada. Em segundo lugar, ambigüidades por diferentes possibilidades de decomposição sintática de uma mesa frase também podem ser tratadas pelo modelo até então. Novamente, a implementação se beneficia do mecanismo de \teng{\textit{backtracking}} do Prolog, de modo que diferentes decomposições sintáticas e seus significados associados podem ser gerados sucessivamente.
 
+\todo[inline]{Checar ambigüidades sintáticas.... Funciona mesmo? Exemplo?}
+
 Entretanto, podemos apontar um tipo de ambigüidade que, até então, nosso modelo é incapaz de tratar: as ditas \textit{ambigüidades de escopo}. \cite[p.~105-109]{BlackburnBos:2005} As ambigüidades de escopo são melhor explicadas através de exemplos.
 
 Analisemos a frase: 
@@ -98,7 +100,7 @@ Para o problema das ambigüidades de escopo, a solução computacional proposta 
 
 Em particular, começaremos com o \textit{armazenamento de Cooper}. Esta é uma técnica desenvolvida por Robin Cooper para lidar com ambigüidades de escopo de quantificadores. \cite[p.~113]{BlackburnBos:2005} Intuitivamente, a idéia está em adicionar a possibilidade de substituir uma representação mais detalhada de um sintagma nominal por uma nova variável e ``armazenar'' a representação completa deste sintagma nominal para uso posterior. Ao fim, as representações podem ser ``resgatadas'' do armazenamento, em qualquer ordem. Ao se ``resgatar'' uma representação após alguma outra, o quantificador do sintagma nominal resgatado posteriormente poderá ter escopo mais externo do que um quantificador da representação ``resgatada'' anteriormente. Desse modo, ao se possibilitar os ``resgates'' em ordens distintas, diferentes representações são formadas.
 
-Agora, cada expressão (isto é, cada nó da árvore de análise sintática (\teng{parse})) é associada a uma $n$-upla chamada ``armazenamento''. O primeiro elemento do armazenamento será uma fórmula de cálculo lambda, bem como antes. É uma representação ``nuclear'' da expressão. Com efeito, chamaremos este elemento de \textit{núcleo} do armazenamento. Por sua vez, os outros elementos da $n$-upla serão pares $(\beta, i)$, em que $\beta$ é uma representação semântica para um sintagma nominal e $i$ é um indice para este sintagma. Estes pares são denominados \textit{operadores de ligação indexados} (\teng{indexed binding operators}).
+Agora cada expressão (isto é, cada nó da árvore de análise sintática (\teng{parse})) é associada a uma $n$-upla chamada ``armazenamento''. O primeiro elemento do armazenamento será uma fórmula de cálculo lambda, bem como antes. É uma representação ``nuclear'' da expressão. Com efeito, chamaremos este elemento de \textit{núcleo} do armazenamento. Por sua vez, os outros elementos da $n$-upla serão pares $(\beta, i)$, em que $\beta$ é uma representação semântica para um sintagma nominal e $i$ é um indice para este sintagma. Estes pares são denominados \textit{operadores de ligação indexados} (\teng{indexed binding operators}).
 
 Com mais detalhes, \textit{a priori} as representações não diferem muito de como eram. Os nós das folhas, não sendo nenhum um sintagma nominal quantificado, são análogos ao modo anterior, sendo armazenamentos com apenas uma entrada. Já um nó não-terminal pode ter sua representação montada de um modo ``usual'': ele tem como núcleo uma combinação dos núcleos de cada um de seus filhos na árvore; isto é, é a combinação dos núcleos dos armazenamentos dos termos que compõem a expressão mais complexa. Esta combinação é exatamente do mesmo modo como era feito até então. O restante do armazenamento do nó não-terminal é a justaposição (\teng{append}) do restante dos armazenamentos de cada um dos termos filhos. Em suma: quando a expressão é composta por outras na análise sintática, tudo ocorre de modo análogo a como ocorria na representação ``pura'' por cálculo lambda, preservando os operadores de ligação indexados de todas as sub-expressões que compõem a expressão maior.
 
@@ -208,8 +210,52 @@ Podemos então aplicar isto para o nosso exemplo:
 
 Assim, o problema dos sintagmas nominais é resolvido. Apesar disso, o segundo problema apontado, do escopo das negações, persiste. As interpretações geradas são as mesmas de antes, pelo armazenamento de Cooper.  Portanto, o método de Keller aprimora os resultados de Cooper, sem resolver todas os obstáculos gerados por ambigüidades de escopo.
 
-\subsection{\textit{Hole Semantics}}
+\subsection{\teng{Hole Semantics}}
 
-Apesar de ser possível criar um novo mecanismo para capturar a ambigüidade de escopo gerada pela negação \todo{comentar o modo pelo qual eu fiz isso?}, abordagens \textit{ad hoc} para novas dificuldades não são muito desejadas, criando uma falta de harmonização dos métodos usados, possivelmente proliferando uma diversidade de construções muito distintas entre si. Se possível, gostaríamos de possuir uma abordagem mais uniforme.
+Apesar de ser possível criar um novo mecanismo para capturar a ambigüidade de escopo gerada pela negação \todo{comentar o modo pelo qual eu fiz isso?}, abordagens \textit{ad hoc} para novas dificuldades não são muito desejadas, criando uma falta de harmonização dos métodos usados, possivelmente proliferando uma diversidade de construções muito distintas entre si. Se possível, gostaríamos de possuir uma abordagem mais uniforme. Na realidade, não apenas a negação traz ambigüidades de escopo. Por exemplo, uma frase como \expreng{If a man walks then he wistles and a woman is happy} é ambígua. \cite{HoleSem} Podemos imaginar uma interpretação na qual \expreng{a woman is happy} é parte do conseqüente da implicação e outra na qual não o é, sendo uma afirmação separada da implicação.\footnote{Esta construção não ocorre em nosso programa, por não haver orações coordenadas com \expreng{and}.} Em razão destas dificuldades, e também de modo a ganhar maior flexibilidade na representação, analisaremos uma outra forma de representação semântica, não baseada em armazenamentos. 
 
-Em razão destas dificuldades, e também de modo a ganhar maior flexibilidade em restrições semânticas, analisaremos uma outra forma de representação semântica, não baseada em armazenamentos.
+Assim como nos métodos baseados em armazenamentos, uma frase não será associada uma expressão de primeira ordem, mas a uma representação abstrata, que então é associada a um conjunto de expressões em primeira ordem. Entretanto, o modo pelo qual isso é feito aqui é distinto. Em \teng{Hole Semantics}, uma idéia essencial é a de \textit{restrições}: podemos pensar na representação como um conjunto de restrições, de modo que qualquer fórmula de primeira ordem que satisfaça as restrições será uma interpretação possível para a frase. \cite[p.~129]{BlackburnBos:2005} A representação será referida por representação subespecificada (\teng{USR}, de \teng{underspecified representation}).
+
+Uma fórmula de primeira ordem possui uma decomposição única como uma árvore, em razão pelo modo como é montada. Por exemplo, a fórmula $\exists x: man(x) \land (\neg love(mia,x))$ pode ser decomposta na árvore:
+
+%todo: montar árvore
+
+As restrições serão sobre o modo de construir a fórmula. Dito de outro modo, a USR será um modo de falar a respeito da árvore de cada interpretação possível. Ao invés de montarmos uma única árvore (o que corresponderia a uma única fórmula), a USR pode ser pensada como uma ``árvore incompleta'', isto é, uma árvore com ``buracos'', justificando o nome desse método. Entretanto, estes buracos não poderão ser preenchidos de qualquer modo, havendo relações de \textit{dominância}. Um buraco deverá dominar um nó quando estiver acima do mesmo na representação da árvore. A partir daí, as subfórmulas irão compôr a fórmula completa através de um \textit{preenchimento} dos buracos. Por exemplo, pensando na frase \expreng{Mia não ama um homem}, podemos sugerir a seguir ``árvore esburacada'':
+
+%todo: montar árvore
+%todo: explicar encaixes
+
+Nos métodos de armazenamentos, a semântica das frases era representada por um vetor que continha um núcleo e os quantificadores guardados em (um aninhamento de) operadores de ligação. Em \teng{Hole Semantics}, nosso modo de representar será bem distinto. Na realidade, nós usaremos uma linguagem lógica para essa representação, chamada \textit{linguagem de representação subespecificada} (\teng{URL}, do inglês \teng{underspecified representation language}). A linguagem original, que aqui é alguma forma de lógica de primeira ordem, será referida por \textit{linguagem de representação semântica} (\teng{SRL}, \teng{semantic representation language}). Pode causar algum espanto o fato de que a URL será, ela própria, uma linguagem de primeira ordem! Seu vocabulário será definido do seguinte modo:
+
+\begin{enumerate}
+\item Predicados binários $\textsc{:not}$ e $\leq$
+\item Predicados ternários $\textsc{:imp}$, $\textsc{:and}$, $\textsc{:or}$, $\textsc{:all}$, $\textsc{:some}$ e $\textsc{:eq}$
+\item Cada constante no vocabulário da SRL também é uma constante no vocabulário da URL.
+\item Para cada predicado $n$-ário $\textsc{pred}$ na SRL, $\textsc{:pred}$ é um predicado $(n+1)$-ário na URL.
+\end{enumerate}
+
+A lógica de primeira ordem utilizada é \textit{tipada}, havendo três tipos. O primeiro deles é o dos \textit{buracos}, cujas variáveis serão denotadas por $h$, $h'$, $h_1$, $h_2$, etc. O segundo é o tipo dos \textit{rótulos}, cujas variáveis são escritas $l$, $l'$, $l_1$, etc. Cada rótulo marcará um vértice na árvore que não é um buraco, sendo um modo de se referir aos símbolos da SRL. Por fim, o terceiro tipo é o das \textit{meta-variáveis}, escritos $v$, $v'$, $v_1$, $v_2$, etc. As meta-variáveis têm a função de se referir às variáveis da SRL.
+
+Dizemos que algo é um \textit{nó} se for um buraco ou um rótulo. Dizemos que algo é um \textit{meta-termo} da URL caso seja uma \textit{meta-variável} ou uma constante da URL.
+
+Agora, iremos definir as USRs básicas:
+\begin{enumerate}
+\item Se $l$ é um rótulo e $h$ é um buraco, então $l \leq h$ é uma USR básica. \label{dom-const}
+\item Se $l$ é um rótulo e $n$ e $n'$ são nós, então $l\textsc{:not}(n)$, $l\textsc{:imp}(n,n')$, $l\textsc{:and}(n,n')$ e $l\textsc{:or}(n,n')$ são USRs básicas.
+\item Se $l$ é um rótulo enquanto $t$ e $t'$ são meta-termos, então $l\textsc{:eq}(t,t')$ é uma USR básica.
+\item Se $l$ é um rótulo, $S$ é um símbolo $n$-ário na linguagem SRL e $t_1$, \dots, $t_n$ são meta-termos, então $l\textsc{:S}(t_1,\dots, t_n)$ é uma USR básica.
+\item Se $l$ é um rótulo, $v$ é uma meta-variável, $n$ é um nó,	então $l\textsc{:some}(v,n)$ e $l\textsc{:all}(v,n)$ são USR básicas.
+\item Nada mais é uma USR.
+\end{enumerate}
+
+Observe aqui que o espaço a mais criado pela subida de aridade nos predicados e conectivos é preenchido pela variáveis de rótulo. Observe que o item \ref{dom-const} é o único que utiliza o símbolo de $\leq$. USRs básicas desta forma são ditas \textit{restrições de dominância}. Por fim, podemos definir o restante das USRs:
+
+\begin{enumerate}
+\item Toda USR básica é uma USR.
+\item Se $\phi$ é uma USR e $n$ é um nó, então $\exists n \phi$ é uma USR.
+\item Se $\phi$ é uma USR e $v$ é uma meta-variável, então $\exists v \phi$ é uma USR.
+\item se $\phi$ e $\psi$ são USRs, então $\phi \land \psi$ é uma USR.
+\item Nada mais é uma USR.
+\end{enumerate}
+
+É de ser notado que nem todos os conectivos e formas da lógica da primeira ordem foram empregados nesta definição. Na realidade, apenas são fórmulas conjuntos pequenos de formas conjuntivas e existencialmente fechadas. \cite[p.~131]{BlackburnBos:2005}

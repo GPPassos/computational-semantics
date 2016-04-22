@@ -47,6 +47,12 @@ s([coord:no,sem:Sem])-->
    vp([coord:_,inf:fin,num:Num,gap:[],sem:VP]), 
    {combine(s:Sem,[np:NP,vp:VP])}.
 
+/* s([coord:yes,sem:Sem])-->
+   s([coord:_,sem:S1]),
+   [and],
+   s([coord:_,sem:S2]),
+   {combine(s:Sem,[s:S1,and:S2])}. % "and" coordinating conjunction -- DOES NOT WORK, ''mia walks'' runs forever */
+
 s([coord:yes,sem:Sem])--> 
    s([coord:ant,sem:S1]), 
    s([coord:con,sem:S2]), 

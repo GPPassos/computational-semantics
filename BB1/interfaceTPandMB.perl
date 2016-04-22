@@ -36,7 +36,7 @@ my $winner = "";
 my %command = ( 
  otter   => "otter < otter.in > otter.out 2>/dev/null; echo otter > otter.ready",
  bliksem => "bliksem < bliksem.in > bliksem.out 2>/dev/null; echo bliksem > bliksem.ready",
- mace    => "mace -t20 -n1 -N$domainsize -P < mace.in > mace.out 2>/dev/null; echo mace > mace.ready",
+ mace    => "mace2 -t20 -n1 -N$domainsize -P < mace.in > mace.out 2>/dev/null; echo mace > mace.ready",
  paradox => "paradox paradox.in --sizes 1..$domainsize --print Model > paradox.out 2>/dev/null; echo paradox > paradox.ready"
 );
 

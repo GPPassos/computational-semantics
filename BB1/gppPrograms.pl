@@ -1,14 +1,18 @@
 % Arquivo de teste / usos 
 
-:- use_module(cooperStorage,[info/0,
-                         infix/0,
-                         prefix/0,             
-                         cooperStorage/0,
-			 cooperStorage/2,
-			 cooperStorageTestSuite/0,
-			 filterAlphabeticVariants/2]).
+/*:- use_module(cooperStorage,[info/0,
+              infix/0,
+              prefix/0,             
+              cooperStorage/0,
+			  cooperStorage/2,
+			  cooperStorageTestSuite/0,
+			  filterAlphabeticVariants/2]).*/
+
+:- use_module(foResolution,[rprove/1,rprove/2]).
 			 
-/*:- use_module(readLine,[readLine/1]).
+/*:- use_module(readLine,[readLine/1]).*/
+
+:- use_module(readLine,[readLine/1]).
 
 :- use_module(comsemPredicates,[memberList/2,
 				appendLists/3,
@@ -18,11 +22,29 @@
                                 prefix/0,
 				printRepresentations/1]).
 
-:- use_module(alphaConversion,[alphabeticVariants/2]).*/
+:- use_module(callInference,[infix/0,
+                         prefix/0,
+                         callTP/3,
+                         callMB/4,
+                         callTPandMB/6]).
 
-:- use_module(betaConversion,[betaConvertList/2]).
+:- [holeSemantics].
+%:- use_module(holeSemantics,[holeSemantics/0,
+%			 holeSemantics/2]).
 
-			 
+/*:- use_module(alphaConversion,[alphabeticVariants/2]).*/
+
+%:- use_module(betaConversion,[betaConvertList/2]).
+
+equivReads(X,Y,Sems) :-
+    readLine(Sentence),
+    holeSemantics(Sentence,Sems),
+    selectFromList(X,Sems,Sems2),
+    selectFromList(Y,Sems2,_),
+    Formula = and(imp(X,Y),imp(Y,X)),
+    callTPandMB(Formula,not(Formula),100,Proof,Model,Engine).
+
+/*
 interp:-
    A1 = [okay(A),bo(lam(B,some(C,and(and(piercing(C),some(D,and(needle(D),doneWith(C,D)))),app(B,C)))),A)],
    A2 = [okay(A),bo(lam(B,some(C,and(and(piercing(C),doneWith(C,D)),app(B,C)))),A),bo(lam(E,some(F,and(needle(F),app(E,F)))),D)],
@@ -58,4 +80,4 @@ pred2 :-
    betaConvert(app(Y1,lam(A,app(Z1,lam(D,X)))),Ans2),
    printRepresentations([Ans1]),nl,
    printRepresentations([app(Y1,lam(A,Ans1))]),nl,
-   printRepresentations([Ans2]).
+   printRepresentations([Ans2]).*/

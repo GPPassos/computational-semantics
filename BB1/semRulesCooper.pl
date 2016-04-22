@@ -32,6 +32,7 @@ combine(t:Converted,[q:Sem]):-
    betaConvert(Sem,Converted).
 
 combine(s:app(A,B),[s:A,s:B]).
+%combine(s:and(A,B),[s:A,and:B]). % "and" coordinating conjunction -- Does not work. See englishGrammar.pl
 combine(s:lam(B,imp(S,B)),[if:S]).
 combine(s:lam(B,or(S,B)),[either:S]).
 combine(s:S,[then:S]).
@@ -83,6 +84,7 @@ combine(vp:A,[iv:A]).
 combine(vp:[app(A,B)|S],[tv:[A],np:[B|S]]).
 combine(vp:[app(app(B,A),C)|S3],[vp:[A|S1],coord:[B],vp:[C|S2]]):-
    appendLists(S1,S2,S3).
+combine(vp:[app(A,lam(P,some(X,app(app(B,P),X))))|S],[cop:[A],pp:[B|S]]). %exercise 2.5.3
 
 combine(pp:[app(A,B)|S],[prep:[A],np:[B|S]]).
 
