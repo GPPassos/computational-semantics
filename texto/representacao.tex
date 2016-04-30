@@ -5,8 +5,9 @@
 Desejamos associar a cada expressão de linguagem natural um significado formal, simbólico. Além disso, desejamos fazê-lo de modo algorítmico, que possa ser reproduzido por um computador.
 \todo{Conferir se falo de lógica aqui ou se puxo isso para a introdução.}
 
-A linguagem formal que utilizaremos para representar o significado de frases é \textit{lógica de primeira ordem}. \citet{Jurafsky:2009} apresentam como propriedades interessantes para representações: verificabilidade, representações não ambíguas, existência de uma forma canônica, capacidade de inferência e uso de variáveis e expressividade. Todas estas são possuídas pela lógica de primeira ordem. %todo: discutir essas propriedades?
-Também uma interessante propriedade da lógica de primeira ordem é sua relativa intuitividade. Bastando explicar o que significam os símbolos conectivos (como $\land$ (significando \expr{e}) e $\rightarrow$ (significando \expr{se \dots então \dots})), bem como os quantificadores ($\forall$ (\expr{para todo})  e $\exists$ (\expr{existe}), uma expressão formal em lógica é compreensível . \todo{é verdade?}
+A linguagem formal que utilizaremos para representar o significado de frases é \textit{lógica de primeira ordem}. \citet{Jurafsky:2009} apresentam como propriedades interessantes para representações: verificabilidade, não-ambigüidade, existência de uma forma canônica, capacidade de inferência, uso de variáveis e expressividade. Todas estas são possuídas pela lógica de primeira ordem, ao menos até certo ponto. Além disso, é um sistema bem compreendido e bastante flexível.
+
+%Também uma interessante propriedade da lógica de primeira ordem é sua relativa intuitividade. Bastando explicar o que significam os símbolos conectivos (como $\land$ (significando \expr{e}) e $\rightarrow$ (significando \expr{se \dots então \dots})), bem como os quantificadores ($\forall$ (\expr{para todo})  e $\exists$ (\expr{existe}), uma expressão formal em lógica é compreensível . %\todo{é verdade?}
 
 Ainda que tenhamos escolhido a lógica de primeira ordem para ser a linguagem das representações semânticas para frases, isto não nos informa qual deve ser a representação semântica de palavras e expressões menores. Talvez algumas poderiam ser feitas por termos, mas não está de todo claro qual seria o significado de uma expressão como \expreng{to run} (\expr{correr}) ou \expreng{that walks} (\expr{que anda}).
 
@@ -124,22 +125,34 @@ Um armazenamento composto apenas por um núcleo, após sucessivas aplicações d
 Para visualizarmos este processo, vamos para um exemplo:
 
 %\begin{center}
+\begin{tikzpicture}
 \Tree [.{\teng{Every man loves a woman} (\teng{Sentence}) } 
 [.{\teng{Every man} (\teng{NP})} {\teng{Every} (\teng{Determiner})} {\teng{man} (\teng{Noun})} ]
 [.{\teng{loves a woman} (\teng{VP})}
 {\teng{loves} (\teng{TV})} [.{\teng{a woman} (\teng{NP})} {\teng{a} (\teng{Determiner})} {\teng{woman} (\teng{Noun})} ] ]
-] \\ 
+]
+\end{tikzpicture} \\ 
 %\end{center}
 
 Esta é a árvore de análise sintática. Construindo os significados a partir das folhas e subindo, uma das possíveis árvores que podemos alcançar é:
-\todo[inline]{converter essas árvores para tikz, para poder aumentar a fonte}
-\scriptsize
-%\footnotesize
+%todo{converter essas árvores para tikz, para poder aumentar a fonte}
+%\scriptsize
+\footnotesize
+%\small
+
+\begin{center}
+\begin{tikzpicture}
+\tikzset{level distance=100pt,align=center, sibling distance = 0pt}
+%\tikzset{level 1/.style={level distance=36pt}}
+%\tikzset{level 2+/.style={sibling distance=1pt}}
+%\tikzset{level 3+/.style={level distance=28pt}}
 \Tree [.{\teng{Every man loves a woman} (\teng{Sentence}) \\ $\langle love(z_1,z_2), $\\$ (\lambda q. \forall x(man(x) \rightarrow q@x), 1),$\\$ (\lambda q. \exists x(woman(x) \land q@x),2) \rangle$ } 
 [.{\teng{Every man} (\teng{NP}) \\$\langle \lambda u . u@z_1 ,$\\$ (\lambda q. \forall x(man(x) \rightarrow q@x), 1) \rangle$} {\teng{Every} (\teng{Determiner}) \\ $\langle \lambda p . \lambda q. \forall x(p@x \rightarrow q@x) \rangle$} {\teng{man} (\teng{Noun}) \\ $\langle \lambda x. man(x) \rangle$} ]
 [.{\teng{loves a woman} (\teng{VP}) \\ $\langle \lambda x. love(x,z_2),$\\$ (\lambda q. \exists x(woman(x) \land q@x),2) \rangle$}
 {\teng{loves} (\teng{TV}) \\ $\langle \lambda k. \lambda x. k @ (\lambda y. love(x,y)) \rangle$} [.{\teng{a woman} (\teng{NP}) \\ $\langle \lambda u. u@z_2 ,$\\$ (\lambda q. \exists x(woman(x) \land q@x),2) \rangle$} {\teng{a} (\teng{Determiner}) \\ $\langle \lambda p. \lambda q. \exists x (p@x \land q@x) \rangle$} {\teng{woman} (\teng{Noun}) \\ $\langle \lambda x. woman(x) \rangle$} ] ]
 ]
+\end{tikzpicture}
+\end{center}
 \normalsize
 
 Agora, o que resta é converter o armazenamento representativo da frase completa nas possíveis fórmulas de primeira ordem através da operação de resgate. 
@@ -203,27 +216,47 @@ Sejam $\sigma$, $\sigma_1$ e $\sigma_2$ seqüências (possivelmente vazias) de o
 \end{oframed}
 
 Podemos então aplicar isto para o nosso exemplo:
-%todo: árvore em tikz
 
-\dots
+\begin{center}
+\begin{tikzpicture}[align = center, sibling distance = 200pt, level distance = 120pt]
+\tikzset{level 2/.style = {level distance = 100pt}}
 
+\node {\teng{Every criminal with a gun is dangerous} (\teng{Sentence}) \\ $\langle dangerous(z_2),$\\$(\langle \lambda q. \forall y((criminal(y) \land with(y,z_1)) \rightarrow q@y),$\\$ (\langle \lambda q. \exists x(gun(x) \land q@x) \rangle, 1) \rangle, z_2) \rangle$}
+ child {node {\teng{Every criminal with a gun} (\teng{NP}) \\ $\langle \lambda w. w@z_2,$\\$(\langle \lambda q. \forall y((criminal(y) \land with(y,z_1)) \rightarrow q@y),$\\$ (\langle \lambda q. \exists x(gun(x) \land q@x) \rangle, 1) \rangle, z_2) \rangle$ }
+  child {node {\teng{Every} (\teng{Det}) \\ $\langle \lambda p. \lambda q. \forall y(p@y \rightarrow q@y) \rangle$ }}
+  child {node {\teng{criminal with a gun} (\teng{Noun}) \\ $\langle \lambda u. criminal(u) \land with(u,z_1),$\\$(\langle \lambda q. \exists x(gun(x) \land q@x) \rangle, 1) \rangle$ }
+   child {node {\teng{criminal} (\teng{Noun}) \\ $\langle \lambda x. criminal(x) \rangle$}}
+   child {node {\teng{with a gun} (\teng{Prepositional Phrase}) \\ $\langle \lambda v. \lambda u. (v@u \land with(u,z_1)),$\\$ (\langle \lambda q. \exists x(gun(x) \land q@x) \rangle, 1) \rangle$}}} }
+ child {node {\teng{is dangerous} (\teng{VP}) \\ $\langle \lambda x.dangerous(x) \rangle$ }};
+
+
+%\Tree [.NP [.Adj tall ] [.N tree ] ]
+%\Tree [\node{aa} child {node {bb}} child [.cc d]; [.Adj C ] [.N E ] ]
+\end{tikzpicture}
+\end{center}
+
+Agora, realizando a extração, podemos fazê-la apenas de um modo: $\exists x(gun(x) \land \forall y((criminal(y) \land with(y,x)) \rightarrow dangerous(y)))$. Isto é a interpretação correta, não tendo sido gerado nenhum problema. As outras opções de (não-)extração funcionam de modo semelhante.
 
 Assim, o problema dos sintagmas nominais é resolvido. Apesar disso, o segundo problema apontado, do escopo das negações, persiste. As interpretações geradas são as mesmas de antes, pelo armazenamento de Cooper.  Portanto, o método de Keller aprimora os resultados de Cooper, sem resolver todas os obstáculos gerados por ambigüidades de escopo.
 
 \subsection{\teng{Hole Semantics}}
 
-Apesar de ser possível criar um novo mecanismo para capturar a ambigüidade de escopo gerada pela negação \todo{comentar o modo pelo qual eu fiz isso?}, abordagens \textit{ad hoc} para novas dificuldades não são muito desejadas, criando uma falta de harmonização dos métodos usados, possivelmente proliferando uma diversidade de construções muito distintas entre si. Se possível, gostaríamos de possuir uma abordagem mais uniforme. Na realidade, não apenas a negação traz ambigüidades de escopo. Por exemplo, uma frase como \expreng{If a man walks then he wistles and a woman is happy} é ambígua. \cite{HoleSem} Podemos imaginar uma interpretação na qual \expreng{a woman is happy} é parte do conseqüente da implicação e outra na qual não o é, sendo uma afirmação separada da implicação.\footnote{Esta construção não ocorre em nosso programa, por não haver orações coordenadas com \expreng{and}.} Em razão destas dificuldades, e também de modo a ganhar maior flexibilidade na representação, analisaremos uma outra forma de representação semântica, não baseada em armazenamentos. 
+Apesar de ser possível criar um novo mecanismo para capturar a ambigüidade de escopo gerada pela negação \todo{comentar o modo pelo qual eu fiz isso?}, abordagens \textit{ad hoc} para novas dificuldades não são muito desejadas, criando uma falta de harmonização dos métodos usados, possivelmente proliferando uma diversidade de construções muito distintas entre si. Se possível, gostaríamos de possuir uma abordagem mais uniforme. Na realidade, não apenas a negação traz ambigüidades de escopo. Por exemplo, uma frase como \expreng{If a man walks then he jumps and a woman is happy} é ambígua. \cite{HoleSem} Podemos imaginar uma interpretação na qual \expreng{a woman is happy} é parte do conseqüente da implicação e outra na qual não o é, sendo uma afirmação separada da implicação.\footnote{Esta construção não ocorre em nosso programa, por não haver orações coordenadas com \expreng{and}.} Em razão destas dificuldades, e também de modo a ganhar maior flexibilidade na representação, analisaremos uma outra forma de representação semântica, não baseada em armazenamentos. 
 
 Assim como nos métodos baseados em armazenamentos, uma frase não será associada uma expressão de primeira ordem, mas a uma representação abstrata, que então é associada a um conjunto de expressões em primeira ordem. Entretanto, o modo pelo qual isso é feito aqui é distinto. Em \teng{Hole Semantics}, uma idéia essencial é a de \textit{restrições}: podemos pensar na representação como um conjunto de restrições, de modo que qualquer fórmula de primeira ordem que satisfaça as restrições será uma interpretação possível para a frase. \cite[p.~129]{BlackburnBos:2005} A representação será referida por representação subespecificada (\teng{USR}, de \teng{underspecified representation}).
 
-Uma fórmula de primeira ordem possui uma decomposição única como uma árvore, em razão pelo modo como é montada. Por exemplo, a fórmula $\exists x: man(x) \land (\neg love(mia,x))$ pode ser decomposta na árvore:
+Uma fórmula de primeira ordem possui uma decomposição única como uma árvore, em razão pelo modo como é montada. Por exemplo, para a frase \expreng{If Mia loves John then Mia does not hurt John} tem associada à sua semântica a fórmula $love(mia,john) \rightarrow (\neg hurt(mia,john))$, que pode ser decomposta na árvore:
 
-%todo: montar árvore
+\begin{center}
+\begin{tikzpicture}[sibling distance=25mm]
+\node {$\rightarrow$}
+ child {node {$love(mia,john)$}}
+ child {node {$\neg$}
+  child {node {$hurt(mia,john)$}}};
+\end{tikzpicture}
+\end{center}
 
-As restrições serão sobre o modo de construir a fórmula. Dito de outro modo, a USR será um modo de falar a respeito da árvore de cada interpretação possível. Ao invés de montarmos uma única árvore (o que corresponderia a uma única fórmula), a USR pode ser pensada como uma ``árvore incompleta'', isto é, uma árvore com ``buracos'', justificando o nome desse método. Entretanto, estes buracos não poderão ser preenchidos de qualquer modo, havendo relações de \textit{dominância}. Um buraco deverá dominar um nó quando estiver acima do mesmo na representação da árvore. A partir daí, as subfórmulas irão compôr a fórmula completa através de um \textit{preenchimento} dos buracos. Por exemplo, pensando na frase \expreng{Mia não ama um homem}, podemos sugerir a seguir ``árvore esburacada'':
-
-%todo: montar árvore
-%todo: explicar encaixes
+As restrições serão sobre o modo de construir a fórmula. Dito de outro modo, a USR será um modo de falar a respeito da árvore de cada interpretação possível. Ao invés de montarmos uma única árvore (o que corresponderia a uma única fórmula), a USR pode ser pensada como uma ``árvore incompleta'', isto é, uma árvore com ``buracos'', justificando o nome desse método. Entretanto, estes buracos não poderão ser preenchidos de qualquer modo, havendo relações de \textit{dominância}. Um buraco deverá dominar um nó quando estiver acima do mesmo na representação da árvore. A partir daí, as subfórmulas irão compôr a fórmula completa através de um ``preenchimento'' dos buracos. Este ``preenchimento'' será feito \textit{encaixando} algum nó (junto com sua sub-árvore) no buraco.
 
 Nos métodos de armazenamentos, a semântica das frases era representada por um vetor que continha um núcleo e os quantificadores guardados em (um aninhamento de) operadores de ligação. Em \teng{Hole Semantics}, nosso modo de representar será bem distinto. Na realidade, nós usaremos uma linguagem lógica para essa representação, chamada \textit{linguagem de representação subespecificada} (\teng{URL}, do inglês \teng{underspecified representation language}). A linguagem original, que aqui é alguma forma de lógica de primeira ordem, será referida por \textit{linguagem de representação semântica} (\teng{SRL}, \teng{semantic representation language}). Pode causar algum espanto o fato de que a URL será, ela própria, uma linguagem de primeira ordem! Seu vocabulário será definido do seguinte modo:
 
@@ -231,7 +264,7 @@ Nos métodos de armazenamentos, a semântica das frases era representada por um 
 \item Predicados binários $\textsc{:not}$ e $\leq$
 \item Predicados ternários $\textsc{:imp}$, $\textsc{:and}$, $\textsc{:or}$, $\textsc{:all}$, $\textsc{:some}$ e $\textsc{:eq}$
 \item Cada constante no vocabulário da SRL também é uma constante no vocabulário da URL.
-\item Para cada predicado $n$-ário $\textsc{pred}$ na SRL, $\textsc{:pred}$ é um predicado $(n+1)$-ário na URL.
+\item Para cada predicado $n$-ário $pred$ na SRL, $\textsc{:pred}$ é um predicado $(n+1)$-ário na URL.
 \end{enumerate}
 
 A lógica de primeira ordem utilizada é \textit{tipada}, havendo três tipos. O primeiro deles é o dos \textit{buracos}, cujas variáveis serão denotadas por $h$, $h'$, $h_1$, $h_2$, etc. O segundo é o tipo dos \textit{rótulos}, cujas variáveis são escritas $l$, $l'$, $l_1$, etc. Cada rótulo marcará um vértice na árvore que não é um buraco, sendo um modo de se referir aos símbolos da SRL. Por fim, o terceiro tipo é o das \textit{meta-variáveis}, escritos $v$, $v'$, $v_1$, $v_2$, etc. As meta-variáveis têm a função de se referir às variáveis da SRL.
@@ -265,22 +298,89 @@ Observe aqui que o espaço a mais criado pela subida de aridade nos predicados e
 
 É de ser notado que nem todos os conectivos e formas da lógica da primeira ordem foram empregados nesta definição. Na realidade, apenas são fórmulas conjuntos pequenos de formas conjuntivas e existencialmente fechadas. Entretanto, esse fragmento da linguagem é suficiente para nossos propósitos. \cite[p.~131]{BlackburnBos:2005}
 
-Podemos avançar então para um exemplo. Consideremos a frase \expreng{Mia does not love a man}. Uma interpretação é aquela na qual Mia não ama um homem específico, que pode ser formalizada como $\exists x: man(x) \land \neg love(mia,x)$. Outra, é aquela na qual Mia não ama homem algum, isto é, $\neg (\exists x: man(x) \land love(mia,x))$. Montando a árvore de cada interpretação, teremos:
+Podemos avançar então para um exemplo. Consideremos a frase \expreng{Mia does not love a man}. Uma interpretação é aquela na qual Mia não ama um homem específico, que pode ser formalizada como $\exists x: man(x) \land \neg love(mia,x)$. Outra, é aquela na qual Mia não ama homem algum, isto é, $\neg (\exists x: man(x) \land love(mia,x))$. Suas árvores são:
 
-\dots
+\begin{center}
+\begin{tikzpicture}[sibling distance=25mm]
+\node at (-4,0) {$\exists x$}
+ child {node {$\land$}
+  child {node {$man(x)$}}
+  child {node {$\neg$}
+   child {node {$love(mia,x)$}}}};
 
-A representação subespecificada para esta frase é:
+\node at (4,0) {$\neg$}
+ child {node {$\exists x$}
+  child {node {$\land$}
+   child {node {$man(x)$}}
+   child {node {$love(mia,x)$}}}};
+\end{tikzpicture}
+\end{center}
 
-\dots
+Já a representação subespecificada busca capturar o que há em comum entre as árvores possíveis. A USR desta frase é: $\exists h_0 \exists h_1 \exists h_2 \exists l_1 \exists l_2 \exists l_3 \exists l_4 \exists l_5 \exists v_1 ({l_1:\textsc{not}(h_1)} \land l_2\textsc{:love}(mia,v_1) \land l_3\textsc{:some}(v_1,l_4) \land l_4\textsc{:and}(l_5, h_2) \land l_5\textsc{:man}(v_1))$. Porém, as USRs se tornam melhor compreensíveis através de sua representação gráfica, estando abaixo aquela relativa à nossa frase considerada:
 
-Podemos ver a intuição desta representação. As linhas pontilhados representam restrições de dominância entre buracos e nós. Por sua vez, as linhas preenchidas mostram quais nós são pais de outros. A relação de parentesco também representa dominância: se um nó é pai de outro, é certo que o filho não pode ter escopo mais externo que o pai, uma vez que deve ser subfórmula do mesmo. Entretanto, neste caso a posição está fixa: necessariamente a relação de parentesco será aquela. Por sua vez, na dominância entre buracos e nós, não é isto que occore. Basta que o nó dominado esteja no escopo do nó dominante, não necessariamente sendo filho do mesmo. Ou seja, basta ser descendente.
+\begin{center}
+\begin{tikzpicture}
+[node distance = 3cm, auto, thick, inner sep=2mm, def/.style={circle,draw}]
 
-Agora, a nossa análise de frases é feita ainda decompondo sintaticamente, e então, para cada termo, criando uma representação na forma de uma USR. Ainda utilizamos o cálculo lambda para fazer combinações de expressões. A representação final da frase é feita por combinações das representações das partes que as constituem. Por exemplo, a representação para as palavras \dots é \dots
+\node (h0) at ( 0,0)  {$h_0$};
+\node (l1) at ( 2,-2) {$l_1: \neg h_1$} edge [dotted] (h0);
+\node (h1) at (2.3,-2) {};
+\node (l2) at ( 2,-4) {$l_2: love(mia, v_1)$} edge [dotted] (h1);
+\node (l3) at ( -3,-2) {$l_3: \exists v_1(l_4)$} edge [dotted] (h0);
+\node (l4ref) at (-2.2,-2) {};
+\node (l4) at (-3,-3) {$l_4: l_5 \land h_2$} edge [<-] (l4ref);
+\node (l5ref) at (-3,-3.1) {};
+\node (h2) at (-2.3,-3) {} edge [dotted] (l2);
+\node (l5) at (-5,-4) {$l_5: man(v_1)$} edge [<-] (l5ref);
 
-Agora, possuindo a USR da frase, precisamos ser capazes de construir as árvores possíveis. Isso é feito por meio de \textit{encaixes}. Para cada buraco, achamos um rótulo candidato para preenchê-lo: este rótulo será encaixado no buraco. Mais formalmente, um encaixe é uma função injetiva dos buracos aos rótulos. Entretanto, nem todo encaixe nos satisfaz. Evidentemente, queremos satisfazer duas condições: queremos que o resultados seja uma árvore (portanto, acíclica e conexa), bem como queremos que, se existe uma restrição de dominância de um buraco $H$ sobre um rótulo $L$ (ou seja, se $L \leq H$), então $L$ será descendente de $H$ na árvore.
 
-Para o exemplo que vimos, dois encaixes são possíveis: \dots
+%\draw [<->] (dir) to (ob/3);
+%\draw [->] (ob/2) to (lib);
+%
+%\end{tikzpicture}
+%\end{center}
 
-Assim, duas árvores são formadas, cada uma gerando uma interpretação possível:
+\end{tikzpicture}
+\end{center}
 
-\dots
+
+Podemos ver a intuição desta representação. É criado um buraco $h_0$ correspondente ao nó mais alto da árvore. As linhas pontilhadas representam restrições de dominância entre buracos e nós. Por sua vez, as linhas preenchidas mostram quais nós são pais de outros. A relação de parentesco também representa dominância: se um nó é pai de outro, é certo que o filho não pode ter escopo mais externo que o pai, uma vez que deve ser subfórmula do mesmo. Entretanto, neste caso a posição está fixa: necessariamente a relação de parentesco será aquela. Por sua vez, na dominância entre buracos e nós, não é isto que occore. Basta que o nó dominado esteja no escopo do nó dominante, não necessariamente sendo filho do mesmo. Ou seja, basta ser descendente.
+
+Agora, a nossa análise de frases é feita ainda decompondo sintaticamente, e então, para cada termo, criando uma representação na forma de uma USR. Ainda utilizamos o cálculo lambda para fazer combinações de expressões. A representação final da frase é feita por combinações das representações das partes que as constituem. Por exemplo, a representação para o determinante \expreng{a} é:
+ $\lambda x. \lambda y. \lambda h. \lambda l. \exists h_1 \exists l_1 \exists l_2 \exists l_3 \exists v_1 (l2\textsc{:all}(v_1,l_3, \land l3 \textsc{:and}(l_1,h_1) \land l \leq h_1 \land l_2 \leq h \land x@v_1@h@l_1 \land y@v_1@h@l))$
+
+Por sua vez, para o substantivo \expreng{woman} é: $\lambda v. \lambda h. \lambda l. (l\textsc{:woman}(v) \land l \leq h  )$
+
+Assim, o sintagma nominal $\expreng{a woman}$ fica, aplicando a segunda representação na primeira e beta-reduzindo: $\lambda y. \lambda h. \lambda l. \exists h_1 \exists l_1 \exists l_2 \exists l_3 \exists v_1 (l2\textsc{:all}(v_1,l_3, \land l3 \textsc{:and}(l_1,h_1) \land l \leq h_1 \land l_2 \leq h \land l_1\textsc{:woman}(v_1) \land l_1 \leq h \land y@v_1@h@l))$.
+
+Definindo as USRs para cada função sintática e o modo de combiná-las, obtemos a USR da frase. Com isto em mãos, precisamos ser capazes de construir as árvores possíveis. Isso é feito por meio de \textit{encaixes}\footnote{Em inglês, o termo usado é \expreng{plug}, por isso a letra utilizada é $P$.}. Para cada buraco, achamos um rótulo candidato para preenchê-lo: este rótulo será encaixado no buraco. Mais formalmente, um encaixe é uma função injetiva dos buracos aos rótulos. Entretanto, nem todo encaixe nos satisfaz. Evidentemente, queremos satisfazer duas condições: queremos que o resultados seja uma árvore (portanto, acíclica e conexa), bem como queremos que, se existe uma restrição de dominância de um buraco $H$ sobre um rótulo $L$ (ou seja, se $L \leq H$), então $L$ será descendente de $H$ na árvore.
+
+Para o exemplo que vimos, dois encaixes são possíveis: $P_1(h_0) = l_1, P_1(h_1) = l_3, P_1(h_2) = l_2$ e $P_2(h_0) = l_3, P_2(h_1) = l_2, P_2(h_2) = l_1$.
+
+Assim, duas árvores são formadas, cada uma gerando uma interpretação possível. Pelo encaixe $P_1$ obtemos:
+
+\begin{center}
+\begin{tikzpicture}[sibling distance=50mm]
+\node {{$h_0$}}
+  child {node {$l_1: \neg h_1$}
+   child {node {$l_3: \exists v_1(l_4)$}
+    child {node {$l_4: l_5 \land h_2$}
+     child {node {$l_5: man(v_1)$}}
+     child {node {$l_2: love(mia,v_1)$}}}}};
+\end{tikzpicture}
+\end{center}
+
+Já pelo $P_2$, temos:
+
+\begin{center}
+\begin{tikzpicture}[sibling distance = 50mm]
+\node {{$h_0$}}
+ child {node {$l_3: \exists v_1(l_4)$}
+  child {node {$l_4: l_5 \land h_2$}
+   child {node {$l_5: man(v_1)$}}
+   child {node {$l_1: \neg h_1$}
+    child {node {$l_2: love(mia,v_1)$}}}}};
+\end{tikzpicture}
+\end{center}
+
+Com efeito, estas são de fato as árvores que havíamos construído antes, para cada interpretação.
