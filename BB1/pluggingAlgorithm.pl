@@ -124,8 +124,8 @@ plugHoles([H|Holes],Labels1,Plugs):-
 admissiblePlugging(Plugs):-
    retractall(plug(_,_)), 
    findall(X,(memberList(X,Plugs),assert(X)),_),
-   \+ dom(A,A).
-   %\+ ( parent(A,B), parent(A,C), \+ B=C, dom(B,D), dom(C,D)).
+   \+ dom(A,A),
+   \+ ( parent(A,B), parent(A,C), \+ B=C, dom(B,D), dom(C,D)).
    
  
 /*========================================================================
