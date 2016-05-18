@@ -20,6 +20,8 @@
     59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 *************************************************************************/
+:- consult('../wordnet/wn_s.pl'). % For use with Wordnet
+:- use_module(readLine,[checkWords/2]).
 
 /*========================================================================
    Determiners
@@ -34,6 +36,12 @@ lexEntry(det,[syntax:[which],mood:int,type:wh]).
 /*========================================================================
    Nouns
 ========================================================================*/
+
+lexEntry(noun,[symbol:Sym,syntax:[Expression]]) :- % Wordnet
+    Ss_type = n,
+    s(Synset,W_num,Expression,Ss_type,_,_), %s(Synset,W_num,Word,Ss_type,_,_),
+    %checkWords([Word],[Expression]),
+    atom_concat(Expression,Synset,Sym).
 
 lexEntry(noun,[symbol:animal,syntax:[animal]]).
 lexEntry(noun,[symbol:beverage,syntax:[beverage]]).
