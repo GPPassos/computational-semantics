@@ -142,18 +142,20 @@ curtUpdate(Input,Moves,run):-
    consistentReadings(Readings,[]-ConsReadings,[]-Models),
    (
       ConsReadings=[],
+      combine(ConsReadings,CombinedReadings), % Botamos aqui para diferenciar quando não foi calculado o InfReadings
       Moves=[contradiction]
    ;
       \+ ConsReadings=[],
-      informativeReadings(ConsReadings,[]-InfReadings),   
+      informativeReadings(ConsReadings,[]-InfReadings),
+      combine(InfReadings,CombinedReadings), %idem   
       (
          InfReadings=[],
          Moves=[obvious]
       ;  
-         \+ InfReadings=[],
+         \+ InfReadings=[],% print(InfReadings),
          Moves=[accept]
       ),
-      combine(ConsReadings,CombinedReadings), 
+      %combine(ConsReadings,CombinedReadings),  % Por que não usar InfReadings? 
       updateReadings(CombinedReadings),
       updateModels(Models)
    ).
@@ -165,12 +167,19 @@ curtUpdate(_,[noparse],run).
    Combine New Utterances with History
 ========================================================================*/
 
+% Alterei código abaixo para lidar com a situação em que InfReadings = []
+
 combine(New,New):-
    readings([]).
 
 combine(Readings,Updated):-
    readings([Old|_]),
-   findall(and(Old,New),memberList(New,Readings),Updated).
+    (
+        \+ Readings = [],
+        findall(and(Old,New),memberList(New,Readings),Updated)
+    ;
+        Updated = [Old]
+    ).
 
 
 /*========================================================================
@@ -232,7 +241,7 @@ informative([Old|_],New):-
    backgroundKnowledge(and(Old,New),BK),
    DomainSize=15,
    callTPandMB(not(and(and(BK,Old),not(New))),and(and(BK,Old),not(New)),DomainSize,Proof,Model,Engine),
-   format('~nMessage (informativity checking): ~p found a result.',[Engine]),
+   format('~nMessage (informativity checking): ~p found a result.',[Engine]),% format('\n New: ~p \t', [New]), print(Proof),
    \+ Proof=proof, Model=model([_|_],_).
 
 informative([],New):-

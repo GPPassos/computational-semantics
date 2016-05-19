@@ -37,10 +37,12 @@ lexEntry(det,[syntax:[which],mood:int,type:wh]).
    Nouns
 ========================================================================*/
 
-lexEntry(noun,[symbol:Sym,syntax:[Expression]]) :- % Wordnet
+lexEntry(noun,[symbol:Sym,syntax:Syn]) :- % Wordnet
     Ss_type = n,
-    s(Synset,W_num,Expression,Ss_type,_,_), %s(Synset,W_num,Word,Ss_type,_,_),
-    %checkWords([Word],[Expression]),
+    s(Synset,_,Word,Ss_type,_,_),%s(Synset,_,Expression,Ss_type,_,_),
+    downcase_atom(Word,Word2),
+    atomic_list_concat(Syn,' ',Word2),
+    checkWords([Word],[Expression]),
     atom_concat(Expression,Synset,Sym).
 
 lexEntry(noun,[symbol:animal,syntax:[animal]]).

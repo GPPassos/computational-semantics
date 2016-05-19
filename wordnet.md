@@ -8,3 +8,5 @@ returns `Meronyms = [pack]` on one case. However, pack isn't a meronym of dog, b
 `Search = 'pack', s(Synset_id,_,Search,_,_,_), g(Synset_id,Gloss), mm(Synset_id,MmSense),findall(X,s(Mmsense,_,X,_,_,_),Meronyms)`
 
 The above query won't return `dog` in `Meronyms`.
+
+- In curt files (example: `knowledgeableCurt.pl`), why do we use `combine(ConsReadings,CombinedReadings),` instead of `combine(InfReadings,CombinedReadings)`? That way we wouldn't add non-informative formulas!

@@ -33,6 +33,7 @@
 
 :- use_module(situationalKnowledge,[situationalKnowledge/1]).
 
+:- use_module(wordnetKnowledge,[wordnetKnowledge/3]).
 
 /*========================================================================
    Declare Dynamic Predicates
@@ -81,6 +82,9 @@ computeBackgroundKnowledge(Symbols,Formula):-
               assert(knowledge(F))),_),
    findall(_,(situationalKnowledge(F),
               assert(knowledge(F))),_),
+   findall(_,(memberList(symbol(Symbol,Arity),Symbols),
+              wordnetKnowledge(Symbol,Arity,F),
+              assert(knowledge(F))),_), % Notice that I've put memberlist before wordnetKnowledge.
    knowledge2formula(Formula).
 
 

@@ -26,7 +26,8 @@
                          info/0,
                          kellerStorage/0,
 			 kellerStorage/2,
-			 kellerStorageTestSuite/0]).
+			 kellerStorageTestSuite/0,
+             s/6]).
 
 :- use_module(readLine,[readLine/1]).
 
