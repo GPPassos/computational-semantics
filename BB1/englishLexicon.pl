@@ -40,9 +40,10 @@ lexEntry(det,[syntax:[which],mood:int,type:wh]).
 lexEntry(noun,[symbol:Sym,syntax:Syn]) :- % Wordnet
     Ss_type = n,
     s(Synset,_,Word,Ss_type,_,_),%s(Synset,_,Expression,Ss_type,_,_),
-    downcase_atom(Word,Word2),
-    atomic_list_concat(Syn,' ',Word2),
-    checkWords([Word],[Expression]),
+    Expression = Word, Syn = [Word], call(((Synset \== 100001740), ! ; format('passei! ~p',[Synset]), !)), % Por que ele passa tantas vezes por aqui?
+%    downcase_atom(Word,Word2),
+%    atomic_list_concat(Syn,' ',Word2),
+%    checkWords([Word],[Expression]),
     atom_concat(Expression,Synset,Sym).
 
 lexEntry(noun,[symbol:animal,syntax:[animal]]).
