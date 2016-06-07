@@ -44,6 +44,15 @@ equivReads(X,Y,Sems) :-
     Formula = and(imp(X,Y),imp(Y,X)),
     callTPandMB(Formula,not(Formula),100,Proof,Model,Engine).
 
+wordnetLexicon(L,SymList) :-
+    findall(Sym,findWordnetLex(L,Sym),SymList)
+
+findWordnetLex(L,Sym) :-
+    s(Synset,_,Expression,n,_,_),
+    member(Expression,L),
+    atom_concat(Expression,Synset,Sym),
+    assert(lexEntry(noun,[symbol:Sym,syntax:Syn])).
+
 /*
 interp:-
    A1 = [okay(A),bo(lam(B,some(C,and(and(piercing(C),some(D,and(needle(D),doneWith(C,D)))),app(B,C)))),A)],

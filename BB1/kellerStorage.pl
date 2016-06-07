@@ -53,6 +53,11 @@
 
 :- [semRulesKeller].
 
+/* Used for Wordnet */
+:- consult('../wordnet/wn_s.pl').
+:- use_module(readLine,[checkWords/2]).
+/* end */
+
 
 /*========================================================================
    Driver Predicates
@@ -60,13 +65,29 @@
 
 kellerStorage:-
    readLine(Sentence),
+   wordnetLexicon(Sentence,_),
    setof(Sem,t([sem:Sem],Sentence,[]),Sems1),
    filterAlphabeticVariants(Sems1,Sems2),
    printRepresentations(Sems2).
 
 kellerStorage(Sentence,Sems2):-
+   wordnetLexicon(Sentence,_),
    setof(Sem,t([sem:Sem],Sentence,[]),Sems1),
    filterAlphabeticVariants(Sems1,Sems2).
+
+/* Predicates added in order to use wordnet words */
+
+wordnetLexicon(L,SymList) :-
+    findall(Sym,findWordnetLex(L,Sym),SymList).
+
+findWordnetLex(L,Sym) :-
+    s(Synset,_,Expression,n,_,_),
+    member(Expression,L),
+    atom_concat(Expression,Synset,Sym),
+    Syn = Expression,
+    assert(lexEntry(noun,[symbol:Sym,syntax:[Syn]])).
+
+/* end */
 
 
 /*========================================================================

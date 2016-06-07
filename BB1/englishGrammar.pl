@@ -310,4 +310,3 @@ noun([sem:Sem])-->
    {lexEntry(noun,[symbol:Sym,syntax:Word])},
    Word,
    {semLex(noun,[symbol:Sym,sem:Sem])}.
-% Notice this cut. It was used in other to 

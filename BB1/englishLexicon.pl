@@ -20,8 +20,7 @@
     59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 *************************************************************************/
-:- consult('../wordnet/wn_s.pl'). % For use with Wordnet
-:- use_module(readLine,[checkWords/2]).
+:- dynamic lexEntry/2.
 
 /*========================================================================
    Determiners
@@ -37,6 +36,8 @@ lexEntry(det,[syntax:[which],mood:int,type:wh]).
    Nouns
 ========================================================================*/
 
+/* Added in order to use Wordnet, but disabled. At the moment, Wordnet is used by wordnetLexicon/2 and findWordnetLex/2, in kellerStorage.pl (and soon to be added to holeSemantics.pl) */
+/*
 lexEntry(noun,[symbol:Sym,syntax:Syn]) :- % Wordnet
     Ss_type = n,
     s(Synset,_,Word,Ss_type,_,_),%s(Synset,_,Expression,Ss_type,_,_),
@@ -44,7 +45,7 @@ lexEntry(noun,[symbol:Sym,syntax:Syn]) :- % Wordnet
 %    downcase_atom(Word,Word2),
 %    atomic_list_concat(Syn,' ',Word2),
 %    checkWords([Word],[Expression]),
-    atom_concat(Expression,Synset,Sym).
+    atom_concat(Expression,Synset,Sym).*/
 
 lexEntry(noun,[symbol:animal,syntax:[animal]]).
 lexEntry(noun,[symbol:beverage,syntax:[beverage]]).
