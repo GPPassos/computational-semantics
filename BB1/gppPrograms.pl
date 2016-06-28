@@ -53,6 +53,19 @@ findWordnetLex(L,Sym) :-
     atom_concat(Expression,Synset,Sym),
     assert(lexEntry(noun,[symbol:Sym,syntax:Syn])).
 
+% Exercise 6.1.3 -- Start
+
+    % Everything
+
+
+    % Nobody
+
+
+    % Nothing
+
+
+% Exercise 6.1.3 -- End
+
 /*
 interp:-
    A1 = [okay(A),bo(lam(B,some(C,and(and(piercing(C),some(D,and(needle(D),doneWith(C,D)))),app(B,C)))),A)],

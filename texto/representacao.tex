@@ -1,21 +1,22 @@
 %Hole Semantics: Semântica de Vãos? Semântica de Buracos? Semântica de Lacunas?
 
-\subsection{Introdução}
+\subsection{Considerações Iniciais}
 
-Desejamos associar a cada expressão de linguagem natural um significado formal, simbólico. Além disso, desejamos fazê-lo de modo algorítmico, que possa ser reproduzido por um computador.
-\todo{Conferir se falo de lógica aqui ou se puxo isso para a introdução.}
+Desejamos associar a cada expressão de linguagem natural um significado formal, simbólico. Além disso, desejamos fazê-lo de modo algorítmico, que possa ser reproduzido por um computador. Portanto, um primeiro passo importante é encontrar um modo adequado de representar o significado, que satisfaça nossos objetivos lingüísticos, bem como que seja manipulável por nossas ferramentas computacionais.
 
 A linguagem formal que utilizaremos para representar o significado de frases é \textit{lógica de primeira ordem}. \citet{Jurafsky:2009} apresentam como propriedades interessantes para representações: verificabilidade, não-ambigüidade, existência de uma forma canônica, capacidade de inferência, uso de variáveis e expressividade. Todas estas são possuídas pela lógica de primeira ordem, ao menos até certo ponto. Além disso, é um sistema bem compreendido e bastante flexível.
 
+\todo[inline]{Adicionar ``Iremos apresentar formalmente esta lógica na seção seguinte.'', bem como escrever esta seção seguinte.}
+
 %Também uma interessante propriedade da lógica de primeira ordem é sua relativa intuitividade. Bastando explicar o que significam os símbolos conectivos (como $\land$ (significando \expr{e}) e $\rightarrow$ (significando \expr{se \dots então \dots})), bem como os quantificadores ($\forall$ (\expr{para todo})  e $\exists$ (\expr{existe}), uma expressão formal em lógica é compreensível . %\todo{é verdade?}
 
-Ainda que tenhamos escolhido a lógica de primeira ordem para ser a linguagem das representações semânticas para frases, isto não nos informa qual deve ser a representação semântica de palavras e expressões menores. Talvez algumas poderiam ser feitas por termos, mas não está de todo claro qual seria o significado de uma expressão como \expreng{to run} (\expr{correr}) ou \expreng{that walks} (\expr{que anda}).
+Ainda que tenhamos escolhido a lógica de primeira ordem para ser a linguagem das representações semânticas para frases, isto não nos informa qual deve ser a representação semântica de palavras e expressões menores. Fórmulas desta lógica definem sentenças completas (no máximo, abertas à interpretação de variáveis livres). Talvez algumas possibilidades poderiam ser feitas através de termos, mas não está de todo claro qual seria o significado de uma expressão como \expreng{to run} (\expr{correr}) ou \expreng{that walks} (\expr{que anda}).
 
-Em nossos pressupostos, adotamos o \textit{Princípio da Composicionalidade}. Segundo o mesmo, o significado de expressões complexas é função das expressões mais simples que a compõem. Em um exemplo como \expreng{Caim kills Abel}, isto nos informa que o significado desta frase depende do significado de \expreng{Caim}, \expreng{kills} e \expreng{Abel}. Entretanto, isto não nos diz como funciona esta dependência, ou a função que leva o significado das expressões simples ao da expressão complexa.
+Em nossos pressupostos, adotaremos o \textit{Princípio da Composicionalidade}, usualmente atribuído a Gottlob Frege. \cite[p.~94]{BlackburnBos:2005} Segundo o mesmo, o significado de expressões complexas é função das expressões mais simples que a compõem. Em um exemplo como \expreng{Caim kills Abel}, isto nos informa que o significado desta frase depende do significado de \expreng{Caim}, \expreng{kills} e \expreng{Abel}. Entretanto, isto não nos diz como funciona esta dependência, ou a função que leva o significado das expressões simples ao da expressão complexa.
 
-Por exemplo, podemos entender que o significado de \expreng{kills} é o predicado binário \code{kill(\dots , \dots)}, onde convencionamos que o primeiro argumento é o agressor (isto é, aquele que mata) e o segundo argumento é a vítima (aquele que é morto). Também podemos entender os significados de \expreng{Caim} e \expreng{Abel} como as constantes \code{caim} e \code{abel}, respectivamente. Assim, apesar de \code{kill(abel,caim} ser formada com o significado destes três termos, respeitando a composicionalidade, esta não é a expressão que queremos, e sim \code{kill(caim,abel)}.
+Por exemplo, podemos entender que o significado de \expreng{kills} é o predicado binário \code{kill(\dots , \dots)}, onde convencionamos que o primeiro argumento é o agressor (isto é, aquele que mata) e o segundo argumento é a vítima (aquele que é morto). Também podemos entender os significados de \expreng{Caim} e \expreng{Abel} como as constantes \code{caim} e \code{abel}, respectivamente. Assim, apesar de \code{kill(abel,caim)} ser formada com o significado destes três termos, respeitando a composicionalidade, esta não é a expressão que queremos, e sim \code{kill(caim,abel)}.
 
-O que nos falta é a \textit{sintaxe}. A sintaxe é o conjunto de regras e processos que organizam a estrutura de frases. \todo[inline]{achar uma boa referência} Assim, as palavras em uma frase existem em relação a uma certa estrutura, que é essencial para capturar o significado. No inglês, com a estrutura \textit{Sujeito - Verbo - Predicado}, entendemos que \expreng{Caim kills Abel} significa \code{kill(caim,abel)}, e não \code{kill(abel,caim)}.
+O que nos falta é a \textit{sintaxe}. A sintaxe é o conjunto de regras e processos que organizam a estrutura de frases. \todo[inline]{achar uma boa referência} Assim, as palavras em uma frase existem em relação a uma certa estrutura, que é essencial para capturar o significado. No inglês, com a estrutura usual de \textit{Sujeito - Verbo - Predicado}, entendemos que \expreng{Caim kills Abel} significa \code{kill(caim,abel)}, e não \code{kill(abel,caim)}.
 
 O foco deste trabalho não é na sintaxe, de modo que utilizamos uma sintaxe simples: a gramática é implementada pelo mecanismo de Gramática de Cláusulas Definidas (\textit{Definite Clause Grammar} - DCG). A análise sintática é feita na forma de uma árvore cujos nós que são folhas são categorias sintáticas básicas (tais como sujeito (\teng{noun}), verbo transitivo (\teng{transitive verb}) e quantificador (\teng{quantifier}, considerado caso particular de \teng{determiner}). Já os nós que não são folhas representam categorias sintáticas complexas (tais como sintagma nominal (\teng{noun phrase}) ou sintagma verbal (\teng{verb phrase}). \cite[p.~58]{BlackburnBos:2005} %Fossem apenas as classes gramaticais, seria uma Gramática Livre de Contexto. Porém, a Gramática de Cláusulas Definidas aceita o uso de algumas restrições, indo além de tal formalismo,como restrições de concordância de número. %Talvez mesmo assim seja possível converter em uma Context Free Grammar (CFG).
 
@@ -33,7 +34,29 @@ Aqui, temos as classes sintáticas:\\
 \teng{VP} -- \teng{verb phrase} (sintagma verbal)\\
 \teng{TV} -- \teng{transitive verb} (verbo transitivo)
 
-A decomposição parece lingüisticamente razoável, bem como útil para a compreensão do significado. Resta saber, assim, como podemos elaborar a construção da semântica de uma frase completa a partir de tal análise sintática e dos significados dos termos mais elementares. Essa idéia nos seguirá pelo restante do trabalho, permitindo separar nossas análises, bem como nossos códigos, pela seguinte idéia: a sintaxe da nossa linguagem natural objeto pode ser separada em léxico, a análise de palavras ou expressões em si, como unidades básicas; e em gramática, a análise de como as classes sintáticas se compõem para formar novas, bem como outras relações de concordância (como concordância de gênero ou de número). Já a semântica também pode ser tratada a nível de léxico, em que cada classe sintática básica terá um modelo próprio de interpretação semântica; bem como a nível de gramática, em que a semântica de uma expressão complexa será formada por uma forma de composição entre as semânticas das expressões que a constituem.
+A decomposição parece lingüisticamente razoável, bem como útil para a compreensão do significado. Resta saber, assim, como podemos elaborar a construção da semântica de uma frase completa a partir de tal análise sintática e dos significados dos termos mais elementares. Portanto, devemos construir nossa gramática.
+
+%Essa idéia nos seguirá pelo restante do trabalho, permitindo separar nossas análises, bem como nossos códigos, pelo seguinte norte: a sintaxe da nossa linguagem natural objeto pode ser separada em léxico -- a análise de palavras ou expressões em si, como unidades básicas -- e em regras gramaticais -- a análise de como as classes sintáticas se compõem para formar novas, bem como outras relações de concordância (como concordância de gênero ou de número). Já a semântica também pode ser tratada a nível de léxico -- em que cada classe sintática básica terá um modelo próprio de interpretação semântica -- bem como a nível de regras -- em que a semântica de uma expressão complexa será formada por uma forma de composição entre as semânticas das expressões que a constituem.
+
+\subsection{Arquitetura da Gramática} \label{sec:arquitetura}
+
+	\citet[p.~86]{BlackburnBos:2005} apontam três princípios a serem observados na construção da gramática: modularidade -- divisão da gramática em componentes com finalidades bem definidas e que interagem de modo transparente --, extensibilidade -- ser fácil de complementá-la -- e reusabilidade -- capacidade de reaproveitar grandes partes da gramática, mesmo alterando as representações semânticas.
+	
+	Para seguí-los, o método usado foi dividir a gramática segundo dois critérios: se o componente trata do léxico ou de regras gramaticais (isto é, combinando expressões para criar outras maiores) e se é sintático ou semântico. Assim, um dos componentes da gramática é um léxico que enumera as palavras e expressões aceitas, afirmando determinadas propriedades. Um segundo trata da semântica dos léxicos, isto é, da representação semântica dada a palavras individualmente ou expressões básicas (aqui, isto é principalmente feito se utilizando da classificação sintática, isto é, a classe sintática e a palavra em si determinam a semântica). Um terceiro item trata das regras da sintaxe, isto é, da classificação sintática de expressões complexas a partir da classificação de termos menos (incluindo aspectos como concordância de gênero ou número). Ademais, um quarto componente trata das regras semânticas, isto é, como combinar o significado de expressões menores para formar o significado de expressões maiores. Por fim, utilizamos uma quinta parte que se utiliza de todas as anteriores para fazer a relação entre o texto recebido e a representação semântica desejada. Um exemplo pode ser visto na tabela \ref{curt-gramatica}, tratando do exemplo da representação semântica mais simples, a do cálculo lambda, que veremos a seguir.
+	
+	\begin{table}[h]
+		\centering
+		\begin{tabular}{|c|c|c|}
+				\hline \textsc{lambda.pl} & sintaxe & semântica \\ 
+				\hline léxico & \textsc{englishLexicon.pl} & \textsc{semLexLambda.pl} \\ 
+				\hline gramática & \textsc{englishGrammar.pl} & \textsc{semRulesLambda.pl} \\ 
+				\hline 
+		\end{tabular}
+		\caption{Gramática para semântica lambda}
+		\label{curt-gramatica}
+	\end{table}
+		 
+	Ao alterarmos a representação semântica, de fato nossas principais alterações estarão nos componentes semânticos.
 
 \subsection{Cálculo Lambda}
 

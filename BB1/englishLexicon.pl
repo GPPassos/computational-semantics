@@ -22,6 +22,11 @@
 *************************************************************************/
 :- dynamic lexEntry/2.
 
+/* Used for Wordnet
+:- consult('../wordnet/wn_s.pl').
+:- use_module(readLine,[checkWords/2]).
+*/
+
 /*========================================================================
    Determiners
 ========================================================================*/
@@ -30,6 +35,12 @@ lexEntry(det,[syntax:[every],mood:decl,type:uni]).
 lexEntry(det,[syntax:[a],mood:decl,type:indef]).
 lexEntry(det,[syntax:[the],mood:decl,type:def]).
 lexEntry(det,[syntax:[which],mood:int,type:wh]).
+
+% Exercise 6.1.3 -- Start
+
+lexEntry(det,[syntax:[no],mood:decl,type:neg]).
+
+% Exercise 6.1.3 -- End 
 
 
 /*========================================================================
@@ -40,11 +51,10 @@ lexEntry(det,[syntax:[which],mood:int,type:wh]).
 /*
 lexEntry(noun,[symbol:Sym,syntax:Syn]) :- % Wordnet
     Ss_type = n,
-    s(Synset,_,Word,Ss_type,_,_),%s(Synset,_,Expression,Ss_type,_,_),
-    Expression = Word, Syn = [Word], call(((Synset \== 100001740), ! ; format('passei! ~p',[Synset]), !)), % Por que ele passa tantas vezes por aqui?
-%    downcase_atom(Word,Word2),
-%    atomic_list_concat(Syn,' ',Word2),
-%    checkWords([Word],[Expression]),
+    s(Synset,_,Word,Ss_type,_,_),
+    downcase_atom(Word,Word2),
+    atomic_list_concat(Syn,' ',Word2),
+    checkWords([Word2],[Expression]),
     atom_concat(Expression,Synset,Sym).*/
 
 lexEntry(noun,[symbol:animal,syntax:[animal]]).
@@ -99,6 +109,7 @@ lexEntry(pn,[symbol:esmarelda,syntax:[esmarelda]]).
 lexEntry(pn,[symbol:honey_bunny,syntax:[honey,bunny]]).
 lexEntry(pn,[symbol:jimmy,syntax:[jimmy]]).
 lexEntry(pn,[symbol:jody,syntax:[jody]]).
+lexEntry(pn,[symbol:john,syntax:[john]]).
 lexEntry(pn,[symbol:jules,syntax:[jules]]).
 lexEntry(pn,[symbol:lance,syntax:[lance]]).
 lexEntry(pn,[symbol:marsellus,syntax:[marsellus]]).
@@ -106,6 +117,7 @@ lexEntry(pn,[symbol:marsellus,syntax:[marsellus,wallace]]).
 lexEntry(pn,[symbol:marvin,syntax:[marvin]]).
 lexEntry(pn,[symbol:mia,syntax:[mia]]).
 lexEntry(pn,[symbol:mia,syntax:[mia,wallace]]).
+lexEntry(pn,[symbol:paul,syntax:[paul]]).
 lexEntry(pn,[symbol:pumpkin,syntax:[pumpkin]]).
 lexEntry(pn,[symbol:thewolf,syntax:[the,wolf]]).
 lexEntry(pn,[symbol:vincent,syntax:[vincent]]).
@@ -119,6 +131,15 @@ lexEntry(pn,[symbol:yolanda,syntax:[yolanda]]).
 
 lexEntry(qnp,[symbol:person,syntax:[who],mood:int,type:wh]).
 lexEntry(qnp,[symbol:thing,syntax:[what],mood:int,type:wh]).
+
+% Exercise 6.1.3 -- Start
+
+lexEntry(qnp,[symbol:thing,syntax:[everything],mood:decl,type:uni]).
+lexEntry(qnp,[symbol:thing,syntax:[nothing],mood:decl,type:neg]).
+lexEntry(qnp,[symbol:person,syntax:[everybody],mood:decl,type:uni]).
+lexEntry(qnp,[symbol:person,syntax:[nobody],mood:decl,type:neg]).
+
+% Exercise 6.1.3 -- End 
 
 
 /*========================================================================
@@ -227,9 +248,21 @@ lexEntry(tv,[symbol:shoot,syntax:[shot],inf:fin,num:sg]).
 lexEntry(tv,[symbol:shoot,syntax:[shoots],inf:fin,num:sg]).
 lexEntry(tv,[symbol:shoot,syntax:[shoot],inf:fin,num:pl]).
 
-/*Exercise 3.3.2*/
+% Exercise 3.3.2 -- Start
 lexEntry(tv,[symbol:doneWith,syntax:[is,done,with],inf:fin,num:sg]).
+% Exercise 3.3.2 -- End
 
+/*========================================================================
+   Ditransitive Verbs   --  Exercise 6.1.3
+========================================================================*/
+
+lexEntry(dv,[symbol:offer,syntax:[offer],inf:inf,num:sg]).
+lexEntry(dv,[symbol:offer,syntax:[offers],inf:fin,num:sg]).
+lexEntry(dv,[symbol:offer,syntax:[offer],inf:fin,num:pl]).
+
+lexEntry(dv,[symbol:give,syntax:[give],inf:inf,num:sg]).
+lexEntry(dv,[symbol:give,syntax:[gives],inf:fin,num:sg]).
+lexEntry(dv,[symbol:give,syntax:[give],inf:fin,num:pl]).
 
 /*========================================================================
    Copula

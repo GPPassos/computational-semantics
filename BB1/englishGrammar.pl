@@ -227,6 +227,14 @@ vp([coord:no,inf:Inf,num:Num,gap:[],sem:VP])--> %exercise 2.5.3
    pp([sem:PP]), 
    {combine(vp:VP,[cop:Cop,pp:PP])}.
 
+% Exercise 6.1.3 -- Start
+vp([coord:no,inf:I,num:Num,gap:[],sem:VP])-->
+   dv([inf:I,num:Num,sem:DV]),
+   np([coord:_,num:_,gap:[],sem:NP1]),
+   np([coord:_,num:_,gap:[],sem:NP2]),
+   {combine(vp:VP,[dv:DV,np:NP1,np:NP2])}.
+% Exercise 6.1.3 -- End
+
 /*========================================================================
    Prepositional Phrases
 ========================================================================*/
@@ -260,6 +268,13 @@ tv([inf:Inf,num:Num,sem:Sem])-->
    {lexEntry(tv,[symbol:Sym,syntax:Word,inf:Inf,num:Num])},
    Word,
    {semLex(tv,[symbol:Sym,sem:Sem])}.
+
+% Exercise 6.1.3 -- Start
+dv([inf:Inf,num:Num,sem:Sem])-->
+   {lexEntry(dv,[symbol:Sym,syntax:Word,inf:Inf,num:Num])},
+   Word,
+   {semLex(dv,[symbol:Sym,sem:Sem])}.
+% Exercise 6.1.3 -- End
 
 cop([inf:Inf,num:Num,sem:Sem])--> 
    {lexEntry(cop,[pol:Pol,syntax:Word,inf:Inf,num:Num])},

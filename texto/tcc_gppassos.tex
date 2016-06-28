@@ -1,14 +1,14 @@
 \documentclass[12pt, a4paper, twoside]{article}
-\usepackage[T1]{fontenc}
+%\usepackage[T1]{fontenc}
 \usepackage[utf8]{inputenc}
-\usepackage[brazil, english]{babel}  % adequacao para o portugues Brasil
-\usepackage[lmargin=3cm,rmargin=3cm,tmargin=2.5cm,bmargin=2.5cm]{geometry}
+\usepackage[english, brazil]{babel}  % adequacao para o portugues Brasil
+\usepackage[lmargin=3cm,rmargin=3cm,tmargin=2.5cm,bmargin=2.5cm,marginparwidth=2.5cm]{geometry}
 %\usepackage[top=2.5cm, bottom=2cm, left=3cm, right=2cm]{geometry}
 \usepackage{amsmath, amsthm,amsfonts,amssymb,amsxtra,empheq,marvosym}
 \usepackage{indentfirst}
 \usepackage[noload]{qtree}
 \usepackage{hyperref}
-\usepackage[disable]{todonotes}
+\usepackage[textwidth=\marginparwidth]{todonotes}
 
 \usepackage{wrapfig}
 \usepackage{graphicx}
@@ -19,6 +19,16 @@
 \usepackage{lipsum} %lorem ipsum
 \usepackage{framed} % cria boxes
 \usepackage{times}
+
+\usepackage{fancyvrb} % Verbatim fancy para exibir melhor códigos
+
+%\makeatletter
+%\newcommand{\verbatimfont}[1]{\def\verbatim@font{#1}} % Alterando a fonte do verbatim para exibir melhor códigos
+%\makeatother
+
+%\verbatimfont{\bf\rmfamily}
+
+\usepackage{color, soulutf8} % highligh com \hl
 
 %\usepackage{palatino} 
 
@@ -31,6 +41,7 @@
 
 %Comandos
 \newcommand{\todonow}[1]{\todo[color=blue!20]{#1}}
+\newcommand{\update}{\todo[color=yellow]{Atualizado}}
 \renewcommand{\baselinestretch}{1.5} 
 \setlength{\parindent}{1cm}
 
@@ -155,21 +166,33 @@ realizá-lo a não ser nos casos e para os fins autorizados pelo professor orien
 \newpage
 
 \section{Introdução}
-\todo{Não esquecer de dizer que a linguagem-objeto natural será o inglês}
+\todo[inline]{Trocar ``pp.X-Y'' por ``pp.X--Y'' nas citações}
+\todo[inline]{Colocar link para minha implementação e para os arquivos originais}
+
+\label{sec:intro}
+\input{introducao.tex}
+
 \newpage
 \section{Representação semântica}
 \label{sec:rep}
 \input{representacao.tex}
 
 \newpage
-\section{...}
+\section{Inferência}
+\label{sec:inf}
+
+\newpage
+
+\section{Curt -- Sistema de Diálogo e Wordnet}
+\input{curt}
+\label{sec:curt}
 
 \newpage
 \section{Conclusão}
-
+\label{sec:conclusao}
 
 \newpage
-\bibliographystyle{plainnat}
+\bibliographystyle{plainnat-br}
 \bibliography{tcc_gppassos}
 
 \end{document}

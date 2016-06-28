@@ -65,13 +65,13 @@
 
 kellerStorage:-
    readLine(Sentence),
-   wordnetLexicon(Sentence,_),
+%   wordnetLexicon(Sentence,_),
    setof(Sem,t([sem:Sem],Sentence,[]),Sems1),
    filterAlphabeticVariants(Sems1,Sems2),
    printRepresentations(Sems2).
 
 kellerStorage(Sentence,Sems2):-
-   wordnetLexicon(Sentence,_),
+%   wordnetLexicon(Sentence,_),
    setof(Sem,t([sem:Sem],Sentence,[]),Sems1),
    filterAlphabeticVariants(Sems1,Sems2).
 
@@ -124,22 +124,10 @@ filterAlphabeticVariants(L,L).
 
 sRetrieval([S],S).
 
-/* sRetrieval([Sem|Store],S):-
-   selectFromList(bo([Q|NestedStore],X),Store,TempStore),
-   appendLists(NestedStore,TempStore,NewStore),
-   sRetrieval([app(Q,lam(X,Sem))|NewStore],S). */
-   
 sRetrieval([Sem|Store],S):-
    selectFromList(bo([Q|NestedStore],X),Store,TempStore),
-   \+ X == av,
    appendLists(NestedStore,TempStore,NewStore),
-   sRetrieval([app(Q,lam(X,Sem))|NewStore],S).   
-
-sRetrieval([Sem|Store],S):-
-   selectFromList(bo([Q|NestedStore],X),Store,TempStore),
-   X == av, %nl, write(Store), nl, 
-   appendLists(NestedStore,TempStore,NewStore),
-   sRetrieval([app(Q,Sem)|NewStore],S).      
+   sRetrieval([app(Q,lam(X,Sem))|NewStore],S).  
 
 /*========================================================================
    Info

@@ -37,6 +37,20 @@ semLex(det,M):-
    M = [type:wh,
         sem:[lam(P,lam(Q,que(X,app(P,X),app(Q,X))))]].
 
+% Exercise 6.1.3 -- Start
+
+semLex(det,M):-
+    M = [type:neg,
+         sem:[lam(P,lam(Q,not(some(X,and(app(P,X),app(Q,X))))))]].
+    % We could have used sem:[lam(P,lam(Q,all(X,imp(app(P,X),not(app(Q,X))))))].
+    % However, the used way seems more directly related to original form in natural language.
+
+semLex(det,M):-
+    M = [type:def,
+         sem:[lam(P,lam(Q,some(X,and(and(app(P,X),app(Q,X)),all(Y,imp(app(P,Y),eq(X,Y)))))))]].
+
+% Exercise 6.1.3 -- End 
+
 semLex(pn,M):-
    M = [symbol:Sym,
         sem:[lam(P,app(P,Sym))]].
@@ -56,11 +70,45 @@ semLex(tv,M):-
         sem:[lam(K,lam(Y,app(K,lam(X,Formula))))]], 
    compose(Formula,Sym,[Y,X]).
 
+% Exercise 6.1.3 -- Start
+
+  % First idea: doesn't work! Try ``Vincent offers Mia a car''. It won't work well with non-stored representation of ``a car''.
+%semLex(dv,M):-
+%   M = [symbol:Sym,
+%        sem:[lam(P,lam(Q,lam(Y,app(Q,app(P,lam(Z,lam(X,Formula)))))))]],
+%    compose(Formula,Sym,[X,Y,Z]).
+
+  % Second idea:
+
+semLex(dv,M):-
+   M = [symbol:Sym,
+        sem:[lam(P,lam(Q,lam(X,app(Q,lam(Y,app(P,lam(Z,Formula)))))))]],
+    compose(Formula,Sym,[X,Y,Z]).
+
+
+% Exercise 6.1.3 -- End
+
 semLex(qnp,M):-
    M = [type:wh,
         symbol:Sym,
         sem:[lam(Q,que(X,Formula,app(Q,X)))]], 
    compose(Formula,Sym,[X]).
+
+% Exercise 6.1.3 -- Start
+
+semLex(qnp,M):-
+   M = [type:uni,
+        symbol:Sym,
+        sem:[lam(P,all(X,imp(Formula,app(P,X))))]],
+   compose(Formula,Sym,[X]).
+
+semLex(qnp,M):-
+   M = [type:neg,
+        symbol:Sym,
+        sem:[lam(P,not(exists(X,and(Formula,app(P,X)))))]],
+    compose(Formula,Sym,[X]).
+
+% Exercise 6.1.3 -- End
 
 semLex(cop,M):-
    M = [pol:pos,

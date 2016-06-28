@@ -82,6 +82,11 @@ combine(vp:[app(A,B)|S],[tv:[A],np:[B|S]]).
 combine(vp:[app(app(B,A),C)|S3],[vp:[A|S1],coord:[B],vp:[C|S2]]):-
 	appendLists(S1,S2,S3).
 
+% Exercise 6.1.3 -- Start
+combine(vp:[app(app(A,C),B)|S3],[dv:[A],np:[B|S1],np:[C|S2]]):-
+    appendLists(S1,S2,S3).
+% Exercise 6.1.3 -- End
+
 combine(pp:[app(A,B)|S],[prep:[A],np:[B|S]]).
 
 combine(rc:[app(A,B)|S],[relpro:[A],vp:[B|S]]).
