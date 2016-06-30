@@ -14,8 +14,11 @@ lexEntry(noun,[symbol:Sym,syntax:[Expression]]) :-
     atom_concat(Expression,Synset,Sym).
 */
 
-% Observe que ainda está errado: expressões de mesmo synset estão dando Syms distintos, mas gostaríamos que fosse igual.
-% Ou podemos aceitar que serão distintos e criar um axioma de equivalência caso estejam no mesmo synset. Esta abordagem parece mais natural, mas talvez menos eficiente.
+% There are two ways to think about it:
+% a) Perhaps we would like that different expressions with the same meaning correspond to the same symbol in the logical expression. 
+% b) However, we could accept different expressions with the same meaning corresponding to different symbols. Then equivalence axioms could be inserted. Perhaps this is less efficient computationaly, but it works.
+
+% We use (b).
 
 /*==================================
 Use synsets, if not already loaded

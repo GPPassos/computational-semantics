@@ -65,13 +65,13 @@
 
 kellerStorage:-
    readLine(Sentence),
-%   wordnetLexicon(Sentence,_),
+   wordnetLexicon(Sentence,_),
    setof(Sem,t([sem:Sem],Sentence,[]),Sems1),
    filterAlphabeticVariants(Sems1,Sems2),
    printRepresentations(Sems2).
 
 kellerStorage(Sentence,Sems2):-
-%   wordnetLexicon(Sentence,_),
+   wordnetLexicon(Sentence,_),
    setof(Sem,t([sem:Sem],Sentence,[]),Sems1),
    filterAlphabeticVariants(Sems1,Sems2).
 
