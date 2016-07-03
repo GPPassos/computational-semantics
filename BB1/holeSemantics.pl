@@ -48,22 +48,64 @@
 
 :- [semRulesHole].
 
+/* Used for Wordnet */
+:- consult('../wordnet/wn_s.pl').
+:- use_module(readLine,[checkWords/2]).
+/* end */
 
 /*========================================================================
    Driver Predicates
 ========================================================================*/
 
+/* Predicates for Curt */
+
 holeSemantics:-
    readLine(Sentence),
+   wordnetLexicon(Sentence,_),
+   setof(USR,t([sem:USR],Sentence,[]),USRs),
+   findall(Sem,(member(USR,USRs), plugUSR(USR,Sem)),Sems1),
+   %filterAlphabeticVariants(Sems1,Sems2),
+   printRepresentations(Sems1).
+
+holeSemantics(Sentence,Sems2):-
+   wordnetLexicon(Sentence,_),   
+   setof(USR,t([sem:USR],Sentence,[]),USRs),
+   findall(Sem,(member(USR,USRs), plugUSR(USR,Sem)),Sems1),
+   filterAlphabeticVariants(Sems1,Sems2).
+
+/* */
+
+
+/* Original predicates to holeSemantics
+
+holeSemantics:-
+   readLine(Sentence),
+   wordnetLexicon(Sentence,_),
    t([sem:USR],Sentence,[]),   
    printRepresentations([USR]),
    setof(Sem,plugUSR(USR,Sem),Sems),
    printRepresentations(Sems).
 
 holeSemantics(Sentence,Sems):-
+   wordnetLexicon(Sentence,_),
    t([sem:USR],Sentence,[]),   
    setof(Sem,plugUSR(USR,Sem),Sems).
 
+*/
+
+/* Predicates added in order to use wordnet words */
+
+wordnetLexicon(L,SymList) :-
+    findall(Sym,findWordnetLex(L,Sym),SymList).
+
+findWordnetLex(L,Sym) :-
+    s(Synset,_,Expression,n,_,_),
+    member(Expression,L),
+    atom_concat(Expression,Synset,Sym),
+    Syn = Expression,
+    assert(lexEntry(noun,[symbol:Sym,syntax:[Syn]])).
+
+/* end */
 
 /*========================================================================
    Testsuite Predicates

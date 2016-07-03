@@ -26,6 +26,8 @@ Use synsets, if not already loaded
 
 :- if(source_file('kellerStorage.pl')).
 :- import(kellerStorage:s/6).
+:- elif(source_file('holeSemantics.pl')).
+:- import(holeSemantics:s/6).
 :- else.
 :- consult('../wordnet/wn_s.pl').
 :- endif.
@@ -76,4 +78,3 @@ wordnetKnowledge(Sym,Arity,Axiom) :-
     ;
         Arity = 2, F1 =.. [Sym,X,Y], F2 =.. [Sym2,X,Y], Axiom = all(X,all(Y,imp(F1,F2)))
     ).
-%    findall(Sym2,(synonym(Sym,Sym2), \+ Sym2 = Sym),
