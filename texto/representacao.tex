@@ -72,13 +72,15 @@ A decomposição parece lingüisticamente razoável, bem como útil para a compr
 		 
 	Ao alterarmos a representação semântica, de fato nossas principais alterações estarão nos componentes semânticos.
 	
-	Seguiremos o desenvolvimento de \citet{BlackburnBos:2005} dos diferentes componentes semânticos. Um primeiro modelo ilustrará um formalismo fundamental para composição de significados, o cálculo lambda. Para que a relação deste formalismo com o significado seja isolada de outros mecanismos usados posteriormente, ele será apresentado isoladamente em um primeiro lugar. Além disto, neste modelo inicial cada frase será associada a exatamente uma fórmula em lógica de primeira ordem, enquanto palavras e expressões menores serão associadas a um outro tipo de fórmula - fórmulas do cálculo lambda.
+	Seguiremos o desenvolvimento de \citet{BlackburnBos:2005} dos diferentes módulos semânticos. Um primeiro modelo ilustrará um formalismo fundamental para composição de significados, o cálculo lambda. Para que a relação deste formalismo com o significado seja isolada de outros mecanismos usados posteriormente, ele será apresentado isoladamente em um primeiro lugar. Além disto, neste modelo inicial cada frase será associada a exatamente uma fórmula em lógica de primeira ordem, enquanto palavras e expressões menores serão associadas a um outro tipo de fórmula - fórmulas do cálculo lambda.
 	
 	A seguir, para sanar alguns de seus problemas, um passo de abstração será tomado. Expressões e frases não necessariamente serão associadas a exatamente uma fórmula, mas sim a um conjunto delas. Isto são as ditas \textit{representações subespecificadas}. Há uma variedade de métodos para representações subespecificadas e aqui veremos três, mas exploraremos essencialmente representantes de dois grupos. Os dois grupos serão vistos para o estudo de abordagens distintas para o problema da subespecificação. \citep[p.~150--153]{BlackburnBos:2005}
 	
 	O primeiro método será o de armazenamentos, a ser introduzido em sua versão mais simples, o armazenamento de Cooper. Veremos como isto é uma melhora, mas ainda não o bastante. Após isto, ele será aprimorado pelo armazenamento de Keller.
 	
 	Do segundo grupo, veremos a \teng{hole semantics}, um formalismo essencialmente diferente, baseado em restrições, devido a \citet{HoleSem}.
+
+	\todo[color=yellow,inline]{atualizei com uma descrição das diferentes técnicas, bem como dizendo que seguiremos as diferentes técnicas}
 
 \subsection{Cálculo Lambda}
 
@@ -171,27 +173,33 @@ Sejam $\sigma_1$ e $\sigma_2$ duas seqüências (possivelmente vazias) de operad
 
 Um armazenamento composto apenas por um núcleo, após sucessivas aplicações da regra de resgate, será uma fórmula bem formada de primeira ordem, como desejávamos.
 
-Para visualizarmos este processo, vamos para um exemplo:
-
+\begin{figure}
 %\begin{center}
 \begin{tikzpicture}
+%\tikzset{level distance=40pt}
+\tikzset{frontier/.style={distance from root=100pt}}
 \Tree [.{\teng{Every man loves a woman} (\teng{Sentence}) } 
 [.{\teng{Every man} (\teng{NP})} {\teng{Every} (\teng{Determiner})} {\teng{man} (\teng{Noun})} ]
 [.{\teng{loves a woman} (\teng{VP})}
 {\teng{loves} (\teng{TV})} [.{\teng{a woman} (\teng{NP})} {\teng{a} (\teng{Determiner})} {\teng{woman} (\teng{Noun})} ] ]
 ]
-\end{tikzpicture} \\ 
+\end{tikzpicture}
 %\end{center}
+\caption{Árvore Sintática}
+\label{tree:syntax}
+\end{figure}
 
-Esta é a árvore de análise sintática. Construindo os significados a partir das folhas e subindo, uma das possíveis árvores que podemos alcançar é:
-%todo{converter essas árvores para tikz, para poder aumentar a fonte}
+Para visualizarmos este processo, vamos para o exemplo da figura \ref{tree:syntax}. Esta é a árvore de análise sintática para a frase \expreng{Every man loves a woman}. Construindo os significados a partir das folhas e subindo, uma das possíveis árvores que podemos alcançar está na figura \ref{tree:cooper}.
+
+\begin{figure}
+\begin{center}
+\begin{tikzpicture}
 %\scriptsize
 \footnotesize
 %\small
 
-\begin{center}
-\begin{tikzpicture}
 \tikzset{level distance=100pt,align=center, sibling distance = 0pt}
+\tikzset{frontier/.style={distance from root=300pt}}
 %\tikzset{level 1/.style={level distance=36pt}}
 %\tikzset{level 2+/.style={sibling distance=1pt}}
 %\tikzset{level 3+/.style={level distance=28pt}}
@@ -203,10 +211,13 @@ Esta é a árvore de análise sintática. Construindo os significados a partir d
 \end{tikzpicture}
 \end{center}
 \normalsize
+\caption{Semântica de Cooper}
+\label{tree:cooper}
+\end{figure}
 
 Agora, o que resta é converter o armazenamento representativo da frase completa nas possíveis fórmulas de primeira ordem através da operação de resgate. 
 
-\begin{align*}
+\begin{flalign*}
  \text{Inicialmente:} \\
  \langle love(z_1,z_2),& \\ &(\lambda q. \forall x(man(x) \rightarrow q@x), 1),  (\lambda q. \exists x(woman(x) \land q@x),2) \rangle \\
  \text{Resgatando o operador de ligação 1:}  \\
@@ -217,9 +228,9 @@ Agora, o que resta é converter o armazenamento representativo da frase completa
  \langle (\lambda q. \exists x(woman(x) \land q@x))@&(\forall x (man(x) \rightarrow love(x,z_2))) \rangle  \\
  \alpha\text{-convertendo e }  \beta\text{-convertendo:} \\
  \langle \exists x (woman(x) \land \forall y(man(y) &\rightarrow love(y,x))) \rangle  \\
-\end{align*}
+\end{flalign*}
 
-Assim, chegamos a uma das duas interpretações: a de que todos os homens amam uma mesma mulher. Se resgatarmos o operador de ligação 2 e só depois resgatarmos o operador de ligação 1, teremos a outra leitura: $\forall y(man(y) \rightarrow \exists x (woman (x) \land love(y,x)))$
+Assim, chegamos a uma das duas interpretações: a de que todos os homens amam uma mesma mulher. Se resgatarmos o operador de ligação 2 e só depois resgatarmos o operador de ligação 1, teremos a outra leitura: $\forall y(man(y) \rightarrow \exists x (woman (x) \land love(y,x)))$, isto é, para cada homem, existe alguma mulher tal que ele a ame.
 
 Portanto, desenvolvemos um método sistemático que pode capturar as ambigüidades de escopo, produzindo as leituras possíveis. O que nos resta agora é a pergunta: será que nosso método é de fato capaz de capturar todas as ambigüidades de escopo? Infelizmente, iremos apontar duas frases nas quais o método não é suficiente. \fixed{De fato não estava nada claro! Retirei a afirmação.}
 
@@ -264,8 +275,9 @@ Por sua vez, também o resgate é alterado. Um operador de ligação só pode se
 Sejam $\sigma$, $\sigma_1$ e $\sigma_2$ seqüências (possivelmente vazias) de operadores de ligação. Se o armazenamento $\langle \phi, \sigma_1, ((\beta, \sigma), i), \sigma_2 \rangle$ é uma representação para uma frase (\teng{sentence}), então $\langle (\beta @ \lambda z_i . \phi ), \sigma_1, \sigma, \sigma_2 \rangle$ também o é.
 \end{oframed}
 
-Podemos então aplicar isto para o nosso exemplo:
+Podemos então aplicar este método para o nosso exemplo da figura \ref{tree:keller}.
 
+\begin{figure}
 \begin{center}
 \begin{tikzpicture}[align = center, sibling distance = 200pt, level distance = 120pt]
 \tikzset{level 2/.style = {level distance = 100pt}}
@@ -277,12 +289,14 @@ Podemos então aplicar isto para o nosso exemplo:
    child {node {\teng{criminal} (\teng{Noun}) \\ $\langle \lambda x. criminal(x) \rangle$}}
    child {node {\teng{with a gun} (\teng{Prepositional Phrase}) \\ $\langle \lambda v. \lambda u. (v@u \land with(u,z_1)),$\\$ (\langle \lambda q. \exists x(gun(x) \land q@x) \rangle, 1) \rangle$}}} }
  child {node {\teng{is dangerous} (\teng{VP}) \\ $\langle \lambda x.dangerous(x) \rangle$ }};
-
-
+ 
 %\Tree [.NP [.Adj tall ] [.N tree ] ]
 %\Tree [\node{aa} child {node {bb}} child [.cc d]; [.Adj C ] [.N E ] ]
 \end{tikzpicture}
 \end{center}
+\caption{Semântica de Cooper}
+\label{tree:keller}
+\end{figure}
 
 Agora, realizando a extração, podemos fazê-la apenas de um modo: $\exists x(gun(x) \land \forall y((criminal(y) \land with(y,x)) \rightarrow dangerous(y)))$. Isto é a interpretação correta, não tendo sido gerado nenhum problema. As outras opções de (não-)extração funcionam de modo semelhante.
 
@@ -290,7 +304,7 @@ Assim, o problema dos sintagmas nominais é resolvido. Apesar disso, o segundo p
 
 \subsection{\teng{Hole Semantics}}
 
-Apesar de ser possível criar um novo mecanismo para capturar a ambigüidade de escopo gerada pela negação \todo{comentar o modo pelo qual eu fiz isso?}, abordagens \textit{ad hoc} para novas dificuldades não são muito desejadas, criando uma falta de harmonização dos métodos usados, possivelmente proliferando uma diversidade de construções muito distintas entre si. Se possível, gostaríamos de possuir uma abordagem mais uniforme. Na realidade, não apenas a negação traz ambigüidades de escopo. Por exemplo, uma frase como \expreng{If a man walks then he jumps and a woman is happy} é ambígua \cite{HoleSem}. Podemos imaginar uma interpretação na qual \expreng{a woman is happy} é parte do conseqüente da implicação e outra na qual não o é, sendo uma afirmação separada da implicação.\footnote{Esta construção não ocorre em nosso programa, por não haver orações coordenadas com \expreng{and}.} Em razão destas dificuldades, e também de modo a ganhar maior flexibilidade na representação, analisaremos uma outra forma de representação semântica, não baseada em armazenamentos. 
+Apesar de ser possível criar um novo mecanismo para capturar a ambigüidade de escopo gerada pela negação\footnote{Com efeito, em nosso repositório apresentamos no arquivo \textsc{negationKellerStorage.pl} uma alteração neste sentido. \todo[inline,color=yellow]{atualizado}}, abordagens \textit{ad hoc} para novas dificuldades fere a extensibilidade da gramática, criando uma falta de harmonização dos métodos usados, possivelmente proliferando uma diversidade de construções muito distintas entre si. Se possível, desse modo, precisamos de uma abordagem mais uniforme. Na realidade, não apenas a negação traz ambigüidades de escopo. Por exemplo, uma frase como \expreng{If a man walks then he jumps and a woman is happy} é ambígua \citep{HoleSem}. Podemos imaginar uma interpretação na qual \expreng{a woman is happy} é parte do conseqüente da implicação e outra na qual não o é, sendo uma afirmação separada da implicação.\footnote{Esta construção não ocorre em nosso programa, por não haver orações coordenadas com \expreng{and}.} Em razão destas dificuldades, e também de modo a ganhar maior flexibilidade na representação, analisaremos uma outra forma de representação semântica, não baseada em armazenamentos. 
 
 Assim como nos métodos baseados em armazenamentos, uma frase não será associada uma expressão de primeira ordem, mas a uma representação abstrata, que então é associada a um conjunto de expressões em primeira ordem. Entretanto, o modo pelo qual isso é feito aqui é distinto. Em \teng{Hole Semantics}, uma idéia essencial é a de \textit{restrições}: podemos pensar na representação como um conjunto de restrições, de modo que qualquer fórmula de primeira ordem que satisfaça as restrições será uma interpretação possível para a frase \cite[p.~129]{BlackburnBos:2005}. A representação será referida por representação subespecificada (\teng{USR}, de \teng{underspecified representation}).
 
@@ -365,7 +379,13 @@ Podemos avançar então para um exemplo. Consideremos a frase \expreng{Mia does 
 \end{tikzpicture}
 \end{center}
 
-Já a representação subespecificada busca capturar o que há em comum entre as árvores possíveis. A USR desta frase é: $\exists h_0 \exists h_1 \exists h_2 \exists l_1 \exists l_2 \exists l_3 \exists l_4 \exists l_5 \exists v_1 ({l_1:\textsc{not}(h_1)} \land l_2\textsc{:love}(mia,v_1) \land l_3\textsc{:some}(v_1,l_4) \land l_4\textsc{:and}(l_5, h_2) \land l_5\textsc{:man}(v_1))$. Porém, as USRs se tornam melhor compreensíveis através de sua representação gráfica, estando abaixo aquela relativa à nossa frase considerada:
+Já a representação subespecificada busca capturar o que há em comum entre as árvores possíveis. A USR desta frase é: 
+
+\begin{flalign*}
+&\exists h_0 \exists h_1 \exists h_2 \exists l_1 \exists l_2 \exists l_3 \exists l_4 \exists l_5 \exists v_1 \\& ({l_1\textsc{:not}(h_1)} \land l_2\textsc{:love}(mia,v_1) \land l_3\textsc{:some}(v_1,l_4) \land l_4\textsc{:and}(l_5, h_2) \land l_5\textsc{:man}(v_1))
+\end{flalign*}
+
+Porém, as USRs se tornam melhor compreensíveis através de sua representação gráfica, estando abaixo aquela relativa à nossa frase considerada:
 
 \begin{center}
 \begin{tikzpicture}
@@ -396,18 +416,28 @@ Já a representação subespecificada busca capturar o que há em comum entre as
 Podemos ver a intuição desta representação. É criado um buraco $h_0$ correspondente ao nó mais alto da árvore. As linhas pontilhadas representam restrições de dominância entre buracos e nós. Por sua vez, as linhas preenchidas mostram quais nós são pais de outros. A relação de parentesco também representa dominância: se um nó é pai de outro, é certo que o filho não pode ter escopo mais externo que o pai, uma vez que deve ser subfórmula do mesmo. Entretanto, neste caso a posição está fixa: necessariamente a relação de parentesco será aquela. Por sua vez, na dominância entre buracos e nós, não é isto que occore. Basta que o nó dominado esteja no escopo do nó dominante, não necessariamente sendo filho do mesmo. Ou seja, basta ser descendente.
 
 Agora, a nossa análise de frases é feita ainda decompondo sintaticamente, e então, para cada termo, criando uma representação na forma de uma USR. Ainda utilizamos o cálculo lambda para fazer combinações de expressões. A representação final da frase é feita por combinações das representações das partes que as constituem. Por exemplo, a representação para o determinante \expreng{a} é:
- $\lambda x. \lambda y. \lambda h. \lambda l. \exists h_1 \exists l_1 \exists l_2 \exists l_3 \exists v_1 (l2\textsc{:all}(v_1,l_3, \land l3 \textsc{:and}(l_1,h_1) \land l \leq h_1 \land l_2 \leq h \land x@v_1@h@l_1 \land y@v_1@h@l))$
 
-Por sua vez, para o substantivo \expreng{woman} é: $\lambda v. \lambda h. \lambda l. (l\textsc{:woman}(v) \land l \leq h  )$
+\begin{flalign*}
+	& \lambda x. \lambda y. \lambda h. \lambda l. \exists h_1 \exists l_1 \exists l_2 \exists l_3 \exists v_1 \\& (l2\textsc{:all}(v_1,l_3, \land l3 \textsc{:and}(l_1,h_1) \land l \leq h_1 \land l_2 \leq h \land x@v_1@h@l_1 \land y@v_1@h@l))
+\end{flalign*}
 
-Assim, o sintagma nominal $\expreng{a woman}$ fica, aplicando a segunda representação na primeira e beta-reduzindo: $\lambda y. \lambda h. \lambda l. \exists h_1 \exists l_1 \exists l_2 \exists l_3 \exists v_1 (l2\textsc{:all}(v_1,l_3, \land l3 \textsc{:and}(l_1,h_1) \land l \leq h_1 \land l_2 \leq h \land l_1\textsc{:woman}(v_1) \land l_1 \leq h \land y@v_1@h@l))$.
+Por sua vez, para o substantivo \expreng{woman} é:
+\begin{flalign*}
+\lambda v. \lambda h. \lambda l. (l\textsc{:woman}(v) \land l \leq h  )&&
+\end{flalign*}
+
+Assim, o sintagma nominal $\expreng{a woman}$ fica, aplicando a segunda representação na primeira e beta-reduzindo:
+\begin{flalign*}
+&\lambda y. \lambda h. \lambda l. \exists h_1 \exists l_1 \exists l_2 \exists l_3 \exists v_1 \\& (l2\textsc{:all}(v_1,l_3, \land l3 \textsc{:and}(l_1,h_1) \land l \leq h_1 \land l_2 \leq h \land l_1\textsc{:woman}(v_1) \land l_1 \leq h \land y@v_1@h@l))
+\end{flalign*}
 
 Definindo as USRs para cada função sintática e o modo de combiná-las, obtemos a USR da frase. Com isto em mãos, precisamos ser capazes de construir as árvores possíveis. Isso é feito por meio de \textit{encaixes}\footnote{Em inglês, o termo usado é \expreng{plug}, por isso a letra utilizada é $P$.}. Para cada buraco, achamos um rótulo candidato para preenchê-lo: este rótulo será encaixado no buraco. Mais formalmente, um encaixe é uma função injetiva dos buracos aos rótulos. Entretanto, nem todo encaixe nos satisfaz. Evidentemente, queremos satisfazer duas condições: queremos que o resultados seja uma árvore (portanto, acíclica e conexa), bem como queremos que, se existe uma restrição de dominância de um buraco $H$ sobre um rótulo $L$ (ou seja, se $L \leq H$), então $L$ será descendente de $H$ na árvore.
 
 Para o exemplo que vimos, dois encaixes são possíveis: $P_1(h_0) = l_1, P_1(h_1) = l_3, P_1(h_2) = l_2$ e $P_2(h_0) = l_3, P_2(h_1) = l_2, P_2(h_2) = l_1$.
 
-Assim, duas árvores são formadas, cada uma gerando uma interpretação possível. Pelo encaixe $P_1$ obtemos:
+Assim, duas árvores são formadas, cada uma gerando uma interpretação possível. Pelo encaixe $P_1$ obtemos a árvore \ref{tree:p1}. Já pelo $P_2$, temos a árvore \ref{tree:p2}.
 
+\begin{figure}[h]
 \begin{center}
 \begin{tikzpicture}[sibling distance=50mm]
 \node {{$h_0$}}
@@ -418,9 +448,11 @@ Assim, duas árvores são formadas, cada uma gerando uma interpretação possív
      child {node {$l_2: love(mia,v_1)$}}}}};
 \end{tikzpicture}
 \end{center}
+\caption{$P_1$}
+\label{tree:p1}
+\end{figure}
 
-Já pelo $P_2$, temos:
-
+\begin{figure}[h]
 \begin{center}
 \begin{tikzpicture}[sibling distance = 50mm]
 \node {{$h_0$}}
@@ -431,5 +463,10 @@ Já pelo $P_2$, temos:
     child {node {$l_2: love(mia,v_1)$}}}}};
 \end{tikzpicture}
 \end{center}
+\caption{$P_2$}
+\label{tree:p2}
+\end{figure}
 
 Com efeito, estas são de fato as árvores que havíamos construído antes, para cada interpretação.
+
+\todo[color=Green,inline]{Grafos e árvores colocados como figures flutuantes.}
