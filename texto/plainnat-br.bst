@@ -224,7 +224,7 @@ FUNCTION {format.names}
         { namesleft #1 >
             { ", " * t * }
             { numnames #2 >
-                { "," * }
+                { " " * }
                 'skip$
               if$
               t "outros" =
