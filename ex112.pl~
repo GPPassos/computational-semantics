@@ -1,1 +1,0 @@
-read(Lista), member(X, Lista), [A, N] = X, atom(A), number(N), member([A, M], lista), N = M.
