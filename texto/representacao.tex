@@ -9,9 +9,97 @@ Desejamos associar a cada expressão de linguagem natural um significado formal,
 
 A linguagem formal que utilizaremos para representar o significado de frases é \textit{lógica de primeira ordem}. \citet{Jurafsky:2009} apresentam como propriedades interessantes para representações: verificabilidade, não-ambigüidade, existência de uma forma canônica, capacidade de inferência, uso de variáveis e expressividade. Todas estas são possuídas pela lógica de primeira ordem, ao menos até certo ponto. \todo{argumentar, pegar referência} Além disso, é um sistema bem compreendido e bastante flexível.
 
-\todo[inline]{Adicionar ``Iremos apresentar formalmente esta lógica na seção seguinte.'', bem como escrever esta seção seguinte.}
+\subsection{Lógica de Primeira Ordem}
+
+Definiremos formalmente a sintaxe e a semântica da lógica de primeira ordem. A linguagem usada é definida a partir de um vocabulário. Um vocabulário consiste em três conjuntos de símbolos: um de predicados, um de funções e um de constantes. Cada um desses conjuntos é um conjunto de palavras, em que cada palavra é associada a um número, dito sua \textit{aridade}. No caso do conjunto de constantes, a aridade de cada elemento é $0$. \footnote{Mais a rigor, podemos dizer que são conjuntos de pares ordenados $(palavra,aridade)$.}
+
+Assim, assumimos que possuímos o seguinte conjunto de símbolos:
+\begin{enumerate}
+\item 	Símbolos Lógicos:
+		\begin{enumerate}
+		\item parênteses: $($, $)$,
+		\item conectivos: $\neg$, $\rightarrow$, $\land$, $\lor$
+		\item quantificadores: $\forall$, $\exists$
+		\item para variáveis: $x$, $y$, $z$, $\dots$ (um conjunto infinito delas)
+		\item igualdade: $=$
+		\end{enumerate}
+\item	Símbolos não lógicos:
+		\begin{enumerate}
+		\item um conjunto de símbolos de predicados
+		\item um conjunto de símbolos de constantes
+		\item um conjunto de símbolos de funções
+		\end{enumerate}
+\end{enumerate}
+
+\begin{defn}[Termo]
+\begin{enumerate}
+\item[]
+\item Se $x$ é uma variável, $x$ é um termo.
+\item Se $c$ é uma constante, $c$ é um termo.
+\item Se $t_1$, \dots, $t_n$ são $n$ termos e $f$ é um símbolo de função de aridade $n$, então $f(t_1,\dots,f_n)$ é um termo.
+\end{enumerate}
+\end{defn}
+
+\begin{defn}[Fórmula atômica]
+\begin{enumerate}
+\item []
+\item Se $p$ é um predicado de aridade $n$ e $t_1$, \dots, $t_n$ são $n$ termos, então $p(t_1,\dots,t_n)$ é uma fórmula atômica.
+\item Se $t_1$ e $t_2$ são termos, então $t_1 = t_2$ é uma fórmula atômica.
+\end{enumerate}
+\end{defn}
+
+\begin{defn}[Fórmula]
+\begin{enumerate}
+\item[]
+\item Se $\phi$ é uma fórmula atômica, então é uma fórmula.
+\item Se $\phi$ e $\psi$ são fórmulas, então $\neg \phi$, $(\phi \rightarrow \psi)$, $(\phi \lor \psi)$ e $(\phi \land \psi)$ são fórmulas.
+\item Se $x$ é uma variável e $\phi$ é uma fórmula, então $\forall x(\phi)$ e $\exists x(\phi)$ são fórmulas.
+\end{enumerate}
+\end{defn}
+
+\begin{defn}[Modelo]
+Um modelo é um par $(D,F)$ em que $D$, chamado \textit{domínio}, é um conjunto não vazio e $F$ é uma função, dita função de interpretação, tal que:
+\begin{enumerate}
+\item $F$ associa cada símbolo de constante do vocabulário a um elemento de $D$.
+\item se $f$ é um símbolo de função de aridade $n$, $F$ associa $f$ a uma função $f^{F}: D^{n} \rightarrow D$.
+\item se $p$ é um símbolo de predicado de aridade $n$, $F$ associa $p$ a um conjunto $p^{F} \subseteq D^{n}$.
+\end{enumerate}
+\end{defn}
+
+\begin{defn}[Atribuição]
+Uma (função de) atribuição $g$ em um modelo $(D,F)$ é uma função das variáveis no domínio $D$. Se $x$ for uma variável, uma atribuição $g'$ é dita uma $x$-variante quando, para toda variável $y$ distinta de $x$, $g'(y) = g(y)$.
+\end{defn}
+
+\begin{defn}[Interpretação]
+Seja $t$ um termo, $M = (D,F)$ um modelo e $g$ uma atribuição em M. A interpretação $I_F^g$ de $t$ com respeito a $M$ e $g$ é definida indutivamente por:
+\begin{enumerate}
+\item se $t$ é uma variável, $I_F^g(t) = g(t)$.
+\item se $t$ é uma constante, $I_F^g(t) = F(t)$.
+\item se $t$ é $f(t_1,\dots,t_n)$, onde $f$ é um símbolo de função e $t_1$, \dots, $t_n$ são termos, então $I_F^g(t) = f^{F}(I_F^g(t_1), \dots, I_F^g(t_n))$.
+\end{enumerate}
+\end{defn}
+
+\begin{defn}[Satisfação]
+Sejam $M = (D,F)$ um modelo, $g$ uma atribuição em M e $\phi$ e $\psi$ fórmulas. Então, a relação de satisfabilidade $\models$ é definida indutivamente:
+\begin{enumerate}
+\item $M,g \models p(t_1,\dots,t_n)$ se e somente se $(I_F^g(t_1), \dots, I_F^g(t_n)) \in F(p)$ , em que $p$ é um símbolo de predicado e $t_1$, \dots, $t_n$ são termos.
+\item $M,g \models \neg \phi$ se e somente se não for verdade que $M, g \models \phi$.
+\item $M,g \models \phi \land \psi$ se e somente se $M, g \models \phi$ e $M, g \models \psi$.
+\item $M,g \models \phi \lor \psi$ se e somente se $M, g \models \phi$ ou $M, g \models \psi$.
+\item $M,g \models \phi \rightarrow \psi$ se e somente se não for o caso tanto que $M,g \models \phi$ quanto que $M,g \not \models \psi$.
+\item $M,g \models \exists x (\phi)$ se e somente se existir uma $x$-variante $g'$ de $g$ tal que $M,g' \models \phi$.
+\item $M,g \models \forall x (\phi)$ se e somente se para toda $x$-variante $g'$ de $g$, $M,g' \models \phi$.
+\end{enumerate}
+\end{defn}
+
+Para mais detalhes a respeito da lógica de primeira ordem, recomendamos o livro de \citet{enderton}.
+
+\update
+\todo{escrever texto}
 
 %Também uma interessante propriedade da lógica de primeira ordem é sua relativa intuitividade. Bastando explicar o que significam os símbolos conectivos (como $\land$ (significando \expr{e}) e $\rightarrow$ (significando \expr{se \dots então \dots})), bem como os quantificadores ($\forall$ (\expr{para todo})  e $\exists$ (\expr{existe}), uma expressão formal em lógica é compreensível . %\todo{é verdade?}
+
+\subsection{Sintaxe e representação de expressões}
 
 Ainda que tenhamos escolhido a lógica de primeira ordem para ser a linguagem das representações semânticas para frases, isto não nos informa qual deve ser a representação semântica de palavras e expressões menores. Fórmulas desta lógica definem sentenças completas (no máximo, abertas à interpretação de variáveis livres). Talvez algumas possibilidades poderiam ser feitas através de termos, mas não está de todo claro qual seria o significado de uma expressão como \expreng{to run} (\expr{correr}) ou \expreng{that walks} (\expr{que anda}).
 
@@ -140,7 +228,37 @@ Analisemos a frase:
 
 Esta frase parece ter duas interpretações possíveis: na primeira, para cada homem existe uma mulher amada por aquele. Possivelmente, são mulheres distintas. Já na segunda leitura, existe uma mulher específica que é amada por todos os homens.
 
-Essa dúvida parece ser gerada pelo \textit{escopo} dos quantificadores \expreng{every} e \expreng{a}. Caso o quantificador \expreng{every} seja \textit{mais externo} (ou \textit{\teng{out-scoping}}) ao quantificador \expreng{a}, então teremos a primeira leitura. Neste caso, também dizemos que o quantificador \expreng{every} tem \textit{escopo sobre} o quantificador \expreng{a}. Por outro lado, caso o quantificador \expreng{a} tenha escopo sobre o quantificador \expreng{every}, a leitura será a segunda. Perceba que, ao que parece, as ambigüidades de escopo não são geradas por, realmente, análises sintáticas distintas, mas sim por uma dificuldade de atribuição de significado à uma decomposição sintática em particular. \todo{Para esclarecer esse ponto, fazer árvore de parse para exibir a decomposição sintática e mostrar que em uma única decomposição a ambigüidade persiste}
+\update Essa dúvida parece ser gerada pelo \textit{escopo} dos quantificadores \expreng{every} e \expreng{a}. Caso o quantificador \expreng{every} seja \textit{mais externo} (ou \textit{\teng{out-scoping}}) ao quantificador \expreng{a}, então teremos a primeira leitura. Neste caso, também dizemos que o quantificador \expreng{every} tem \textit{escopo sobre} o quantificador \expreng{a}. Por outro lado, caso o quantificador \expreng{a} tenha escopo sobre o quantificador \expreng{every}, a leitura será a segunda. Isto é, em nossa semântica, a primeira leitura seria representada por
+
+\begin{align*}
+\forall x (man(x) \rightarrow \exists y (woman(y) \land love(x,y)))
+\end{align*}
+
+O quantificador existencial está ``dentro do alcance'' do quantificador universal. Já na segunda leitura ocorreria o contrário, sendo:
+
+\begin{align*}
+\exists y (woman(y) \land \forall x(man(x) \rightarrow love(x,y)))
+\end{align*}
+
+Perceba que, ao que parece, as ambigüidades de escopo não são geradas por, realmente, análises sintáticas distintas, mas sim por uma dificuldade de atribuição de significado à uma decomposição sintática em particular.
+
+Com efeito, na gramática que utilizamos, esta frase seria decomposta sintaticamente segundo a figura \ref{tree:syntax}. Para as duas interpretações, a decomposição sintática é a mesma, mostrando que o problema é semântico.
+
+\begin{figure}
+%\begin{center}
+\begin{tikzpicture}
+%\tikzset{level distance=40pt}
+\tikzset{frontier/.style={distance from root=100pt}}
+\Tree [.{\teng{Every man loves a woman} (\teng{Sentence}) } 
+[.{\teng{Every man} (\teng{NP})} {\teng{Every} (\teng{Determiner})} {\teng{man} (\teng{Noun})} ]
+[.{\teng{loves a woman} (\teng{VP})}
+{\teng{loves} (\teng{TV})} [.{\teng{a woman} (\teng{NP})} {\teng{a} (\teng{Determiner})} {\teng{woman} (\teng{Noun})} ] ]
+]
+\end{tikzpicture}
+%\end{center}
+\caption{Árvore Sintática}
+\label{tree:syntax}
+\end{figure}
 
 Que o nosso sistema atual não é capaz de representar esse tipo de ambigüidade pode ser visto pelo fato de que a representação semântica é única, dados o sentido dos termos mais simples e a decomposição sintática. Precisamos, assim, aprimorar o modelo.
 
@@ -173,23 +291,7 @@ Sejam $\sigma_1$ e $\sigma_2$ duas seqüências (possivelmente vazias) de operad
 
 Um armazenamento composto apenas por um núcleo, após sucessivas aplicações da regra de resgate, será uma fórmula bem formada de primeira ordem, como desejávamos.
 
-\begin{figure}
-%\begin{center}
-\begin{tikzpicture}
-%\tikzset{level distance=40pt}
-\tikzset{frontier/.style={distance from root=100pt}}
-\Tree [.{\teng{Every man loves a woman} (\teng{Sentence}) } 
-[.{\teng{Every man} (\teng{NP})} {\teng{Every} (\teng{Determiner})} {\teng{man} (\teng{Noun})} ]
-[.{\teng{loves a woman} (\teng{VP})}
-{\teng{loves} (\teng{TV})} [.{\teng{a woman} (\teng{NP})} {\teng{a} (\teng{Determiner})} {\teng{woman} (\teng{Noun})} ] ]
-]
-\end{tikzpicture}
-%\end{center}
-\caption{Árvore Sintática}
-\label{tree:syntax}
-\end{figure}
-
-Para visualizarmos este processo, vamos para o exemplo da figura \ref{tree:syntax}. Esta é a árvore de análise sintática para a frase \expreng{Every man loves a woman}. Construindo os significados a partir das folhas e subindo, uma das possíveis árvores que podemos alcançar está na figura \ref{tree:cooper}.
+Para visualizarmos este processo, vamos para o exemplo da figura \ref{tree:syntax}, a árvore de análise sintática para a frase \expreng{Every man loves a woman}. Construindo os significados a partir das folhas e subindo, uma das possíveis árvores que podemos alcançar está na figura \ref{tree:cooper}.
 
 \begin{figure}
 \begin{center}
@@ -197,7 +299,6 @@ Para visualizarmos este processo, vamos para o exemplo da figura \ref{tree:synta
 %\scriptsize
 \footnotesize
 %\small
-
 \tikzset{level distance=100pt,align=center, sibling distance = 0pt}
 \tikzset{frontier/.style={distance from root=300pt}}
 %\tikzset{level 1/.style={level distance=36pt}}
@@ -304,7 +405,7 @@ Assim, o problema dos sintagmas nominais é resolvido. Apesar disso, o segundo p
 
 \subsection{\teng{Hole Semantics}}
 
-Apesar de ser possível criar um novo mecanismo para capturar a ambigüidade de escopo gerada pela negação\footnote{Com efeito, em nosso repositório apresentamos no arquivo \textsc{negationKellerStorage.pl} uma alteração neste sentido. \todo[inline,color=yellow]{atualizado}}, abordagens \textit{ad hoc} para novas dificuldades fere a extensibilidade da gramática, criando uma falta de harmonização dos métodos usados, possivelmente proliferando uma diversidade de construções muito distintas entre si. Se possível, desse modo, precisamos de uma abordagem mais uniforme. Na realidade, não apenas a negação traz ambigüidades de escopo. Por exemplo, uma frase como \expreng{If a man walks then he jumps and a woman is happy} é ambígua \citep{HoleSem}. Podemos imaginar uma interpretação na qual \expreng{a woman is happy} é parte do conseqüente da implicação e outra na qual não o é, sendo uma afirmação separada da implicação.\footnote{Esta construção não ocorre em nosso programa, por não haver orações coordenadas com \expreng{and}.} Em razão destas dificuldades, e também de modo a ganhar maior flexibilidade na representação, analisaremos uma outra forma de representação semântica, não baseada em armazenamentos. 
+Apesar de ser possível criar um novo mecanismo para capturar a ambigüidade de escopo gerada pela negação\footnote{Com efeito, em nosso repositório apresentamos no arquivo \textsc{negationKellerStorage.pl} uma alteração neste sentido. \todo[inline,color=yellow]{atualizado}}, abordagens \textit{ad hoc} para novas dificuldades fere a extensibilidade da gramática, criando uma falta de harmonização dos métodos usados, possivelmente proliferando uma diversidade de construções muito distintas entre si. Se possível, desse modo, precisamos de uma abordagem mais uniforme. Na realidade, não apenas a negação traz ambigüidades de escopo. Por exemplo, uma frase como \expreng{If a man walks then he jumps and a woman is happy} é ambígua \citep{HoleSem}. Podemos imaginar uma interpretação na qual \expreng{a woman is happy} é parte do conseqüente da implicação e outra na qual não o é, sendo uma afirmação separada da implicação.\footnote{Este tipo de construção não ocorre no programa original de \citet{BlackburnBos:2005}, por não haver orações coordenadas com \expreng{and}, nem coordenação com orações já coordenadas com outras. O código foi modificado para que isso fosse}\todo{AJUSTAR - ambigüidade semântica ou sintática?} Em razão destas dificuldades, e também de modo a ganhar maior flexibilidade na representação, analisaremos uma outra forma de representação semântica, não baseada em armazenamentos. 
 
 Assim como nos métodos baseados em armazenamentos, uma frase não será associada uma expressão de primeira ordem, mas a uma representação abstrata, que então é associada a um conjunto de expressões em primeira ordem. Entretanto, o modo pelo qual isso é feito aqui é distinto. Em \teng{Hole Semantics}, uma idéia essencial é a de \textit{restrições}: podemos pensar na representação como um conjunto de restrições, de modo que qualquer fórmula de primeira ordem que satisfaça as restrições será uma interpretação possível para a frase \cite[p.~129]{BlackburnBos:2005}. A representação será referida por representação subespecificada (\teng{USR}, de \teng{underspecified representation}).
 

@@ -34,6 +34,7 @@ Use synsets, if not already loaded
 %:- load_files('kellerStorage.pl',imports(s/6),
 %:- import(kellerStorage:s/6); ensure_loaded('../wordnet/wn_s.pl'). %wordnetKnowledge:import(X:s/6).
 :- consult('../wordnet/wn_hyp.pl').
+:- consult('../wordnet/wn_ent.pl').
 :- use_module(readLine,[checkWords/2]).
 %:- (\+ source_file('../wordnet/wn_s.pl')) -> consult('../wordnet/wn_s.pl'); (s(A,B,C,D,E,F) -> assert(wordnetKnowledge:s(A,B,C,D,E,F))).
 
@@ -54,6 +55,14 @@ hypernym(Sym1,Sym2) :- % Apenas dá hiperônimos diretos, não dá todos os ante
     \+ E1 = E2,    
     atom_concat(E2,SynsetHyp,Sym2).
 
+entailment(Sym1,Sym2) :-
+    atom_concat(E1,Synset,Sym1),
+    atom_number(Synset,SynsetNum),
+    ent(SynsetNum,SynsetEnt),
+    s(SynsetEnt,_,Word,_,_,_),
+    checkWords([Word],[E2]),
+    \+ E1 = E2,    
+    atom_concat(E2,SynsetEnt,Sym2).
 
 %s(Synset,W_num,Expression,Ss_type,_,_)
 
@@ -73,6 +82,14 @@ wordnetKnowledge(Sym,Arity,Axiom) :-
 
 wordnetKnowledge(Sym,Arity,Axiom) :-
     hypernym(Sym,Sym2),
+    (
+        Arity = 1, F1 =.. [Sym,X], F2 =.. [Sym2,X], Axiom = all(X,imp(F1,F2))
+    ;
+        Arity = 2, F1 =.. [Sym,X,Y], F2 =.. [Sym2,X,Y], Axiom = all(X,all(Y,imp(F1,F2)))
+    ).
+
+wordnetKnowledge(Sym,Arity,Axiom) :-
+    entailment(Sym,Sym2),
     (
         Arity = 1, F1 =.. [Sym,X], F2 =.. [Sym2,X], Axiom = all(X,imp(F1,F2))
     ;

@@ -47,12 +47,6 @@ s([coord:no,sem:Sem])-->
    vp([coord:_,inf:fin,num:Num,gap:[],sem:VP]), 
    {combine(s:Sem,[np:NP,vp:VP])}.
 
-/* s([coord:yes,sem:Sem])-->
-   s([coord:_,sem:S1]),
-   [and],
-   s([coord:_,sem:S2]),
-   {combine(s:Sem,[s:S1,and:S2])}. % "and" coordinating conjunction -- DOES NOT WORK, ''mia walks'' runs forever */
-
 s([coord:yes,sem:Sem])--> 
    s([coord:ant,sem:S1]), 
    s([coord:con,sem:S2]), 
@@ -86,6 +80,51 @@ s([coord:or,sem:Sem])-->
    [or], 
    s([coord:no,sem:S]),
    {combine(s:Sem,[or:S])}.
+
+% "and" coordinating conjunction
+s([coord:yes,sem:Sem])-->
+   s([coord:and,sem:S1]),
+   {C = no; C = yes},
+   s([coord:C,sem:S2]),
+   {combine(s:Sem,[s:S1,s:S2])}.
+
+s([coord:and,sem:Sem])-->
+   s([coord:no,sem:S]),
+   [and],
+   {combine(s:Sem,[and:S])}.
+%
+
+% Creating syntatic ambiguity
+s([coord:and,sem:Sem])-->
+   s([coord:yes-or,sem:S]),
+   [and],
+   {combine(s:Sem,[and:S])}.
+
+s([coord:yes-or,sem:Sem])--> 
+   s([coord:either,sem:S1]), 
+   s([coord:or,sem:S2]), 
+   {combine(s:Sem,[s:S1,s:S2])}.
+
+s([coord:or,sem:Sem])-->
+   [or], 
+   s([coord:_,sem:S]),
+   {combine(s:Sem,[or:S])}.
+
+s([coord:and,sem:Sem])-->
+   s([coord:yes-imp,sem:S]),
+   [and],
+   {combine(s:Sem,[and:S])}.
+
+s([coord:yes-imp,sem:Sem])--> 
+   s([coord:ant,sem:S1]), 
+   s([coord:con,sem:S2]), 
+   {combine(s:Sem,[s:S1,s:S2])}.
+
+s([coord:con,sem:Sem])--> 
+   [then], 
+   s([coord:_,sem:S]),
+   {combine(s:Sem,[then:S])}.
+%
 
 sinv([gap:G,sem:S])-->
    av([inf:fin,num:Num,sem:Sem]),

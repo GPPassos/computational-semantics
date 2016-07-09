@@ -36,6 +36,7 @@ combine(s:lam(B,imp(S,B)),[if:S]).
 combine(s:lam(B,or(S,B)),[either:S]).
 combine(s:S,[then:S]).
 combine(s:S,[or:S]).
+combine(s:lam(B,and(S,B)),[and:S]).
 combine(s:S,[np:[A|S1],vp:[B|S2]]):-
    appendLists(S1,S2,S3),
    sRetrieval([app(A,B)|S3],Retrieved),
