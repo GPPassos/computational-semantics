@@ -7,21 +7,27 @@
 %
 Desejamos associar a cada expressão de linguagem natural um significado formal, simbólico. Além disso, desejamos fazê-lo de modo algorítmico, que possa ser reproduzido por um computador. Portanto, um primeiro passo importante é encontrar um modo adequado de representar o significado, que satisfaça nossos objetivos lingüísticos, bem como que seja manipulável por nossas ferramentas computacionais.
 
-A linguagem formal que utilizaremos para representar o significado de frases é \textit{lógica de primeira ordem}. \citet{Jurafsky:2009} apresentam como propriedades interessantes para representações: verificabilidade, não-ambigüidade, existência de uma forma canônica, capacidade de inferência, uso de variáveis e expressividade. Todas estas são possuídas pela lógica de primeira ordem, ao menos até certo ponto. \todo{argumentar, pegar referência} Além disso, é um sistema bem compreendido e bastante flexível.
+A linguagem formal que utilizaremos para representar o significado de frases é \textit{lógica de primeira ordem}. \citet[pp.~500--506]{Jurafsky:2009} apresentam como propriedades interessantes para representações: verificabilidade, não-ambigüidade, existência de uma forma canônica, capacidade de inferência, uso de variáveis e expressividade. Para estes autores, a lógica de primeira ordem possui base computacional válida para verificabilidade, inferência e expressabilidade, sendo um sistema bem compreendido e bastante flexível. Além disso, afirmam que sua característica mais atrativa é o baixo número de compromissos sobre a representação: o mundo representado consistir em objetos, propriedades destes objetos e relações entre eles. \citep[p.~509]{Jurafsky:2009}
+
+\citet[pp.~44--50]{BlackburnBos:2005} destacam as capacidades de inferência e de representação da lógica de primeira ordem. A respeito da inferência, foram criadas ferramentas de dedução automática e de construção de modelos, ambas utilizadas neste trabalho. Sendo a lógica mais estudada, há disponível uma variedade de tais ferramentas em nível sofisticado, o que é uma vantagem sobre outros formalismos. Os autores também destacam a facilidade de incorporação de conhecimento preliminar na lógica de primeira ordem. Já sobre a representação, os autores apontam sua extensão. Não negam que há restrições%
+	\footnote{Particularmente, apontam dificuldades com quantificadores da linguagem natural como \expr{ao menos} (\expreng{most}).}, 
+mas destacam que, em razão de sua flexibilidade, modelos são capazes de ilustrar ``virtualmente qualquer coisa que achemos interessante'' \citep[p.~48]{BlackburnBos:2005}.
 
 \subsection{Lógica de Primeira Ordem}
 
-Definiremos formalmente a sintaxe e a semântica da lógica de primeira ordem. A linguagem usada é definida a partir de um vocabulário. Um vocabulário consiste em três conjuntos de símbolos: um de predicados, um de funções e um de constantes. Cada um desses conjuntos é um conjunto de palavras, em que cada palavra é associada a um número, dito sua \textit{aridade}. No caso do conjunto de constantes, a aridade de cada elemento é $0$. \footnote{Mais a rigor, podemos dizer que são conjuntos de pares ordenados $(palavra,aridade)$.}
+Definiremos formalmente a sintaxe e a semântica da lógica de primeira ordem. Por sintaxe, queremos dizer as fórmulas bem formadas da linguagem, enquanto por semântica, o modelo matemático de seu significado. Assim como linguagens naturais possuem sintaxe e semântica, a lógica de primeira ordem, como linguagem formal, também possui suas regras de formação e seu significado, com a vantagem da precisão matemática. Nossa apresentação será breve. Para uma introdução à lógica clássica (incluindo de primeira ordem) com uma motivação lingüística, recomendamos o livro de \citet{gamut1}.  Para um aprofundamento matemático, recomendamos o livro de \citet{enderton}.
+
+A linguagem usada é definida a partir de um vocabulário. Um vocabulário consiste em três conjuntos de símbolos: um de predicados, um de funções e um de constantes. Cada um desses conjuntos é um conjunto de palavras, em que cada palavra é associada a um número, dito sua \textit{aridade}. No caso do conjunto de constantes, a aridade de cada elemento é $0$. \footnote{Mais a rigor, podemos dizer que são conjuntos de pares ordenados $(palavra,aridade)$.}
 
 Assim, assumimos que possuímos o seguinte conjunto de símbolos:
 \begin{enumerate}
 \item 	Símbolos Lógicos:
 		\begin{enumerate}
 		\item parênteses: $($, $)$,
-		\item conectivos: $\neg$, $\rightarrow$, $\land$, $\lor$
-		\item quantificadores: $\forall$, $\exists$
+		\item conectivos: $\neg$, $\rightarrow$, $\land$, $\lor$ (\expr{não}, \expr{se \dots então}, \expr{e}, \expr{ou}, respectivamente)
+		\item quantificadores: $\forall$, $\exists$ (\expr{para todo}, \expr{existe})
 		\item para variáveis: $x$, $y$, $z$, $\dots$ (um conjunto infinito delas)
-		\item igualdade: $=$
+		\item igualdade: $=$ (\expr{igual})
 		\end{enumerate}
 \item	Símbolos não lógicos:
 		\begin{enumerate}
@@ -30,6 +36,8 @@ Assim, assumimos que possuímos o seguinte conjunto de símbolos:
 		\item um conjunto de símbolos de funções
 		\end{enumerate}
 \end{enumerate}
+
+Com este vocabulário, podemos definir inicialmente o que são termos: expressões que se referem a ``objetos''. A definição possui uma cláusula recursiva. Para ilustrar, se \code{mother} é uma função de aridade $1$, querendo dizer uma função que atribui a cada pessoa a sua mãe, e se \code{mia} é uma constante representando a pessoa de nome \expreng{Mia}, então \code{mother(mia)} é o termo que se refere à mãe de Mia.
 
 \begin{defn}[Termo]
 \begin{enumerate}
@@ -40,6 +48,8 @@ Assim, assumimos que possuímos o seguinte conjunto de símbolos:
 \end{enumerate}
 \end{defn}
 
+Definidos os termos, podemos falar das fórmulas atômicas -- estas são as fórmulas mais básicas de nossa linguagem formal. Como o nome sugere (ao menos por sua etimologia grega), podemos pensar em uma fórmula atômica como uma afirmação irredutível a outra.
+
 \begin{defn}[Fórmula atômica]
 \begin{enumerate}
 \item []
@@ -47,6 +57,8 @@ Assim, assumimos que possuímos o seguinte conjunto de símbolos:
 \item Se $t_1$ e $t_2$ são termos, então $t_1 = t_2$ é uma fórmula atômica.
 \end{enumerate}
 \end{defn}
+
+Possuindo fórmulas atômicas, podemos criar fórmulas mais complexas, a partir dos conectivos e quantificadores.
 
 \begin{defn}[Fórmula]
 \begin{enumerate}
@@ -57,7 +69,9 @@ Assim, assumimos que possuímos o seguinte conjunto de símbolos:
 \end{enumerate}
 \end{defn}
 
-\begin{defn}[Modelo]
+Com isto, está definida a sintaxe da linguagem. Podemos então definir a semântica, o ``significado matemático'' que fundamenta a lógica de primeira ordem e sobre o qual os conceitos de \expr{verdade} e \expr{conseqüência lógica} são definidos. Fundamental será a noção de \textit{modelo}, que pode ser pensado como um ``retrato'' do mundo que está sendo descrito, como uma ``situação''. Matematicamente, modelos são definidos através de conjuntos (e relações).
+
+\begin{defn}[Modelo] \label{def:modelo}
 Um modelo é um par $(D,F)$ em que $D$, chamado \textit{domínio}, é um conjunto não vazio e $F$ é uma função, dita função de interpretação, tal que:
 \begin{enumerate}
 \item $F$ associa cada símbolo de constante do vocabulário a um elemento de $D$.
@@ -66,9 +80,13 @@ Um modelo é um par $(D,F)$ em que $D$, chamado \textit{domínio}, é um conjunt
 \end{enumerate}
 \end{defn}
 
+Como uma variável não é um elemento independente do mundo (como uma constante é), mas sim algo a ser substituído por um ``verdadeiro objeto'', elas não estão representadas na definição \ref{def:modelo}. Para as mesmas, existem as funções de atribuição, que associam cada variável a um objeto do modelo. \citet{BlackburnBos:2005}[p.~12] associam as funções de atribuição a ``contextos'', comparando-as a pronomes indefinidos: se uma variável é um termo que, em princípio, não está relacionado a um objeto em específico, essa relação pode ser definida pelo contexto.
+
 \begin{defn}[Atribuição]
 Uma (função de) atribuição $g$ em um modelo $(D,F)$ é uma função das variáveis no domínio $D$. Se $x$ for uma variável, uma atribuição $g'$ é dita uma $x$-variante quando, para toda variável $y$ distinta de $x$, $g'(y) = g(y)$.
 \end{defn}
+
+Com modelos e funções de atribuição correspondentes, podemos montar a interpretação dos termos, associando cada termo a um objeto: um elemento do domínio. 
 
 \begin{defn}[Interpretação]
 Seja $t$ um termo, $M = (D,F)$ um modelo e $g$ uma atribuição em M. A interpretação $I_F^g$ de $t$ com respeito a $M$ e $g$ é definida indutivamente por:
@@ -79,10 +97,13 @@ Seja $t$ um termo, $M = (D,F)$ um modelo e $g$ uma atribuição em M. A interpre
 \end{enumerate}
 \end{defn}
 
+Com isto, o significado das fórmulas atômicas é construído através da identificação do predicado aplicado aos termos com a existência ou inexistência da relação correspondente entre a interpretação de cada termo. As fórmulas com conectivos possuem seu significado definido pela relação lógica usual. Além disso, as fórmulas com o quantificador existencial (\expr{$\exists$}) é verdade quando a fórmula vale para alguma atribuição (ou, podemos dizer, algum contexto) para a variável quantificada. Por sua vez, com o quantificador universal (\expr{$\forall$}), quando a fórmula vale para qualquer atribuição (qualquer contexto) para a variável quantificada. Por fim, a igualdade entre termos é verdade em um modelo e uma atribuição quando os dois termos são representados como o mesmo objeto (elemento do domínio):
+
 \begin{defn}[Satisfação]
 Sejam $M = (D,F)$ um modelo, $g$ uma atribuição em M e $\phi$ e $\psi$ fórmulas. Então, a relação de satisfabilidade $\models$ é definida indutivamente:
 \begin{enumerate}
 \item $M,g \models p(t_1,\dots,t_n)$ se e somente se $(I_F^g(t_1), \dots, I_F^g(t_n)) \in F(p)$ , em que $p$ é um símbolo de predicado e $t_1$, \dots, $t_n$ são termos.
+\item $M, g \models t_1 = t_2$ se e somente se $I_F^g(t_1)$ é igual a $I_ F^g(t_2)$, em que $t_1$ e $t_2$ são termos.
 \item $M,g \models \neg \phi$ se e somente se não for verdade que $M, g \models \phi$.
 \item $M,g \models \phi \land \psi$ se e somente se $M, g \models \phi$ e $M, g \models \psi$.
 \item $M,g \models \phi \lor \psi$ se e somente se $M, g \models \phi$ ou $M, g \models \psi$.
@@ -92,12 +113,7 @@ Sejam $M = (D,F)$ um modelo, $g$ uma atribuição em M e $\phi$ e $\psi$ fórmul
 \end{enumerate}
 \end{defn}
 
-Para mais detalhes a respeito da lógica de primeira ordem, recomendamos o livro de \citet{enderton}.
-
 \update
-\todo{escrever texto}
-
-%Também uma interessante propriedade da lógica de primeira ordem é sua relativa intuitividade. Bastando explicar o que significam os símbolos conectivos (como $\land$ (significando \expr{e}) e $\rightarrow$ (significando \expr{se \dots então \dots})), bem como os quantificadores ($\forall$ (\expr{para todo})  e $\exists$ (\expr{existe}), uma expressão formal em lógica é compreensível . %\todo{é verdade?}
 
 \subsection{Sintaxe e representação de expressões}
 
