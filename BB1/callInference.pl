@@ -33,6 +33,9 @@
 :- use_module(fol2otter,[fol2otter/2,
                          fol2mace/2]).
 
+:- use_module(fol2prover9,[fol2prover9/2,
+                           fol2mace4/2]). % Prover9 and mace4 included
+
 :- use_module(fol2bliksem,[fol2bliksem/2]).
 
 :- use_module(fol2tptp,[fol2tptp/2]).
@@ -55,6 +58,12 @@
 ========================================================================*/
 
 initTheoremProvers([],_).
+
+initTheoremProvers([prover9|L],Formula):- !,
+   open('prover9.in',write,Stream),
+   fol2prover9(not(Formula),Stream),
+   close(Stream),
+   initTheoremProvers(L,Formula).
 
 initTheoremProvers([otter|L],Formula):- !,
    open('otter.in',write,Stream),
@@ -79,8 +88,14 @@ initTheoremProvers([_|L],Formula):-
 
 initModelBuilders([],_).
 
-initModelBuilders([mace|L],Formula):- !,
-   open('mace.in',write,Stream),
+initModelBuilders([mace4|L],Formula):- !,
+   open('mace4.in',write,Stream),
+   fol2mace4(Formula,Stream),
+   close(Stream),
+   initModelBuilders(L,Formula).
+
+initModelBuilders([mace2|L],Formula):- !,
+   open('mace2.in',write,Stream),
    fol2mace(Formula,Stream),
    close(Stream),
    initModelBuilders(L,Formula).
@@ -169,6 +184,11 @@ callTPandMB(TPProblem,MBProblem,DomainSize,Proof,Model,Engine):-
       Result=interpretation(_,_),
       read(Out,engine(Engine)),
       mace2blackburnbos(Result,Model), !,
+      Proof=unknown
+   ;
+      Result=interpretation(_,_,_),
+      read(Out,engine(Engine)),
+      mace42blackburnbos(Result,Model), !,
       Proof=unknown
    ;
       Result=paradox(_),
@@ -368,6 +388,10 @@ mace2blackburnbos(Mace,model(D,F)):-
 mace2blackburnbos(Mace,unknown):-
    \+ Mace = interpretation(_Size,_Terms).
 
+mace42blackburnbos(Mace,model(D,F)):-
+   Mace = interpretation(Size,_,Terms),
+   mace42d(1,Size,D),
+   mace42f(Terms,D,F).
 
 /*========================================================================
    Translate Mace Model to Domain
@@ -383,6 +407,9 @@ mace2d(I,N,[V|D]):-
 	name(V,[100|Codes]),
 	J is I + 1,
 	mace2d(J,N,D).
+
+mace42d(I,N,L):-
+   mace2d(I,N,L).
 
 
 /*========================================================================
@@ -415,6 +442,38 @@ mace2f([predicate(Relation,V)|Terms],D,[f(2,Functor,X)|F]):-
 
 mace2f([_|Terms],D,F):-
 	mace2f(Terms,D,F).
+
+%---
+
+mace42f([],_,[]):- !.
+
+mace42f([function(Skolem,_)|Terms],D,F):-
+	\+ atom(Skolem), !,
+	mace42f(Terms,D,F).
+
+mace42f([function(Constant,[V])|Terms],D,[f(0,Constant,X)|F]):-
+	atom(Constant), !,
+	Index is V + 1,
+	name(Index,Codes),
+	name(X,[100|Codes]),
+	mace42f(Terms,D,F).
+
+% Not ready for true functions (not constants).
+
+mace42f([relation(Relation,V)|Terms],D,[f(1,Functor,X)|F]):-
+	Relation =.. [Functor,_], !,
+	positiveValues(V,1,X),
+	mace42f(Terms,D,F).
+
+mace42f([relation(Relation,V)|Terms],D,[f(2,Functor,X)|F]):-
+	Relation =.. [Functor,_,_], !,
+	length(D,Size),
+	positivePairValues(V,Size,1,1,X),
+	mace42f(Terms,D,F).
+
+mace42f([_|Terms],D,F):-
+	mace42f(Terms,D,F).
+
 
 
 /*========================================================================

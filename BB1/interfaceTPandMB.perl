@@ -36,15 +36,17 @@ my $winner = "";
 my %command = ( 
  otter   => "otter < otter.in > otter.out 2>/dev/null; echo otter > otter.ready",
  bliksem => "bliksem < bliksem.in > bliksem.out 2>/dev/null; echo bliksem > bliksem.ready",
- mace    => "mace2 -t20 -n1 -N$domainsize -P < mace.in > mace.out 2>/dev/null; echo mace > mace.ready",
- paradox => "paradox paradox.in --sizes 1..$domainsize --print Model > paradox.out 2>/dev/null; echo paradox > paradox.ready"
+ mace2    => "mace2 -t20 -n1 -N$domainsize -P < mace2.in > mace2.out 2>/dev/null; echo mace2 > mace2.ready",
+ paradox => "paradox paradox.in --sizes 1..$domainsize --print Model > paradox.out 2>/dev/null; echo paradox > paradox.ready",
+ prover9 => "prover9 < prover9.in > prover9.out 2>/dev/null; echo prover9 > prover9.ready",
+ mace4 => "mace4 -c -N$domainsize < mace4.in > mace4.out 2>/dev/null; echo mace4 > mace4.ready"
 );
 
 # delete any cruft from previous instances of this script 
 system "rm -f *.ready";
 
 # run any requested processes
-foreach my $p (("otter", "bliksem", "mace", "paradox")) {
+foreach my $p (("otter", "bliksem", "mace2", "paradox", "prover9", "mace4")) {
    if ($pleaseload =~ /$p/) {
       my $forkedpid = fork;
       unless ($forkedpid) {
@@ -64,24 +66,44 @@ while( (keys %pids) > 0 && $winner eq "") {
   # give some time to the child processes
   sleep 0.5;
 
-  if (-e "mace.ready" && $winner eq "") {
-      my $readmacemodel = 0;
-      open(OUTPUT,"mace.out");
+  if (-e "mace2.ready" && $winner eq "") {
+      my $readmace2model = 0;
+      open(OUTPUT,"mace2.out");
       while (<OUTPUT>) {
              if (/end_of_model/) {
-                $winner = "mace";
-                $readmacemodel = 0;
+                $winner = "mace2";
+                $readmace2model = 0;
              }
-             elsif ($readmacemodel) {
+             elsif ($readmace2model) {
                 $model = "$model$_";
                 $model =~ s/\$(.*?)\,/$1\,/;
              }
              elsif (/======================= Model/) {
-                $readmacemodel = 1;
+                $readmace2model = 1;
 	    }
       }
       close(OUTPUT);
-      delete $pids{mace};
+      delete $pids{mace2};
+  }
+
+  if (-e "mace4.ready" && $winner eq "") {
+      my $readmace4model = 0;
+      open(OUTPUT,"mace4.out");
+      while (<OUTPUT>) {
+             if (/end of model/) {
+                $winner = "mace4";
+                $readmace4model = 0;
+             }
+             elsif ($readmace4model) {
+                $model = "$model$_";
+                $model =~ s/\$(.*?)\,/$1\,/;
+             }
+             elsif (/============================== MODEL/) {
+                $readmace4model = 1;
+	    }
+      }
+      close(OUTPUT);
+      delete $pids{mace4};
   }
 
   if (-e "paradox.ready" && $winner eq "") {
@@ -124,6 +146,18 @@ while( (keys %pids) > 0 && $winner eq "") {
      }
      close(OUTPUT);
      delete $pids{otter};
+  }
+
+  if (-e "prover9.ready" && $winner eq "") {
+      open(OUTPUT,"prover9.out");
+      while (<OUTPUT>) {
+             if (/THEOREM PROVED/) {
+                $winner = "prover9";
+            }
+     }
+
+     close(OUTPUT);
+     delete $pids{prover9};
   }
 
   if (-e "bliksem.ready" && $winner eq "") {

@@ -81,7 +81,7 @@ lexEntry(noun,[symbol:person,syntax:[person]]).
 lexEntry(noun,[symbol:husband,syntax:[husband]]).
 lexEntry(noun,[symbol:joke,syntax:[joke]]).
 lexEntry(noun,[symbol:man,syntax:[man]]).
-%lexEntry(noun,[symbol:money,syntax:[money]]).
+%%lexEntry(noun,[symbol:money,syntax:[money]]). % Problem: needs determiner
 lexEntry(noun,[symbol:motorbike,syntax:[motorbike]]).
 lexEntry(noun,[symbol:needle,syntax:[needle]]).
 lexEntry(noun,[symbol:owner,syntax:[owner]]).

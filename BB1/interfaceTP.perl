@@ -22,6 +22,7 @@ eval 'exec perl -w -S $0 ${1+"$@"}'
 #
 my $otter_selected = ($ARGV[0] =~ /otter/);
 my $bliksem_selected = ($ARGV[0] =~ /bliksem/);
+my $prover9_selected = ($ARGV[0] =~ /prover9/);
 
 my $otter_result = 0;
 my $readotter = 0;
@@ -29,6 +30,8 @@ my $readotter = 0;
 my $bliksem_result = 0;
 my $readbliksem = 0;
 
+my $prover9_result = 0;
+my $readprover9 = 0;
 
 if ($otter_selected) {
    open(OTTER_OUTPUT, "otter < otter.in 2>/dev/null |");
@@ -40,12 +43,18 @@ if ($bliksem_selected) {
    $readbliksem=1;
 }
 
-while($readotter || $readbliksem) { 
+if ($prover9_selected) {
+   open(PROVER9_OUTPUT, "prover9 < prover9.in 2>/dev/null |");
+   $readprover9=1;
+}
+
+while($readotter || $readbliksem || $readprover9) { 
   if ($readotter && defined($_ = <OTTER_OUTPUT>)) {
      if ($_ =~ /proof of the theorem/) {
         $otter_result = 1;
         $readotter = 0;
         $readbliksem = 0;
+        $readprover9 = 0;
      }
   }
   else {
@@ -56,10 +65,22 @@ while($readotter || $readbliksem) {
         $bliksem_result = 1;
         $readotter = 0;
         $readbliksem = 0;
+        $readprover9 = 0;
      }
   }
   else {
      $readbliksem=0;
+  }
+  if ($readprover9 && defined($_ = <PROVER9_OUTPUT>)) {
+     if ($_ =~ /THEOREM PROVED/) {
+        $prover9_result = 1;
+        $readotter = 0;
+        $readbliksem = 0;
+        $readprover9 = 0;
+     }
+  }
+  else {
+     $readprover9=0;
   }
 }
 
@@ -71,6 +92,10 @@ if ($bliksem_selected) {
    close BLIKSEM_OUTPUT;			 
 }
 
+if ($prover9_selected) {
+   close PROVER9_OUTPUT;
+}
+
 open(OUTPUT,">tp.out");
 if ($otter_result == 1) {
    print OUTPUT "proof.\n";
@@ -79,6 +104,10 @@ if ($otter_result == 1) {
 elsif ($bliksem_result == 1) {
    print OUTPUT "proof.\n";
    print OUTPUT "engine(bliksem).\n";
+}
+elsif ($prover9_result == 1) {
+   print OUTPUT "proof.\n";
+   print OUTPUT "engine(prover9).\n";
 }
 else {
    print OUTPUT "unknown.\n";

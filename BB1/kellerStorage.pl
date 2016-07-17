@@ -78,7 +78,7 @@ kellerStorage(Sentence,Sems2):-
 /* Predicates added in order to use wordnet words */
 
 wordnetLexicon(L,SymList) :-
-    findall(Sym,findWordnetLex(L,Sym),SymList).
+    findall(Sym,findWordnetLex(L,Sym),SymList), !.
 
 findWordnetLex(L,Sym) :-
     s(Synset,_,Expression,Class,_,_),
