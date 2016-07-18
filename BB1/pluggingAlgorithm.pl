@@ -40,6 +40,7 @@
 :- dynamic some/3, all/3, que/4.
 :- dynamic not/2, or/3, imp/3, and/3.
 :- dynamic pred1/3, pred2/4, eq/3.
+:- dynamic pred3/5.
 %:- dynamic parent/2.
 
 
@@ -187,6 +188,14 @@ url2srl(L,F):-
    pred2(L,Symbol,Arg1,Arg2),
    compose(F,Symbol,[Arg1,Arg2]).
 
+% Exercise 6.1.3 -- Start
+
+url2srl(L,F):-
+   pred3(L,Symbol,Arg1,Arg2,Arg3),
+   compose(F,Symbol,[Arg1,Arg2,Arg3]).
+
+% Exercise 6.1.3 -- End
+
 
 /*========================================================================
    Assert USR to Prolog database
@@ -214,5 +223,6 @@ initUSR:-
    retractall(some(_,_,_)), retractall(all(_,_,_)), retractall(que(_,_,_,_)), 
    retractall(pred1(_,_,_)), retractall(pred2(_,_,_,_)), retractall(eq(_,_,_)), 
    retractall(and(_,_,_)), retractall(or(_,_,_)), retractall(not(_,_)), 
-   retractall(plug(_,_)), retractall(imp(_,_,_)).
+   retractall(plug(_,_)), retractall(imp(_,_,_)),
+   retractall(pred3(_,_,_,_,_)). % Added for ditransitive verbs
 

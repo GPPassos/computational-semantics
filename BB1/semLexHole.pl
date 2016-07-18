@@ -64,12 +64,36 @@ semLex(tv,M):-
    M = [symbol:Sym,
         sem:lam(Z,lam(X,app(Z,lam(Y,lam(H,lam(L,and(pred2(L,Sym,X,Y),leq(L,H))))))))]. 
 
+% Exercise 6.1.3 -- Start
+
+semLex(dv,M):-
+   M = [symbol:Sym,
+        sem:lam(P,lam(Q,lam(X,app(Q,lam(Y,app(P,lam(Z,lam(H,lam(L,and(pred3(L,Sym,X,Y,Z),leq(L,H)))))))))))].
+
+% Exercise 6.1.3 -- End
+
 semLex(qnp,M):-
    M = [type:wh,
         symbol:Sym,
         sem:lam(V,lam(H,lam(L,some(H1,some(L2,some(L3,some(X,and(hole(H1),and(label(L2),
                 and(label(L3),and(que(L2,X,L3,H1),and(pred1(L3,Sym,X),and(leq(L,H1),
                     and(leq(L2,H),app(app(app(V,X),H),L)))))))))))))))]. 
+
+% Exercise 6.1.3 -- Start
+
+%semLex(qnp,M):-
+%   M = [type:uni,
+%        symbol:Sym,
+%        sem:lam(P,all(X,imp(Formula,app(P,X))))],
+%   compose(Formula,Sym,[X]).
+
+%semLex(qnp,M):-
+%   M = [type:neg,
+%        symbol:Sym,
+%        sem:lam(P,not(exists(X,and(Formula,app(P,X)))))],
+%    compose(Formula,Sym,[X]).
+
+% Exercise 6.1.3 -- End
 
 semLex(cop,M):-
     M = [pol:pos,

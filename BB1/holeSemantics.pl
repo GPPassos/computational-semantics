@@ -67,11 +67,11 @@ holeSemantics:-
    %filterAlphabeticVariants(Sems1,Sems2),
    printRepresentations(Sems1).
 
-holeSemantics(Sentence,Sems2):-
+holeSemantics(Sentence,Sems1):-
    wordnetLexicon(Sentence,_),   
    setof(USR,t([sem:USR],Sentence,[]),USRs),
-   findall(Sem,(member(USR,USRs), plugUSR(USR,Sem)),Sems1),
-   filterAlphabeticVariants(Sems1,Sems2).
+   findall(Sem,(member(USR,USRs), plugUSR(USR,Sem)),Sems1).
+   %filterAlphabeticVariants(Sems1,Sems2).
 
 /* */
 
@@ -96,14 +96,40 @@ holeSemantics(Sentence,Sems):-
 /* Predicates added in order to use wordnet words */
 
 wordnetLexicon(L,SymList) :-
-    findall(Sym,findWordnetLex(L,Sym),SymList).
+    findall(Sym,findWordnetLex(L,Sym),SymList), !.
 
 findWordnetLex(L,Sym) :-
-    s(Synset,_,Expression,n,_,_),
-    member(Expression,L),
-    atom_concat(Expression,Synset,Sym),
-    Syn = Expression,
-    assert(lexEntry(noun,[symbol:Sym,syntax:[Syn]])).
+    s(Synset,_,Expression,Class,_,_),
+    (
+        (Class = n,
+        member(Expression,L),
+        atom_concat(Expression,Synset,Sym),
+        Syn = Expression,        
+        assert(lexEntry(noun,[symbol:Sym,syntax:[Syn]])) )
+    ;
+        (Class = v,
+        member(Expression2,L),
+        (Expression = Expression2; atom_concat(Expression,s,Expression2)),
+        atom_concat(Expression,Synset,Sym),
+        Syn = Expression,
+        atom_concat(Syn,s,Syn2),
+        assert(lexEntry(tv,[symbol:Sym,syntax:[Syn],inf:inf,num:sg])),
+        assert(lexEntry(tv,[symbol:Sym,syntax:[Syn2],inf:fin,num:sg])),
+        assert(lexEntry(tv,[symbol:Sym,syntax:[Syn],inf:fin,num:pl])),
+        assert(lexEntry(iv,[symbol:Sym,syntax:[Syn],inf:inf,num:sg])),
+        assert(lexEntry(iv,[symbol:Sym,syntax:[Syn2],inf:fin,num:sg])),
+        assert(lexEntry(iv,[symbol:Sym,syntax:[Syn],inf:fin,num:pl])),
+        assert(lexEntry(dv,[symbol:Sym,syntax:[Syn],inf:inf,num:sg])),
+        assert(lexEntry(dv,[symbol:Sym,syntax:[Syn2],inf:fin,num:sg])),
+        assert(lexEntry(dv,[symbol:Sym,syntax:[Syn],inf:fin,num:pl])))
+    ;
+        (Class = a,
+        member(Expression,L),
+        atom_concat(Expression,Synset,Sym),
+        Syn = Expression,
+        assert(lexEntry(adj,[symbol:Sym,syntax:[Syn]]))
+        )
+    ).
 
 /* end */
 

@@ -72,6 +72,10 @@ combine(vp:app(A,B),[cop:A,np:B]).
 combine(vp:A,[iv:A]).
 combine(vp:app(A,B),[tv:A,np:B]).
 
+% Exercise 6.1.3 -- Start
+combine(vp:app(app(A,C),B),[dv:A,np:B,np:C]).
+% Exercise 6.1.3 -- End
+
 combine(pp:app(A,B),[prep:A,np:B]).
 
 combine(rc:app(A,B),[relpro:A,vp:B]).
