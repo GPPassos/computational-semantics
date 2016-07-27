@@ -42,6 +42,11 @@ combine(s:S,[np:[A|S1],vp:[B|S2]]):-
    sRetrieval([app(A,B)|S3],Retrieved),
    betaConvert(Retrieved,S).
 
+%combine(s:S,[np:[A|S1],vp:[B|S2]]):-
+%    appendLists(S1,S2,S3),
+%    betaConvert(app(A,B),Res),
+%    S = [Res|S3].
+
 combine(sinv:S,[av:[A],np:[B|S1],vp:[C|S2]]):-
    appendLists(S1,S2,S3),
    sRetrieval([app(B,app(A,C))|S3],Retrieved),
@@ -56,7 +61,10 @@ combine(q:Q,[sinv:Q]):-
    Q=que(_,_,_).
 
 combine(np:A,[pn:A]).
-combine(np:A,[qnp:A]).
+%combine(np:A,[qnp:A]). %%- original
+% Exercise 6.1.3 -- Start -- I'm not sure about this modification. It seems adequate for the example "Everybody loves nobody", but not so for "Nobody loves everybody".
+combine(np:[lam(P,app(P,X)),bo([A],X)],[qnp:[A]]).
+% Exercise 6.1.3 -- End
 combine(np:[lam(P,app(P,X)),bo([app(A,B)|S],X)],[det:[A],n:[B|S]]).
 combine(np:[app(A,B)|S],[det:[A],n:[B|S]]).
 combine(np:[app(app(B,A),C)|S3],[np:[A|S1],coord:[B],np:[C|S2]]):-

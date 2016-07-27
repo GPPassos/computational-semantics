@@ -105,7 +105,7 @@ semLex(qnp,M):-
 semLex(qnp,M):-
    M = [type:neg,
         symbol:Sym,
-        sem:[lam(P,not(exists(X,and(Formula,app(P,X)))))]],
+        sem:[lam(P,not(some(X,and(Formula,app(P,X)))))]],
     compose(Formula,Sym,[X]).
 
 % Exercise 6.1.3 -- End
