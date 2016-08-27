@@ -3,16 +3,19 @@ Repository for Bachelor's Thesis (final project) in Applied Mathematics at Funda
 
 We work with Blackburn & Bos files, integrating with Wordnet and doing other exercises.
 
-The thesis text is avaiable at texto/tcc_gppassos.pdf
+The thesis text is available at texto/tcc_gppassos.pdf
 
 # Requirements
 
 - Prolog (we use [Prolog SWI](http://www.swi-prolog.org/) )
-- Otter and Mace2: avaiable at https://www.cs.unm.edu/~mccune/otter/
+
+One of:
+- Otter and Mace2: available at https://www.cs.unm.edu/~mccune/otter/
+- Prover9 and Mace4: available at https://www.cs.unm.edu/~mccune/mace4/
 
 # Usage
 
-Access `BB1` folder and from there call `prolog`. You'll probably want to use our modifications from `kellerStorage.pl` or `helpfulCurt.pl`:
+Access `BB1` folder and from there call `prolog`. You'll probably want to use our modifications from `kellerStorage.pl`, `holeSemantics.pl`, `helpfulCurt.pl` or `helpfulCurtHole.pl`:
 
 ```bash
 prolog
@@ -26,6 +29,7 @@ For an example, you can then type
 ```
 A king loves a dying dragon
 ```
+For using Prover9 and Mace4 instead of Otter and Mace2, modify `inferenceEngines.pl`.
 
 # References
 

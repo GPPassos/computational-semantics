@@ -95,7 +95,8 @@ printOtter(Stream,and(Phi,Psi),Tab):-
    printOtter(Stream,Phi,Tab), 
    format(Stream,' & ~n',[]),
    tab(Stream,Tab),
-   NewTab is Tab + 5,
+   %% NewTab is Tab + 5,
+   NewTab is Tab,
    printOtter(Stream,Psi,NewTab),
    write(Stream,')').
 

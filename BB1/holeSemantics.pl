@@ -26,7 +26,8 @@
                          infix/0,
                          holeSemantics/0,
 			 holeSemantics/2,
-			 holeSemanticsTestSuite/0]).
+			 holeSemanticsTestSuite/0,
+                         s/6]).
 
 :- use_module(readLine,[readLine/1]).
 
@@ -64,34 +65,14 @@ holeSemantics:-
    wordnetLexicon(Sentence,_),
    setof(USR,t([sem:USR],Sentence,[]),USRs),
    findall(Sem,(member(USR,USRs), plugUSR(USR,Sem)),Sems1),
-   %filterAlphabeticVariants(Sems1,Sems2),
    printRepresentations(Sems1).
 
 holeSemantics(Sentence,Sems1):-
    wordnetLexicon(Sentence,_),   
    setof(USR,t([sem:USR],Sentence,[]),USRs),
+   %% findall(USR,(member(USR,USRs)),Sems1),
    findall(Sem,(member(USR,USRs), plugUSR(USR,Sem)),Sems1).
-   %filterAlphabeticVariants(Sems1,Sems2).
-
-/* */
-
-
-/* Original predicates to holeSemantics
-
-holeSemantics:-
-   readLine(Sentence),
-   wordnetLexicon(Sentence,_),
-   t([sem:USR],Sentence,[]),   
-   printRepresentations([USR]),
-   setof(Sem,plugUSR(USR,Sem),Sems),
-   printRepresentations(Sems).
-
-holeSemantics(Sentence,Sems):-
-   wordnetLexicon(Sentence,_),
-   t([sem:USR],Sentence,[]),   
-   setof(Sem,plugUSR(USR,Sem),Sems).
-
-*/
+   %% printRepresentations(Sems1).
 
 /* Predicates added in order to use wordnet words */
 

@@ -39,7 +39,7 @@ my %command = (
  mace2    => "mace2 -t20 -n1 -N$domainsize -P < mace2.in > mace2.out 2>/dev/null; echo mace2 > mace2.ready",
  paradox => "paradox paradox.in --sizes 1..$domainsize --print Model > paradox.out 2>/dev/null; echo paradox > paradox.ready",
  prover9 => "prover9 < prover9.in > prover9.out 2>/dev/null; echo prover9 > prover9.ready",
- mace4 => "mace4 -c -N$domainsize < mace4.in > mace4.out 2>/dev/null; echo mace4 > mace4.ready"
+ mace4 => "mace4 -t20 -c -N$domainsize < mace4.in > mace4.out 2>/dev/null; echo mace4 > mace4.ready"
 );
 
 # delete any cruft from previous instances of this script 

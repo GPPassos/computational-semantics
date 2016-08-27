@@ -47,6 +47,22 @@ semLex(det,M):-
                 and(label(L1),and(label(L2),and(que(L2,X,L1,H1),and(leq(L,H1),
                     and(leq(L2,H),and(app(app(app(N,X),H),L1),
                         app(app(app(V,X),H),L))))))))))))))))].
+% Exercise 6.1.3 -- Start
+semLex(det,M):-
+   M = [type:neg,
+        sem:lam(N,lam(V,lam(H,lam(L,some(H1,some(L1,some(L2,some(L3,some(L4,
+            and(hole(H1),and(label(L1),and(label(L2),and(label(L3),and(label(L4),
+            and(not(L1,L2),and(some(L2,X,L3),and(and(L3,L4,H1),
+            and(leq(L1,H),and(leq(L,H1),and(app(app(app(N,X),H),L4),app(app(app(V,X),H),L)))))))))))))))))))))].
+
+semLex(det,M):-
+   M = [type:def,
+        sem:lam(N,lam(V,lam(H,lam(L,some(H1,some(L1,some(L2,some(L3,some(L4,some(L5,some(L6,some(L7,some(L8,
+             and(hole(H1),and(label(L1),and(label(L2),and(label(L3),and(label(L4),and(label(L5),and(label(L6),and(label(L7),and(label(L8),
+             and(some(L1,X,L2),and(and(L2,L3,L4),and(and(L3,L5,H1),and(all(L4,Y,L6),and(imp(L6,L7,L8),and(eq(L8,Y,X),
+             and(leq(L1,H),and(leq(L,H1),and(app(app(app(N,X),H),L5),and(app(app(app(V,X),H),L),app(app(app(N,Y),H),L7)))))))))))))))))))))))))))))))))].
+
+% Exercise 6.1.3 -- End
 
 semLex(pn,M):-
    M = [symbol:Sym,
@@ -81,17 +97,21 @@ semLex(qnp,M):-
 
 % Exercise 6.1.3 -- Start
 
-%semLex(qnp,M):-
-%   M = [type:uni,
-%        symbol:Sym,
-%        sem:lam(P,all(X,imp(Formula,app(P,X))))],
-%   compose(Formula,Sym,[X]).
+semLex(qnp,M):-
+   M = [type:uni,
+        symbol:Sym,
+        sem:lam(P,lam(H,lam(L,some(L1,some(L2,some(L3,some(H1,and(label(L1),and(label(L2),and(label(L3),and(hole(H1),and(
+            all(L1,X,L2),and(imp(L2,L3,H1),and(pred1(L3,Sym,X),and(
+            leq(L1,H),and(leq(L,H1),
+            app(app(app(P,X),H),L)))))))))))))))))].
 
-%semLex(qnp,M):-
-%   M = [type:neg,
-%        symbol:Sym,
-%        sem:lam(P,not(exists(X,and(Formula,app(P,X)))))],
-%    compose(Formula,Sym,[X]).
+semLex(qnp,M):-
+   M = [type:neg,
+        symbol:Sym,
+        sem:lam(P,lam(H,lam(L,some(L1,some(L2,some(L3,some(L4,some(H1,and(label(L1),and(label(L2),and(label(L3),and(label(L4),and(hole(H1),and(
+            not(L1,L2),and(some(L2,X,L3),and(imp(L3,L4,H1),and(pred1(L4,Sym,X),and(
+            leq(L1,H),and(leq(L,H1),
+            app(app(app(P,X),H),L))))))))))))))))))))].
 
 % Exercise 6.1.3 -- End
 

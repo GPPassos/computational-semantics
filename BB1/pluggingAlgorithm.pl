@@ -58,8 +58,9 @@ plugUSR(USR,Sem):-
            (label(L),\+ parent(_,L)),
            Labels),
    plugHoles(Holes,Labels,[]),   % 3 Calculate a plugging
-   url2srl(Top,Sem).             % 4 Construct SRL formula
-
+   %% url2srl(Top,Sem).             % 4 Construct SRL formula
+   url2srl(Top,SemNonvar),       % 4 Construct SRL (nonvar) formula
+   varnumbers(SemNonvar,Sem).    % 4.1 Transform nonvar in SRL into variables
 
 /*========================================================================
    Asserting immediate dominance relations to the Prolog database
@@ -109,8 +110,8 @@ dom(L,X,Z):-
 ========================================================================*/
 
 plugHoles([],_,Plugs):-
-   admissiblePlugging(Plugs),
-   write(Plugs).
+   admissiblePlugging(Plugs).
+   %% write(Plugs).
 
 plugHoles([H|Holes],Labels1,Plugs):-
    admissiblePlugging(Plugs),

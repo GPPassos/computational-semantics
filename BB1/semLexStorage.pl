@@ -47,7 +47,7 @@ semLex(det,M):-
 
 semLex(det,M):-
     M = [type:def,
-         sem:[lam(P,lam(Q,some(X,and(and(app(P,X),app(Q,X)),all(Y,imp(app(P,Y),eq(X,Y)))))))]].
+         sem:[lam(P,lam(Q,some(X,and(and(app(P,X),app(Q,X)),all(Y,imp(app(P,Y),eq(Y,X)))))))]].
 
 % Exercise 6.1.3 -- End 
 

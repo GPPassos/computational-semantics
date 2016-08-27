@@ -27,7 +27,7 @@
 
 
 /*========================================================================
-   Translates formula to Otter syntax on Stream
+   Translates formula to Prover9 syntax on Stream
 ========================================================================*/
 
 fol2prover9(Formula,Stream):- 
@@ -46,6 +46,7 @@ fol2prover9(Formula,Stream):-
 
 fol2mace4(Formula,Stream):- 
 	format(Stream,'set(auto).~n~n',[]),
+        format(Stream,'assign(max_seconds,60).~n~n',[]),
 	format(Stream,'set(prolog_style_variables).~n~n',[]),
 	format(Stream,'formulas(sos).~n~n',[]),
 	printProver9Formula(Stream,Formula),
@@ -94,7 +95,8 @@ printProver9(Stream,and(Phi,Psi),Tab):-
    printProver9(Stream,Phi,Tab), 
    format(Stream,' & ~n',[]),
    tab(Stream,Tab),
-   NewTab is Tab + 5,
+   %% NewTab is Tab + 5,
+   NewTab is Tab,
    printProver9(Stream,Psi,NewTab),
    write(Stream,')').
 
