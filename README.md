@@ -10,8 +10,13 @@ The thesis text is available at texto/tcc_gppassos.pdf
 - Prolog (we use [Prolog SWI](http://www.swi-prolog.org/) )
 
 One of:
-- Otter and Mace2: available at https://www.cs.unm.edu/~mccune/otter/
 - Prover9 and Mace4: available at https://www.cs.unm.edu/~mccune/mace4/
+- Otter and Mace2: available at https://www.cs.unm.edu/~mccune/otter/
+
+If you are using Otter and Mace2, please in `BB1/inferenceEngines.pl` uncomment the line
+`inferenceEngines([mace2,otter]).`
+and comment 
+`inferenceEngines([mace4,prover9]).`
 
 # Usage
 
