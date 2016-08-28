@@ -1,9 +1,9 @@
 # Computational Semantics (Work in Progress)
-Repository for Bachelor's Thesis (final project) in Applied Mathematics at Fundação Getulio Vargas, supervised by [Alexandre Rademaker] (http://arademaker.github.io/)
+Repository for Bachelor's Thesis (final project) in Applied Mathematics at Fundação Getulio Vargas, supervised by [Alexandre Rademaker] (http://arademaker.github.io/).
 
 We work with Blackburn & Bos files, integrating with Wordnet and doing other exercises.
 
-The thesis text is available at texto/tcc_gppassos.pdf
+The thesis text is available at texto/tcc_gppassos.pdf.
 
 # Requirements
 
@@ -16,7 +16,7 @@ One of:
 If you are using Otter and Mace2, please uncomment in `BB1/inferenceEngines.pl` the line
 `inferenceEngines([mace2,otter]).`
 and comment 
-`inferenceEngines([mace4,prover9]).`
+`inferenceEngines([mace4,prover9]).`.
 
 # Usage
 
