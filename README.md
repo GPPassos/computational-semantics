@@ -13,7 +13,7 @@ One of:
 - Prover9 and Mace4: available at https://www.cs.unm.edu/~mccune/mace4/
 - Otter and Mace2: available at https://www.cs.unm.edu/~mccune/otter/
 
-If you are using Otter and Mace2, please in `BB1/inferenceEngines.pl` uncomment the line
+If you are using Otter and Mace2, please uncomment in `BB1/inferenceEngines.pl` the line
 `inferenceEngines([mace2,otter]).`
 and comment 
 `inferenceEngines([mace4,prover9]).`
