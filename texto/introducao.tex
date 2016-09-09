@@ -1,0 +1,108 @@
+% O estudo da linguagem
+\subsection{Estudo Formal e Computacional da Linguagem}
+% Trocar para ser sobre o estudo da linguagem e deixar NLP depois? Manning e van Eijck falam de linguagem
+
+	Linguagem natural é o termo utilizado para se referir à linguagem humana que não foi criada através de um planejamento consciente, como o Português, o Inglês, o Japonês, entre outras. \fixd O termo se contrapõe às linguagens construídas, como o Esperanto, e às linguagens formais, tais como as linguagens de programação ou linguagens lógicas.
+	
+	Nas últimas décadas, o estudo computacional da linguagem natural passou por intenso desenvolvimento. Isto se deu pelo crescimento e grande aproximação (ou mesmo fusão) de áreas em diferentes departamentos, como Lingüística Computacional, em linguística, e Processamento de Linguagem Natural (\textit{Natural Language Processing}, ou simplesmente NLP), em computação \citep[pp.~xxi, 10]{Jurafsky:2009}.
+		\footnote{Preferimos a visão que diferencia conceitualmente a Lingüística Computacional do Processamento de Linguagem Natural. A primeira seria o estudo da linguagem humana através de modelos computacionais. Seria, portanto, de interesse científico, buscando explicação e compreensão do fenômeno. Já a segunda seria a disciplina de métodos computacionais relacionados à linguagem para resolução de problemas práticos. Assim, seria uma disciplina de engenharia, voltada para a aplicação \citep{CarnegieMellon}. Isto, entretanto, não significa que sejam comunidades apartadas ou que os métodos utilizados sejam distintos. A diferença conceitual na prática apenas se realiza por uma distinção de enfoque ou de finalidade.
+		
+		Há a visão de tais nomes representariam a mesma área, ou mesmo de que um campo estaria incluído no outro. Por exemplo, \citet[pp.~1--9]{Grishman:1986} utiliza o nome ``Lingüística Computacional'' para incluir tanto a abordagem de finalidade científica quanto a de finalidade prática.}
+	
+	Exemplos bem sucedidos de aplicações são a Siri, uma assistente do sistema operacional iOS que interage com o usuário utilizando linguagem natural; serviços de tradução automática, como o do Google, que apresentam constante melhora; e também diversas empresas relacionadas a inteligência de marketing ou empresarial (\textit{marketing intelligence} e \textit{business intelligence}) destinadas a fazer análise de dados a partir de textos em linguagem natural.
+
+\todo[inline, disable]{melhorar essa introdução, achar referências, talvez pesquisar um paperzinho de história de NLP} % Acho que não vai rolar paperzinho não
+	
+	O uso de modelos matemáticos de diferentes formas e tradições foi um passo essencial para o desenvolvimento da ciência, bem como para a levar o conhecimento adquirido a aplicações. Historicamente, ocorreu uma tensão (ou, ao menos, um distanciamento) entre dois paradigmas em NLP: o simbólico e o probabilístico. 
+	
+		Tal divisão existiu de modo particularmente notável do fim da década de 50 ao fim da de 60. Desta época, do paradigma simbólico participaram o trabalho de Noam Chomsky em linguagens formais e sintaxe gerativa, o trabalho de lingüistas e cientistas da computação em algoritmos de análise sintática (\textit{parsing}), bem como os da área de inteligência artificial, como sistemas baseados em lógica formal e correspondência de padrões (\textit{pattern matching}), influenciados pelo famoso \textit{Logic Theorist} (Teórico Lógico)\fixed{apresentei o nome traduzido, mas como é um nome próprio (ainda que de software), deixei o original também} de Allen Newell, Herbert Simon e Cliff Shaw, um exemplo de sistema baseado em lógica e raciocínio automático.
+		
+		Para \citet[pp.~4--7]{Manning:1999}, esta tradição é representativa da escola do racionalismo, no embate filosófico entre racionalismo e empirismo. Aqui, racionalismo é a posição segundo a qual é possível, de modo significativo, adquirir conceitos e conhecimento independentemente da experiência dos sentidos \citep{sep-rationalism-empiricism}. No caso em questão, conhecimento lingüístico.
+%
+	
+		Na tradição estocástica, dois exemplos são o trabalho de Bledson e Browning de um sistema bayesiano para reconhecimento ótico de caracteres, bem como o uso de métodos bayesianos por Mosteller e Wallace para atribuir autoria de trechos d'\textit{O Federalista}. Já nas décadas de 70 e 80, houve grande desenvolvimento de algoritmos de reconhecimento de fala, como o uso de Cadeias Ocultas de Markov \citep[pp.10--11]{Jurafsky:2009}.
+		
+		Assim, \citet[pp.~4--7]{Manning:1999} apresentam esta linha como representativa do empirismo -- pressupondo menos conhecimento inato e ressaltando o aprendizado a partir de exemplos.
+	
+	%\subsection*{}
+		
+	Métodos de lingüística computacional e processamento de linguagem natural foram aplicados para as mais diversas sub-áreas da lingüística. Algumas delas são: a fonologia (estudo dos sons), a morfologia (o estudo da formação e composição de palavras), a sintaxe (o estudo de como as palavras se combinam para formar orações e frases), a semântica (o estudo do significado) e a pragmática (o estudo de como o contexto influencia no significado) \citep[p.~2]{vanEijck:2010}.
+	
+	Em particular, uma linha de estudos de semântica é a chamada \textit{semântica de teoria de modelos} ou \textit{semântica formal}. Este método busca descrever o significado de linguagem natural através de um modelo, uma estrutura abstrata que codifica a informação passada. Particularmente, são usados modelos formais, isto é, matematicamente bem definidos. Um fundamento por trás deste método é como se segue:
+		Entre as funções da linguagem, está a de descrever a maneira que o mundo é (ou de comunicar tais descrições). Neste uso, uma afirmação feita em linguagem é \textit{sobre} algo; em particular, usualmente algo do mundo real. Caso a afirmação corretamente reflita o modo pelo qual o mundo é, é dita \textit{verdadeira}. Se não, é \textit{falsa}. Dada a importância do uso da linguagem para troca de informações a respeito do mundo, em particular para a razão prática -- decisões sobre como agir --, pareceria razoável que coubesse a uma teoria da semântica descrever a relação entre o significado de expressões e a determinação de sua verdade ou falsidade, colocando este aspecto como central.
+%		
+		Um modo de realizar esta descrição seria pelo uso de modelos. Estes seriam uma representação abstrata do mundo, de modo que a relação entre a linguagem e a descrição do mundo possa ser feita de um modo tratável \citep[pp.~11--13]{Kamp:1993}.
+	
+	Esse método é devido a Richard Montague, sendo a realização específica feita pelo mesmo hoje conhecida como \textit{Gramática de Montague}. 
+	%
+	Montague foi um lógico e, com efeito, seu trabalho utilizou métodos da lógica para a descrição da linguagem natural. Em lógica, também a definição de significado (ou de verdade) se utiliza de modelos: a noção de modelo foi construída para definir os conceitos de verdade e de conseqüência lógica. O fundamento não é muito diferente: um modelo é uma representação abstrata de um estado de coisas no mundo. Apesar disto, o uso da lógica em linguagem não foi de acordo com a visão comum da época, segundo a qual as linguagens naturais não seriam sistemáticas o suficiente; com efeito, as lógicas formais teriam sido desenvolvidas exatamente para permitir a comunicação de afirmações científicas um modo rigoroso, que seria impossível para a linguagem natural. Apesar disto, um precursor deste método foi o alemão Gottlob Frege, criador da lógica de primeira ordem \citep[pp.~12,16--17,21--23]{Kamp:1993}.
+
+% O que é o trabalho?
+\subsection{Proposta do Trabalho}
+
+	Este é um trabalho na área de semântica computacional, em um sentido estrito. Denotamos aqui \textit{semântica computacional} como a área que busca construir representações formais de modo algorítmico para o significado de expressões de linguagem natural \citep[p.~ix]{vanEijick:intro}. Incluímos também na área o uso dessas representações para realizar inferências, isto é, extrair conclusões. É, assim, uma versão computacional da semântica formal.
+
+	%\subsection{Semântica Computacional}
+	Em mais detalhes, no estudo computacional da semântica, uma idéia central é a de que é possível capturar o significado de expressões de linguagem natural a partir de estruturas formais. Como vimos, isto é a definição do campo de semântica formal. O intuito é relacionar estruturas lingüísticas com conhecimento sobre o mundo, que é representado de alguma maneira. São todas questões da semântica formal: a escolha de qual modo de representar, quais as propriedades da representação e como associar palavras e frases a estruturas. O uso de estruturas formais tem utilidade para lingüistas por permitir que discutam significado de modo mais rigoroso, menos ambíguo \citep[p. xii]{BlackburnBos:2005}.
+	
+	%Esta tradição deriva diretamente dos trabalhos de Richard Montague \citep[p. xii]{BlackburnBos:2005}.
+	
+	Um modo de expandir o emprego de tais estruturas é caminhar em direção à semântica computacional\updated{mais coeso agora?}, buscando realizar as tarefas da semântica formal por uso de um computador. Isso expande a utilidade de modelos formais para além da análise por um humano. As representações formais tornam possível que um computador consiga acessar o significado e trabalhar com ele, o utilizando para finalidade distintas. Em especial, para a atividade de \textit{inferência}, isto é, tornar explícita informação que estava implícita. Portanto, são objetivos centrais da área a automatização de construção de representações a partir de textos em linguagem natural, bem como a automatização da extração de inferências a partir de representações formais já feitas.
+
+% Como foi feito este trabalho?
+
+	Aqui, seguimos o livro de \citet{BlackburnBos:2005}, revisando seu conteúdo e realizando alguns de seus exercícios. Os autores apresentam código em Prolog para os desenvolvimentos feitos no texto. Nosso trabalho é feito por modificações neste código original, estando disponível em:
+	
+	\url{https://github.com/GPPassos/computational-semantics} \update
+	
+	Em particular, ao fim integramos o sistema Curt, apresentado pelos autores, à Wordnet. A Wordnet é um banco de dados do léxico inglês, sendo uma fonte adequada de informação semântica de diversas palavras, para integração ao conhecimento do sistema \citep{Fellbaum:wordnet}.
+	
+	Para o português, há disponível a OpenWordnet-PT, trabalho de \citet{wordnetPT}. Esta ferramenta é apropriada para uma versão em português deste desenvolvimento. Entretanto, para tal projeto, passa a ser necessária uma gramática do português, isto é, um analisador sintático. Uma primeira opção seria utilizar um analisador disponível. Isto exigiria um maior desenvolvimento dos módulos semânticos e de sua interrelação com a sintaxe, para garantir compatibilidade. Uma segunda opção seria desenvolver uma gramática própria, utilizando o mesmo mecanismo que de \citet{BlackburnBos:2005}. Contudo, isto ensejaria um estudo próprio da sintaxe, além das construções semânticas aqui estudadas. Desse modo, o inglês será a linguagem-objeto deste texto.  \updated{Explicação para escolha do inglês. O que acha?}
+
+% Qual a importância do trabalho?
+
+	Do ponto de vista científico, a semântica computacional traz novos métodos para explorar a teoria da semântica formal. Exemplos podem ser testados em grande quantidade, permitindo melhor verificação empírica e simulações. Já da visão das aplicações, o processamento da semântica ainda é um desafio, oferecendo novos métodos de valor. Um processamento semântico adequado é útil para diversas tarefas, como para sistemas de responder questões, extração de informações, resumo automático de textos, tradução automática, entre outros \citep[pp.~1--2,10--14]{TextEntBook}.
+
+% Como esta importância pode ser avaliada?
+
+	Assim, a utilidade da teoria e dos métodos pode ser colocado em teste tanto através do poder explicativo em linguagens naturais, quanto pela utilidade em aplicações práticas. A respeito da questão semântica, há uma série de desafios chamada \textit{PASCAL Recognizing Textual Entailment (RTE) Challenges}. Neles, são apresentados exemplos de  \textsl{implicação textual}  (\textit{textual entailment}):
+	
+	Dados dois fragmentos de texto, a tarefa é reconhecer se o significado de um pode ser inferido a partir do significado do outro. Mais especificamento, dado um par de expressões textuais --- $T$, o texto base, e $H$, a hipótese --- dizemos que $T$ acarreta $H$ se o significado de $H$ pode ser inferido do significado de $T$, de acordo com o que seria tipicamente interpretado por falantes da língua \citep[p.~1]{TextEnt}. Apesar desta definição parecer problemática, há resultados que mostram que existe consistência suficiente nos julgamentos humanos, validando a proposta \citep[p.~3]{TextEntBook}. Dois exemplos estão na tabela \ref{table:textent}. \fixed{tabela como float}
+	
+	\begin{table}
+	\begin{center}
+	\begin{tabular}{|p{5cm}|p{5cm}|c|}
+	\hline Texto & Hipótese & Implicação Textual \\ 
+	\hline  Sessões no Clube Caverna pagaram aos Beatles £15 à noite e £5 na hora do almoço. & Os Beatles tocaram no Clube Caverna na hora do almoço. & Verdadeiro \\ 
+	\hline A American Airlines começou a demitir centenas de comissários de bordo na terça-feira após um juiz ter rejeitado a proposta da União de bloquear as perdas de empregos. & A American Airlines chamará de volta centenas de comissários de bordo para aumentar o número de vôos que opera. &  Falso \\
+	\hline
+	\end{tabular} 
+	\end{center}
+	\caption{Implicação Textual}
+	\label{table:textent}
+	\end{table}
+	
+	Versões mais avançadas dos métodos estudados aqui foram utilizadas para atacar o problema em \citet{BosMarkert2005} e \citet{BosMarkert2006}, inclusive com resultados de precisão superior à do melhor resultado feito durante a RTE-1 \citep[p.~89]{TextEntBook}.
+
+\subsection{Estrutura do Texto} \fixed{fixed! Não fazia idéia que ``Mapa de Leitura'' era específico de Direito / humanas}
+
+No capítulo \ref{sec:rep}, apresentaremos o modelo de representação semântica. Usaremos a lógica de primeira ordem como linguagem formal para capturar frases completas. Isto será complementado com ferramentas que permitam uma combinação mais natural do significado de partes para formar as sentenças, o que será feito formalmente. Também apresentamos representações mais complexas, desenvolvidas para resolver as chamadas ambigüidades des escopo.
+
+%No capítulo \ref{sec:inf}, apresentaremos rapidamente métodos de inferência estudados no trabalho. Em nosso sistema final, no entanto, usaremos ferramentas já prontas, de maior sofisticação, além do escopo do trabalho.
+%\todo[inline]{Posso comentar a existência de alguns provadores, como Vampire, E, SNARK, leanCOP,  verificadores de modelos e assistentes de prova (Isabelle, coq, Lean, PVS etc).  Mas devo desenvolver a teoria disso? Resolução, tableau, etc? Não sei se será viável pelo tempo e também pelo espaço}
+
+Já no capítulo \ref{sec:curt}, exibiremos a combinação dos métodos de representação e de inferência no Curt, um pequeno sistema de diálogo desenvolvido por \citet{BlackburnBos:2005}. Também mostraremos a integração por nós realizada deste sistema com a Wordnet.
+
+Por fim, no capítulo \ref{sec:conclusao}, apresentaremos conclusões e próximos passos possíveis nesta linha de trabalho.
+
+% ------- Texto do TCC 1 para se basear -------
+
+
+%\subsection{Textos Normativos}
+%A palavra ``norma'' não é daquelas de significado mais claro. Entretanto, explicações de seu sentido normalmente recorrem às idéias de regra, comando, obrigação, dever ou, de modo mais geral, a alguma orientação para acreditar, agir ou sentir.\footnote{Para um clássico da análise filosófica sobre normas, bem como um texto de grande importância para a lógica deôntica, veja \citet{Wright:63}} Desse modo, podemos dizer que textos normativos são textos cujo conteúdo é normativo, ou que tratam de normas. Não faltam exemplos de textos normativos em nosso cotidiano: contratos, acordos, promessas, ordens, textos que expressam críticas ou padrões de corretude (moral, estética), decisões judiciais, leis, etc.
+%
+%A análise computacional desse tipo de texto busca o desenvolvimento de ferramentas úteis para os meios e práticas que se relacionam fortemente com normas. Um exemplo claro é o meio jurídico, o qual acreditamos que ainda usufrui muito pouco de avanços tecnológicos atuais. Exemplos de tarefas para os quais se espera que a análise semântica possa ser útil são a verificação de \textit{compliance}, a de consistência entre leis, a adequação de contratos a outros documentos, a comparação entre decisões judiciais, etc.
+%
+%
+
+%-------- Fim do texto TCC1

@@ -1,0 +1,512 @@
+
+
+%	[Texto sobre Curt, Reasoner e Model Builder]
+
+% 	Parágrafo pressupondo que não haverá capítulo sobre inferência
+	De posse dos nossos métodos de representação e de uma gramática capaz de se utilizar deles, precisamos agora extrair informação a partir destas representações. Ou seja, precisamos ser capazes de fazer inferência.
+%
+	Há três importantes tarefas inferenciais que desejamos cumprir.
+	
+	A primeira é chamada \textit{consulta} (\teng{querying}). Suponha que tenhamos uma representação de como o mundo é -- um modelo $M$. Este modelo pode ter sido construído de diferentes modos: por um banco de dados pré-existente, extraindo dados por meios diversos (como a partir da leitura de imagens) ou mesmo através de um diálogo. Agora, suponha que tenhamos uma \textit{descrição} do mundo, uma afirmação cujo significado pode ser capturado por uma fórmula $\phi$. A tarefa de consulta consiste em verificar se esta descrição é verdadeira no mundo; no nosso caso, no modelo de mundo que temos. Portanto, em saber se $\phi$ é satisfeita em $M$.
+	
+	A segunda é a tarefa de \textit{verificação de consistência}. Dizemos que uma afirmação ou discurso é consistente quando ``faz sentido'', ``não é contraditório'' ou descreve algo ``imaginável'' ou ``possível''. Por exemplo, é claramente inconsistente dizer que \expr{João é cego e viu Paula atravessar a rua.}, afinal, cegos não são capazes de ver. Essa consistência em linguagem natural pode ser capturada pela noção de satisfabilidade em lógica: uma afirmação é consistente exatamente quando sua representação formal é satisfatível, isto é, quando existe um modelo possível para a representação formal.
+	
+	Já a terceira tarefa é a de \textit{verificação de informatividade}. Se dissermos que \expr{Zeus é marido de Hera.}, seria por certo estranho se complementássemos com \expr{Zeus é casado.}. A informação contida nesta segunda frase já estava presente na primeira, de modo que fazer a nova afirmação é redundante. Dito de outro modo, a segunda frase não é informativa, ainda que isso seja um diálogo possível (se, por exemplo, queremos realçar o fato de Zeus ser casado). De posse da representação lógica, podemos avaliar a informatividade de uma afirmação pela idéia de conseqüência lógica: se o significado da nova afirmação for conseqüência lógica do discurso feito até então, a nova afirmação não é informativa. Formalmente, se nosso discurso até então pode ser representado por uma fórmula $\phi$ e a afirmação a ser avaliada, pela fórmula $\psi$, então não-informatividade ocorre quando $\phi \models \psi$. Pelo teorema da dedução, isto equivale a $\models \phi \rightarrow \psi$. Assim, a verificação de informatividade equivale à verificação de validade lógica.
+	
+	É importante de se notar que as duas últimas tarefas são interdefiníveis. Uma fórmula $\phi$ é consistente se e somente se $\neg \phi$ é informativa (isto é, logicamente inválida), ao mesmo tempo que $\phi$ é informativa se e somente se $\neg \phi$ é consistente.
+	
+	Computacionalmente, a tarefa de consulta é a mais fácil das três. Ela é decidível, o que significa que existem métodos capazes de resolver o problema. Infelizmente, isto não significa que seja tão fácil: na realidade, é um problema da classe de complexidade PSPACE. \updated{Mesmo para FOL. A referência estava no fim do parágrafo, mas a adiantei} Já as outras duas tarefas, interdefiníveis, na realidade são \textit{indecidíveis}. Do ponto de vista da tarefa de consistência, uma vez que existe um número infinito de modelos possíveis, a maioria deles sendo infinito, temos um problema de busca computacionalmente complicado. \citep[pp.~50--54]{BlackburnBos:2005} Isto é um fato que teremos de aceitar: nossos métodos não serão capazes de confirmar a consistência e a informatividade em todos os casos. Isto não será um impedimento para nossos exemplos, mas outras abordagens foram desenvolvidas em lógicas menos complexas, algumas decidíveis, que podem ser vistos como fragmentos da lógica de primeira ordem, como lógicas modais ou lógicas de descrição\footnote{Para uma referência a respeito de lógicas de descrição, apontamos o livro de \citet{description-logic}.}.
+	
+	Para resolver o par difícil de problemas, teremos duas ferramentas: provadores de teorema e construtores de modelos. Provadores de teorema verificam validade: eles são capazes de achar demonstrações e, caso achem a demonstração de uma fórmula, está será válida. Entretanto, eles nada dizem sobre invalidade. Por sua vez, construtores de modelo tentam encontrar um modelo que satisfaça a fórmula a ele apresentada. Contudo, a incapacidade de encontrar um modelo não garante que tal modelo não exista (por exemplo, o modelo pode ser infinito ou maior do que considerado pelo construtor).
+	%
+		Estes instrumentos são utilizados dos seguinte modo: para uma fórmula $\phi$, caso uma prova seja achada, saberemos que ela é válida, o que significa que ela é não-informativa, bem como que $\neg \phi$ é insatisfatível (e assim, inconsistente). Por sua vez, caso um modelo para $\phi$ seja achado, saberemos que ela é satisfatível (consistente) e que $\neg \phi$ não é válida, isto é, informativa.
+		
+		Assim, tome $\theta$ como representativo do discurso atual. Seja $\phi$ a representação da nova informação. Caso um provador consiga mostrar a validade de $\theta \rightarrow (\neg \phi)$, então a nova afirmação não será consistente com o discurso anterior. Por sua vez, caso consiga mostrar que $\theta \rightarrow \phi$, a nova afirmação não será informativa.
+		
+		De outro lado, caso um construtor de modelos consiga encontrar um modelo para $\theta \land \phi$, então a nova afirmação é consistente com o discurso. Já se encontrar um modelo para $\theta \land (\neg \phi)$, a afirmação será informativa.
+		
+		Isto é, provadores de teorema podem fornecer respostas negativas para o teste de informatividade e para o teste de consistência, enquanto construtores de modelos podem fornecer respostas positivas. Há muitos provadores de teorema disponíveis, tais como \textsc{Vampire} de \citet{vampire} e \textsc{E} de \citet{e-prover}. Neste trabalho, usamos um provador de teoremas e um construtor de modelos prontos, chamados de \textsc{otter} e \textsc{mace2}, respectivamente, já utilizados por \citet{BlackburnBos:2005}. Decidimos também integrar as encarnações mais novas destas ferramentas: \textsc{prover9} e \textsc{mace4}. \citep{prover9-mace4}
+	
+	Estabelecidas as tarefas que desejamos cumprir e como realizá-las com nossas representações semânticas, apresentaremos como fazer isto através do sistema Curt, de \citet{BlackburnBos:2005}. Curt significa \expreng{clever use of reasoning tools} (\expr{uso esperto de ferramentas de raciocínio}). É um sistema no qual o usuário pode fazer afirmações em inglês que serão avaliadas pelo programa. Ele será capaz de fazer nossas tarefas inferenciais, notificando caso haja algum problema, bem como de construir modelos das informações passadas e de responder algumas perguntas simples.
+
+\subsection{Arquitetura do Curt}
+
+	O Curt integra as ferramentas de representação com as de inferência. A arquitetura da leitura e representação é como descrevemos na seção \ref{sec:arquitetura}. Já a tarefa de inferência é principalmente organizada no arquivo \textsc{callInference.pl}, colocando o problema em um formato lido pelo provador de teoremas e pelo construtor de modelos.
+	
+%	\citet{BlackburnBos:2005} desenvolve o Curt passo a passo, de modo didático. Mostraremos aqui apenas algumas características gerais do \textit{Knowledgeable Curt}.
+
+	O Curt é um sistema de diálogo rudimentar, no qual o usuário pode fazer afirmações em linguagem natural a serem avaliadas. A cada afirmação, Curt encontra os sentidos possíveis para a frase e tenta integrá-la ao restante de sua leitura do diálogo. Esta é uma fórmula de primeira ordem: quando uma nova frase é dita, para cada interpretação possível é formada uma nova leitura pela conjunção da leitura anterior com a interpretação da nova frase. Além disso, são encontrados modelos possíveis para cada leitura. Posteriormente, todas as leituras alternativas são descartadas, sendo mantida uma única. Do mesmo modo, apenas é mantido um modelo.
+	
+	Alguns comandos são possíveis, como \Verb[fontseries=b]|history|, que apresenta a lista das afirmações feitas até então; \Verb[fontseries=b]|readings|, que apresenta as leituras possíveis do diálogo até então; \Verb[fontseries=b]|new|, que recomeça o diálogo, \Verb[fontseries=b]|select|, que permite a escolha de uma das leituras possíveis para ser mantida pelo sistema e \Verb[fontseries=b]|models|, que mostra os modelos construídos para o diálogo.
+	
+	Nossas ferramentas de inferência são usadas no modo pelo qual Curt lê criticamente as afirmações feitas. Caso uma leitura construída seja inconsistente, ela é descartada. Não havendo nenhuma leitura consistente, o sistema reclamará que não acredita na afirmação feita. Por outro lado, também é avaliada a informativadade. Caso a afirmação sendo feita não seja informativa em relação ao diálogo até então, Curt reclamará que a afirmação feita é óbvia.
+	
+	Mostremos um exemplo no SensitiveCurt, um modelo de Curt que ainda não utiliza conhecimento preliminar. Por hora, não discutiremos os testes de consistência e informatividade.
+	
+	\begin{Verbatim}[fontseries=b,gobble=1]
+	> John is a gorilla
+	
+	Message (consistency checking): mace found a result.
+	Message (informativity checking): mace found a result.
+	Curt: OK.
+	
+	> readings
+	
+	1 some A (gorilla102480855(A) & john = A)
+	
+	> models
+	
+	1 D=[d1]
+	  f(0,c1,d1)
+	  f(1,gorilla102480855,[d1])
+	  f(0,john,d1)
+	
+	
+	> John eats a banana
+	
+	Message (consistency checking): mace found a result.
+	Message (consistency checking): mace found a result.
+	Message (informativity checking): mace found a result.
+	Message (informativity checking): mace found a result.
+	Curt: OK.
+	
+	> readings
+	
+	1 (some A (gorilla102480855(A) & john = A)
+	 & some B (banana107753592(B) & eat(john,B)))
+	2 (some A (gorilla102480855(A) & john = A)
+	 & some B (banana112352287(B) & eat(john,B)))
+	
+	> models
+	
+	1 D=[d1]
+	  f(0,c1,d1)
+	  f(1,gorilla102480855,[d1])
+	  f(0,john,d1)
+	  f(0,c2,d1)
+	  f(1,banana107753592,[d1])
+	  f(2,eat,[ (d1,d1)])
+	
+	2 D=[d1]
+	  f(0,c1,d1)
+	  f(1,gorilla102480855,[d1])
+	  f(0,john,d1)
+	  f(0,c2,d1)
+	  f(1,banana112352287,[d1])
+	  f(2,eat,[ (d1,d1)])
+	
+	
+	\end{Verbatim}
+	
+	Nosso sistema identificou dois sentidos possíveis para \expreng{banana}. Consultando a glosa, veremos que um dos sentidos é a fruta, enquanto o outro sentido é a bananeira, a árvore de banana. O sentido que queremos, de fruta, é \Verb[fontseries=b]|banana107753592| Entretanto, o que é estranho nos dois modelos formados é que há apenas um elemento no domínio, que é tanto \teng{John} quanto a banana! Nosso sistema é incapaz de dizer que nenhum gorila é uma banana. Teremos de dizer isto a ele:
+	
+	\begin{Verbatim}[fontseries=b,gobble=1]
+	> No gorilla is a banana
+	
+	Message (consistency checking): mace found a result.
+	Message (consistency checking): mace found a result.
+	Message (consistency checking): mace found a result.
+	Message (consistency checking): mace found a result.
+	Message (informativity checking): mace found a result.
+	Message (informativity checking): mace found a result.
+	Message (informativity checking): mace found a result.
+	Message (informativity checking): mace found a result.
+	Curt: OK.
+	
+	> readings
+	
+	1 ((some A (gorilla102480855(A) & john = A)
+	 & some B (banana107753592(B) & eat(john,B)))
+	 & some C (banana107753592(C) &
+	 	 ~ some D (gorilla102480855(D) & D = C)))
+	2 ((some A (gorilla102480855(A) & john = A)
+	 & some B (banana107753592(B) & eat(john,B)))
+	 & some C (banana112352287(C) &
+	 	 ~ some D (gorilla102480855(D) & D = C)))
+	3 ((some A (gorilla102480855(A) & john = A)
+	 & some B (banana107753592(B) & eat(john,B)))
+	 & ~ some C (gorilla102480855(C) &
+	 	 some D (banana107753592(D) & C = D)))
+	4 ((some A (gorilla102480855(A) & john = A)
+	 & some B (banana107753592(B) & eat(john,B)))
+	 & ~ some C (gorilla102480855(C) &
+	 	 some D (banana112352287(D) & C = D)))
+	
+	\end{Verbatim}
+	
+	Selecionaremos aqui a terceira interpretação, pois possui o escopo correto (a negação está fora do escopo do quantificador existencial) e usa a interpretação correta de banana, com o \teng{synset} 107753592. 
+	
+	\begin{Verbatim}[fontseries=b,gobble=1]
+	> select 3
+	
+	> models
+	
+	1 D=[d1,d2]
+	  f(0,c1,d1)
+	  f(1,gorilla102480855,[d1])
+	  f(0,john,d1)
+	  f(0,c2,d2)
+	  f(1,banana107753592,[d2])
+	  f(2,eat,[ (d1,d2)])
+	
+	\end{Verbatim}
+	
+	Desse modo, Curt agora mostrou um modelo em que, de fato, há duas entidades: o gorila \teng{John} e a banana comida pelo mesmo.
+	
+	Vejamos agora outro exemplo, para ilustrar o uso dos testes de consistência e informatividade.
+	
+	Diremos inicialmente que todo crocodilo é réptil.
+	
+	\begin{Verbatim}[fontseries=b,gobble=1]
+	> Every crocodile is a reptile
+	
+	Message (consistency checking): mace found a result.
+	Message (consistency checking): mace found a result.
+	Message (informativity checking): mace found a result.
+	Message (informativity checking): mace found a result.
+	Curt: OK.
+	
+	> readings
+	
+	1 some A (reptile101661091(A) & all B (crocodile101697178(B) > B = A))
+	2 all A (crocodile101697178(A) > some B (reptile101661091(B) & A = B))
+	\end{Verbatim}
+	
+	Perceba que a segunda leitura é a que queremos, pois a primeira é a de que há um réptil específico que é todo crocodilo, o que é absurdo. Assim, selecionaremos a segunda leitura.
+	
+	\begin{Verbatim}[fontseries=b,gobble=1]
+	> select 2
+	
+	> Paul is a crocodile
+	
+	Message (consistency checking): mace found a result.
+	Message (informativity checking): mace found a result.
+	Curt: OK.
+	
+	> No reptile is Paul
+	
+	Message (consistency checking): otter found a result.
+	Curt: No! I do not believe that!
+	\end{Verbatim}
+
+	Assim, dizendo que \teng{Paul} é um crocodilo, Curt percebe o absurdo de dizer que Paul não é um réptil e enfaticamente reclama.
+	
+	Por outro lado:
+	
+	\begin{Verbatim}[fontseries=b,gobble=1]
+	> If John is a crocodile then John is a reptile.
+	
+	Message (consistency checking): mace found a result.
+	Message (informativity checking): otter found a result.
+	Curt: Well, that is obvious!
+	\end{Verbatim}
+	
+	Dizer que se \teng{John} é um crocodilo garante que \teng{John} é um réptil também é algo que Curt reclama: o sistema já sabia disso, por saber que todo crocodilo é um réptil, apontando portanto a obviedade da afirmação.
+	
+	O que desejamos é que Curt seja capaz de fazer este tipo de inferência sem que tenhamos de ensiná-lo que todo crocodilo é um réptil. Este é um conhecimento sobre o mundo que Curt poderia já ter. De fato, uma vez integrado à Wordnet, teremos uma consulta deste modo:
+	
+	\begin{Verbatim}[fontseries=b,gobble=1]
+	> John is a crocodile
+	
+	Message (consistency checking): mace found a result.
+	Message (informativity checking): mace found a result.
+	Curt: OK.
+	
+	> John is a reptile
+	
+	Message (consistency checking): mace found a result.
+	Message (informativity checking): otter found a result.
+	Curt: Well, that is obvious!
+	
+	> models
+	
+	1 D=[d1]
+	  f(1,physicalentity100001930,[d1])
+	  f(1,entity100001740,[d1])
+	  f(1,physicalobject100002684,[d1])
+	  f(1,object100002684,[d1])
+	  f(1,unit100003553,[d1])
+	  f(1,whole100003553,[d1])
+	  f(1,animatething100004258,[d1])
+	  f(1,livingthing100004258,[d1])
+	  f(1,being100004475,[d1])
+	  f(1,organism100004475,[d1])
+	  f(1,fauna100015388,[d1])
+	  f(1,animal100015388,[d1])
+	  f(1,animatebeing100015388,[d1])
+	  f(1,beast100015388,[d1])
+	  f(1,brute100015388,[d1])
+	  f(1,creature100015388,[d1])
+	  f(1,chordate101466257,[d1])
+	  f(1,diapsidreptile101661818,[d1])
+	  f(1,diapsid101661818,[d1])
+	  f(1,reptile101661091,[d1])
+	  f(1,reptilian101661091,[d1])
+	  f(1,crocodilian101696633,[d1])
+	  f(1,crocodilianreptile101696633,[d1])
+	  f(1,craniate101471682,[d1])
+	  f(1,vertebrate101471682,[d1])
+	  f(1,crocodile101697178,[d1])
+	  f(0,c1,d1)
+	  f(0,john,d1)
+	  f(0,c2,d1)
+	\end{Verbatim}
+	
+	Apenas pela afirmação de que \teng{John} é um crocodilo, Curt construirá um modelo com tudo que sabe sobre crocodilos: \teng{John}, o crocodilo, é necessariamente um réptil, é vertebrado, é um animal, é um organismo e uma entidade física.
+	
+%\begin{framed}
+%\begin{verbatim}
+%curtUpdate([knowledge],[],run):-
+%   readings(R), 
+%   findall(K,(memberList(F,R),backgroundKnowledge(F,K)),L),
+%   printRepresentations(L).
+%\end{verbatim}
+%\end{framed}
+
+\subsection{Integrando à Wordnet}
+\label{sec:wordnet}
+% -- Descrição da Wordnet
+
+A Wordnet considera quatro categorias sintáticas de palavras: substantivos, verbos, adjetivos e advérbios \citep[p.~5]{Fellbaum:wordnet}. Dentro de cada categoria, os conceitos são distribuídos em conjuntos de sinônimos (\teng{synsets}, de \expreng{synonym sets}). Entre estes são definidas relações semânticas, como hiponímia (relação de subconjunto), meronímia (relação de ser parte) e implicação. Felizmente, a Wordnet pode ser baixada em um formato já preparado par a linguagem Prolog.
+
+	Por exemplo, o arquivo \textsc{wn\_s.pl} apresenta um predicado no formato
+	\begin{center}
+	\Verb[fontseries=b]|s(synset_id,w_num,"word",ss_type,sense_number,tag_count)|.
+	\end{center}
+	
+		Cada cláusula corresponde a um significado de uma palavra. Os argumentos relevantes para nossa análise são o \Verb[fontseries=b]|synset_id|, que identifica a qual synset aquele sentido da palavra pertence, \Verb[fontseries=b]|w_num|, que diz qual o número daquela palavra dentro do synset, \Verb[fontseries=b]|"word"|, que diz qual palavra é e \Verb[fontseries=b]|ss_type|, que diz a qual categoria sintática aquele synset pertence.
+		
+		Um pequeno trecho do arquivo é este:
+	
+	\begin{Verbatim}[fontseries=b,gobble=1]
+	s(104565375,1,`weapon',n,1,29).
+	s(104565375,2,`arm',n,3,1).
+	s(105563770,1,`arm',n,1,104).
+	\end{Verbatim}	
+	
+	Notamos aqui a palavra \expreng{arm} tendo um sentido que pertence ao \teng{synset} 104565375, que é o mesmo de um sentido de \teng{weapon}, bem como tendo um outro sentido que pertence ao \teng{synset} 105563770. Consultando o arquivo \textsc{wn\_g.pl}, temos a glosa sobre cada \teng{synset}, isto é, um comentário. O trecho relativo é:
+	
+	\begin{Verbatim}[fontseries=b,gobble=1]
+	g(104565375,`any instrument or instrumentality used in fighting
+		or hunting; ``he was licensed to carry a weapon"').
+	
+	g(105563770,`a human limb; technically the part of the superior limb
+		between the shoulder and the elbow but commonly
+		used to refer to the whole superior limb').
+	\end{Verbatim}
+	
+	Ou seja, os \expreng{synsets} correspondem, respectivamente, às palavras \expr{arma} e \expr{braço}, que são dois sentidos possíveis de \expreng{arm}. Um outro exemplo é:
+	
+	\begin{Verbatim}[fontseries=b,gobble=1]
+	s(110388924,1,`owner',n,1,15).
+	s(110388924,2,`proprietor',n,1,11).
+	s(110389398,1,`owner',n,2,9).
+	s(110389398,2,`possessor',n,1,0).
+	\end{Verbatim}
+	
+	A palavra \expreng{owner} possui ao menos dois sentidos: o de \expreng{proprietor}, representado no \teng{synset} 110388924, bem como o de \expreng{possessor}, representado no \teng{synset} 110389398. Esta diferenciação também existe no português, onde \expr{dono} pode significar tanto \expr{proprietário} quanto \expr{possuidor}.
+	
+% -- Efetivamente integrando
+
+	Há dois pontos distintos no qual precisamos integrar a Wordnet à nossa arquitetura. O primeiro é na extensão do vocabulário, isto é, fazer com que nosso leitor de entradas seja capaz de aceitar frases que, respeitando as regras sintáticas entendidas pelo mesmo, usem palavras contidas na lista da Wordnet. O segundo ponto é na utilização das relações semânticas entre \teng{synsets} para complementar o conhecimento prévio do Curt. Iremos especificar como realizamos cada passo.
+	
+	% Vocabulário
+	
+	Para o primeiro problema, um modo natural na nossa arquitetura é inserir no arquivo \textsc{englishLexicon.pl} a conexão com a Wordnet. Tal arquivo é onde as entradas do léxico estão especificadas, de modo que poderíamos adicionar uma cláusula que considera como entradas do léxico palavras presentes na Wordnet. De fato, este foi o primeiro modo que implementamos, inserindo no arquivo a seguinte cláusula:
+	
+	\begin{Verbatim}[fontseries=b,gobble=1]
+	lexEntry(noun,[symbol:Sym,syntax:Syn]) :-
+	    Ss_type = n,
+	    s(Synset,_,Word,Ss_type,_,_),
+	    downcase_atom(Word,Word2),
+	    atomic_list_concat(Syn,' ',Word2),
+	    checkWords([Word2],[Expression]),
+	    atom_concat(Expression,Synset,Sym).
+	\end{Verbatim}	
+	
+	Explicaremos com mais cuidado. Dizemos que existe uma entrada no léxico de um substantivo (\teng{noun}) com símbolo \code{Sym} (isto é, representação semântica usando o símbolo \code{Sym}) e sintaxe \code{Syn} (isto é, aparecendo no texto na forma \code{Syn}) quando as condições no corpo da cláusula são satisfeitas.
+	
+	Em primeiro lugar, o tipo de entrada na Wordnet deve ser um substantivo, portanto \Verb[fontseries=b]|Ss_type = n|. Depois, em \Verb[fontseries=b]|s(Synset,_,Word,Ss_type,_,_)|, tentamos achar um candidato. Verificamos a sintaxe. Na Wordnet, as palavras não estão pré-processadas do modo que queremos: em minúsculo e quebrando expressões de mais de uma palavra em listas. Por exemplo, \code{``human} \code{foot''} deve ficar no formato \code{[human,foot]}. Os predicados \Verb[fontseries=b]|downcase_atom/2| e \Verb[fontseries=b]|atomic_list_concat/2| fazem este papel, construindo a representação sintática. Quanto ao símbolo semântico, usamos o \Verb[fontseries=b]|checkWords| também para normalizar a expressão (desta vez em uma única string) e concatenamos o resultado com o número do \expreng{synset}. Perceba que isto garante uma expressão única na nossa linguagem lógica para um sentido específico de uma palavra.
+	
+	Por exemplo, veja o código abaixo e o que nos é retornado:
+	
+	\begin{Verbatim}[fontseries=b,gobble=1]
+	?- lexEntry(noun,[symbol:Sym,syntax:[dinosaur]]).
+	Sym = dinosaur101699831
+	\end{Verbatim}
+	
+	Em uma consulta (por exemplo, usando \textsc{holeSemantics.pl}), obtemos:
+	
+	\begin{Verbatim}[fontseries=b,gobble=1]
+	?- holeSemantics.
+	> Vincent is a dinosaur
+	
+	1 some(A,and(hole(A),some(B,and(label(B),some(C,some(D,
+	some(E,some(F,some(G,and(hole(C),and(label(D),and(label(E),
+	and(label(F),and(some(E,G,F),and(and(F,D,C),and(leq(B,C),
+	and(leq(E,A),and(and(pred1(D,dinosaur101699831,G),leq(D,A)),
+	and(eq(B,G,vincent),leq(B,A))))))))))))))))))))
+	
+	[plug(C,B),plug(A,E)]
+	
+	1 some(G,and(dinosaur101699831(G),eq(G,vincent)))
+	\end{Verbatim}
+	
+	Apesar de cumprir o objetivo e adequado à arquitetura, infelizmente este método não é adequado: ele é extremamente lento. Investigando, a causa não é de todo surpreendente: a decomposição sintática é feita testando possibilidades. Encontrando um candidato a substantivo, o único modo não só de achar a entrada léxica, caso seja, mas de refutar essa possibilidade é percorrendo toda a lista da Wordnet. Isto faz com que a decomposição sintática seja imensamente demorada, com várias consultas ao banco de dados léxicos, que é extenso. Assim, desenvolvemos uma abordagem alternativa. \updated{Acho que vale a pena dizer como falhou pois o outro modo era mais natural, ou parecia mais de acordo com a modularidade.}
+	
+	O lampejo está em se pensar quantas consultas à Wordnet são necessárias para a leitura de uma frase. Podemos imaginar um modo de, conhecida a lista de palavras da frase (normalmente, uma lista bastante pequena), identificar os synsets necessários percorrendo a Wordnet apenas uma vez: basta avançar na Wordnet, verificando a cada etapa se a palavra é igual à forma sintática desejada. Sendo igual, podemos criar uma entrada no léxico com esta informação. \footnote{Um problema deste método é que, do modo descrito, não captura adequadamente palavras compostas. Entretanto, soluções podem ser pensadas, como utilizar não apenas as palavras individualmente, mas também pares de palavras adjacentes, na ordem da frase.}
+	
+	Podemos implementar isso. Inicialmente, em \textsc{englishLexicon.pl}, declaramos o predicado \Verb[fontseries=b]|lexEntry/2| como dinâmico. Modificaremos então o arquivo \textsc{kellerStorage.pl} (o mesmo pode ser feito em \textsc{holeSemantics.pl}, depende de qual forma de representação será usada para encontrar as leituras possíveis):
+	
+	\begin{Verbatim}[fontseries=b,gobble=1]
+	kellerStorage:-
+	   readLine(Sentence),
+	   wordnetLexicon(Sentence,_),
+	   setof(Sem,t([sem:Sem],Sentence,[]),Sems1),
+	   filterAlphabeticVariants(Sems1,Sems2),
+	   printRepresentations(Sems2).
+	\end{Verbatim}
+	
+	A única linha que adicionamos foi \Verb[fontseries=b]|wordnetLexicon(Sentence,_),|. Com isso, nosso léxico será atualizado a depender da frase lida, pela Wordnet. Descreveremos como isso é feito:
+	
+	\begin{Verbatim}[fontseries=b,gobble=1]
+	wordnetLexicon(L,SymList) :-
+	    findall(Sym,findWordnetLex(L,Sym),SymList).
+	
+	findWordnetLex(L,Sym) :-
+	    s(Synset,_,Expression,n,_,_),
+	    member(Expression,L),
+	    atom_concat(Expression,Synset,Sym),
+	    Syn = Expression,
+	    assert(lexEntry(noun,[symbol:Sym,syntax:[Syn]])).
+	\end{Verbatim}
+	
+	O primeiro predicado garante que serão consideradas todas as possibilidades de leitura das palavras com base na Wordnet. Já o segundo, inicialmente encontra uma palavra na Wordnet que seja um substantivo e um significado possível para ela, pelo predicado \Verb[fontseries=b]|s/6|. Verifica-se se a palavra está presente na frase sendo lida. Caso o seja, então é inserido no léxico a entrada para a mesma, a partir do synset.
+	%
+	Por exemplo, se a palavra \expreng{bear} estiver presente em uma frase, será inserido o predicado
+		\footnote{O \teng{synset} 102131653 representa o animal urso. Um outro sentido para a palavra na Wordnet é de um investidor pessimista.}
+	
+	\begin{Verbatim}[fontseries=b,gobble=2]
+		lexEntry(noun,[symbol:bear102131653,syntax:[bear]]).
+	\end{Verbatim}
+	% Conhecimento prévio
+	
+	Agora usaremos a Wordnet para geração de conhecimento prévio. Faremos primeiro para a relação de \textit{sinonímia}, isto é, palavras de mesmo significado.
+
+	Por exemplo, no \teng{synset} 100064151, temos as expressões \expreng{blockbuster}, \expreng{megahit}, \expreng{smash hit}. Esse \teng{synset} representa o significado de algo de sucesso e popularidade, como um filme ou peça.
+			\footnote{De fato, a glosa é \expreng{an unusually successful hit with widespread popularity and huge sales (especially a movie or play or recording or novel)}.}
+			
+	Queremos então que nosso sistema detecte \expreng{Titanic is a megahit.} como equivalente a \expreng{Titanic is a blockbuster}. Pensamos então em duas alternativas:
+		Uma primeira opção é fazer as duas palavras corresponderem à mesma expressão lógica. Por exemplo, a \code{blockbuster(titanic)} ou a \code{p100064151(titanic)}. Utilizar uma palavra específica para representar um \teng{synset} não é uma boa alternativa, pois teríamos de escolher palavras não ambíguas ou tomar o cuidado de não representar dois \teng{synsets} distintos pela mesma palavra. Por outro lado, utilizar algo como \code{p100064151} como predicado faz com que a interpretação humana das fórmulas criadas seja mais trabalhosa (tendo de consultar a glosa), então não foi a forma que escolhemos.
+		
+		Fizemos de outro modo. Associamos a cada significado de cada palavra um \teng{synset}. Assim, \expreng{Titanic is a megahit.} fica \code{megahit100064151(titanic)} e \expreng{Titanic is a blockbuster}, \code{blockbuster100064151(titanic)}. Sendo predicados distintos, não há ainda uma relação lógica entre eles. Isto obriga que adicionemos explicitamente como axioma que \code{\forall x(megahit100064151(x) \leftrightarrow blockbuster100064151(x))}. Uma desvantagem de tal método é que cria um número maior de fórmulas a serem adicionadas no conhecimento prévio, o que pode prejudicar a computação. Por outro lado, torna as formulações mais legíveis e explícitas para um humano. Este é o modo pelo qual implementaremos.
+		
+	Para dizermos que dois predicados são sinônimos, como \code{megahit100064151} e \code{blockbuster100064151}, mas principalmente para encontrar os sinônimos dado um predicado, usamos a regra abaixo.
+	
+	\begin{Verbatim}[fontseries=b,gobble=1]
+	synonym(Sym1,Sym2) :-
+	    atom_concat(E1,Synset,Sym1),
+	    atom_number(Synset,SynsetNum),
+	    s(SynsetNum,_,Word,_,_,_),
+	    checkWords([Word],[E2]),
+	    \+ E1 = E2,    
+	    atom_concat(E2,Synset,Sym2).
+	\end{Verbatim}
+	
+	Nas duas primeiras linhas do corpo da regra, decompomos o primeiro predicado em sua parte léxica e em seu número do \teng{synset}. Depois, procuramos uma palavra na Wordnet com o mesmo \teng{synset}. Usamos \Verb[fontseries=b]|checkWords/2| apenas para normalizar a palavra (retirar espaços, colocar em caixa baixa e retirar símbolos diversos) e então conferimos se a palavra é distinta da palavra inserida. Se sim, então construímos o seguindo predicado pela concatenação da palavra com o \teng{synset}. Com isto, podemos encontrar todos os predicados sinônimos.
+	
+	Para a criação das regras, usamos:
+	
+	\begin{Verbatim}[fontseries=b,gobble=1]
+	wordnetKnowledge(Sym,Arity,Axiom) :-
+	    synonym(Sym,Sym2),
+	    (
+	        Arity = 0, Axiom = eq(Sym,Sym2)
+	    ;
+	        Arity = 1, F1 =.. [Sym,X], F2 =.. [Sym2,X],
+	        Axiom = all(X,and(imp(F1,F2),imp(F2,F1)))
+	    ;
+	        Arity = 2, F1 =.. [Sym,X,Y], F2 =.. [Sym2,X,Y],
+	        Axiom = all(X,all(Y,and(imp(F1,F2),imp(F2,F1))))
+	    ).
+	\end{Verbatim}
+	
+	A divisão por aridade já era utilizada nas outras formas de conhecimento prévio no arquivo \textsc{backgroundKnowledge.pl}, tendo sido útil seguí-la. Inicialmente encontramos um sinônimo.
+		Caso a expressão que desejamos consultar seja de aridade 0, isto é, uma constante, então o a regra a ser adicionada é a igualdade entre as constantes.
+		%
+		Caso seja um predicado unário, basta dizer que para todo argumento, satisfazer um dos predicados implica satisfazer o outro.
+		%
+		Caso seja binário
+			\footnote{Tanto neste trabalho quanto em \cite{BlackburnBos:2005}, não são consideramos predicados com mais do que 2 argumentos.}, 
+			será o mesmo, mas para todo par de argumentos.
+			
+	Colocamos tais regras no arquivo \textsc{wordnetKnowledge.pl}, o relacionamos com o \textsc{backgroundKnowledge.pl} (inserindo entre as outras formas de conhecimento prévio) e então estará construído o conhecimento prévio de sinonímia.
+	
+	A relação de hiponímia trata da idéia de subclasse: um conceito é dito hipônimo de outro quando o primeiro é mais específico que o do segundo. Por exemplo, \expr{banana} é um hipônimo de \expr{fruta}, pois toda banana é uma fruta. Equivalentemente, dizemos que \expr{fruta} é um hiperônimo de \expr{banana}.
+	
+	A Wordnet traz a relação de hiponímia no arquivo \textsc{wn\_hyp.pl}, definida tanto para substantivos quanto para verbos. Um exemplo é o seguinte:
+	
+	\begin{Verbatim}[fontseries=b, gobble=1]
+	?- s(X,_,angel,_,_,_), g(X,GX), hyp(X,Y),
+	g(Y,GY), findall(Z,s(Y,_,Z,_,_,_),SETZ).
+	
+	X = 109538915,
+	GX = 'spiritual being attendant upon God',
+	Y = 109504135,
+	GY = 'an incorporeal being believed to have powers
+		 to affect the course of human events',
+	SETZ = ['spiritual being', 'supernatural being'] .
+	\end{Verbatim}
+	
+	O predicado de hiponímia é \Verb[fontseries=b]|hyp/2|, indicando que o primeiro argumento é hipônimo do segundo. Neste caso, o \teng{synset} 109538915 é hipônimo de \teng{109504135}. De acordo com a glosa e com as palavras consultadas, isto significa que \expreng{angel}, no sentido de \expr{um ser espiritual a serviço de Deus}, é um hipônimo de \expreng{um ser espiritual}.
+	
+	Podemos então verificar como implementamos isto no sistema Curt:
+	
+	\begin{Verbatim}[fontseries=b, gobble=1]
+	hypernym(Sym1,Sym2) :-
+	    atom_concat(E1,Synset,Sym1),
+	    atom_number(Synset,SynsetNum),
+	    hyp(SynsetNum,SynsetHyp),
+	    s(SynsetHyp,_,Word,_,_,_),
+	    checkWords([Word],[E2]),
+	    \+ E1 = E2,    
+	    atom_concat(E2,SynsetHyp,Sym2).
+	\end{Verbatim}
+	
+	Esta regra encontra hiperônimos. Assim como a regra de achar sinônimos, utilizamos aqui um predicado da linguagem lógica, \Verb[fontseries=b]|Sym1|, na forma palavra-número. Precisamos decompô-lo, achar um hiperônimo e então construir o novo predicado do hiperônimo. 
+	
+	Para o conhecimento preliminar, usamos:
+	
+	\begin{Verbatim}[fontseries=b, gobble=1]
+	wordnetKnowledge(Sym,Arity,Axiom) :-
+	    hypernym(Sym,Sym2),
+	    (
+	        Arity = 1, F1 =.. [Sym,X], F2 =.. [Sym2,X],
+	        Axiom = all(X,imp(F1,F2))
+	    ;
+	        Arity = 2, F1 =.. [Sym,X,Y], F2 =.. [Sym2,X,Y],
+	        Axiom = all(X,all(Y,imp(F1,F2)))
+	    ).
+	\end{Verbatim}
+	
+	Em primeiro lugar, é de se notar que aqui não aceitamos aridade 0, apenas 1 ou 2. Em ambos os casos, inserimos no conhecimento prévio a afirmação de que o hipônimo implica no hiperônimo, que é tudo que precisamos.
+	
+	% ---- Implementação geral do background knowledge -----
+
+	Para o uso do predicado \Verb[fontseries=b]|wordnetKnowledge|, transformamos o arquivo \textsc{wordnetKnowledge.pl} em um módulo, modificamos o arquivo \textsc{backgroundKnowledge.pl}. Para isto, basta chamar o módulo e colocar o conhecimento prévio da Wordnet entre os outros no predicado \Verb[fontseries=b]|computeBackgroundKnowledge/2|:
+	
+	\begin{Verbatim}[fontseries=b, gobble=1]
+	findall(_,(memberList(symbol(Symbol,Arity),Symbols),
+	           wordnetKnowledge(Symbol,Arity,F),
+	           assert(knowledge(F))),_),
+	\end{Verbatim}
+	
+	Uma diferença no que fizemos em relação aos outros tipos de conhecimento prévio é que analisamos a lista dos símbolos até então antes do processamento da Wordnet, o que é necessário, uma vez que nosso conhecimento prévio é construído com base nesta lista.
+	
+	Com isso, está completa nossa integração com a Wordnet em relação aos substantivos, para as relações de sinonímia e de hiponímia.
+
+	É importante destacar que, com a incorporação de substantivos, verbos e adjetivos da Wordnet, o número de interpretações se torna bem grande, tornando a execução lenta. Por exemplo, para a frase \expreng{A king loves a dying dragon}, Curt encontra 60 interpretações diferentes, enquanto para \expreng{A man is not a woman}, 165 interpretações distintas.
+
+	\subsection{Helpful Curt}
+
+	Podemos usar o Curt mais avançado, Helpful Curt, a fim de utilizar seu mecanismo de responder perguntas. Podem ser respondidas por ele perguntas ditas \teng{wh-questions}, como \expreng{who} (``quem''), \expreng{what} (``o quê'') e \expreng{which} (``qual''). A técnica utilizada envolve utilizar uma representação quase-lógica para as perguntas: uma vez que perguntas não possuem valor-verdade (não sendo declarativas), não podemos atribuir a elas uma verdadeira expressão lógica. A técnica utilizada no Helpful Curt é uma de lacunas, mas não entraremos aqui em mais detalhes a respeito dela ou da semântica de questões. Para mais informações sobre estes tópicos, leitor pode consultar o original \citep[pp.~293--300, 303--304]{BlackburnBos:2005} e os trabalhos referenciados no mesmo.
