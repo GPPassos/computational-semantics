@@ -3,7 +3,7 @@
 
 %\subsection{Considerações Iniciais}
 
-\fixed{Solução fácil para eliminar o espaço: fim de uma subseção de considerações iniciais}
+
 %
 Desejamos associar a cada expressão de linguagem natural um significado formal, simbólico. Além disso, desejamos fazê-lo de modo algorítmico, que possa ser reproduzido por um computador. Portanto, um primeiro passo importante é encontrar um modo adequado de representar o significado, que satisfaça nossos objetivos lingüísticos, bem como que seja manipulável por nossas ferramentas computacionais.
 
@@ -15,9 +15,9 @@ mas destacam que, em razão de sua flexibilidade, modelos são capazes de ilustr
 
 \subsection{Lógica de Primeira Ordem}
 
-Definiremos formalmente a sintaxe e a semântica da lógica de primeira ordem. Por sintaxe, queremos dizer as fórmulas bem formadas da linguagem, enquanto por semântica, o modelo matemático de seu significado. Assim como linguagens naturais possuem sintaxe e semântica, a lógica de primeira ordem, como linguagem formal, também possui suas regras de formação e seu significado, com a vantagem da precisão matemática. Nossa apresentação será breve. Para uma introdução à lógica clássica (incluindo de primeira ordem) com uma motivação lingüística, recomendamos o livro de \citet{gamut1}.  Para um aprofundamento matemático, recomendamos o livro de \citet{enderton}.
+Definiremos formalmente a sintaxe e a semântica da lógica de primeira ordem. Por sintaxe, queremos dizer as fórmulas bem formadas da linguagem, enquanto por semântica, o modelo matemático de seu significado. Assim como linguagens naturais possuem sintaxe e semântica, a lógica de primeira ordem, como linguagem formal, também possui suas regras de formação e seu significado, com a vantagem da precisão matemática. Nossa apresentação será breve. Para uma introdução à lógica clássica (incluindo de primeira ordem) com uma motivação lingüística, recomendamos \citet{gamut1}.  Para um aprofundamento matemático, recomendamos \citet{enderton}. \fixd
 
-A linguagem usada é definida a partir de um vocabulário. Um vocabulário consiste em três conjuntos de símbolos: um de predicados, um de funções e um de constantes. Cada um desses conjuntos é um conjunto de palavras, em que cada palavra é associada a um número, dito sua \textit{aridade}. No caso do conjunto de constantes, a aridade de cada elemento é $0$. \footnote{Mais a rigor, podemos dizer que são conjuntos de pares ordenados $(palavra,aridade)$.}
+A linguagem usada é definida a partir de um vocabulário. Um vocabulário consiste em três conjuntos de símbolos: um de predicados, um de funções e um de constantes. Cada um desses conjuntos é um conjunto de palavras, em que cada palavra é associada a um número, dito sua \textit{aridade}. No caso do conjunto de constantes, a aridade de cada elemento é $0$. \footnote{Mais precisamente, podemos dizer que são conjuntos de pares ordenados $(palavra,aridade)$.}
 
 Assim, assumimos que possuímos o seguinte conjunto de símbolos:
 \begin{enumerate}
@@ -39,6 +39,7 @@ Assim, assumimos que possuímos o seguinte conjunto de símbolos:
 
 Com este vocabulário, podemos definir inicialmente o que são termos: expressões que se referem a ``objetos''. A definição possui uma cláusula recursiva. Para ilustrar, se \code{mother} é uma função de aridade $1$, querendo dizer uma função que atribui a cada pessoa a sua mãe, e se \code{mia} é uma constante representando a pessoa de nome \expreng{Mia}, então \code{mother(mia)} é o termo que se refere à mãe de Mia.
 
+\newpage
 \begin{defn}[Termo]
 \begin{enumerate}
 \item[]
@@ -80,11 +81,16 @@ Um modelo é um par $(D,F)$ em que $D$, chamado \textit{domínio}, é um conjunt
 \end{enumerate}
 \end{defn}
 
-Como uma variável não é um elemento independente do mundo (como uma constante é), mas sim algo a ser substituído por um ``verdadeiro objeto'', elas não estão representadas na definição \ref{def:modelo}. Para as mesmas, existem as funções de atribuição, que associam cada variável a um objeto do modelo. \citet{BlackburnBos:2005}[p.~12] associam as funções de atribuição a ``contextos'', comparando-as a pronomes indefinidos: se uma variável é um termo que, em princípio, não está relacionado a um objeto em específico, essa relação pode ser definida pelo contexto.
+É de se notar que variáveis são a única espécie de símbolo que constitui termo que não aparece na definição \ref{def:modelo}. Isto é, até este momento, uma função de interpretação consegue associar um termo a um elemento do domínio, mas apenas se tal termo não tiver nenhuma variável em sua composição. A intuição para isto é de que um símbolo de constante representa um objeto definido do mundo (identificado pela função de interpretação), enquanto símbolos de função representam funções bem definidas no domínio. Por sua vez, uma variável não corresponde naturalmente a qualquer elemento. Como indicado pelo próprio nome, ela pode variar. \updated{Melhor ou mais confuso?}
 
-\begin{defn}[Atribuição]
+Desse modo, para as variáveis existem as funções de atribuição, que associam cada variável a um objeto do modelo. \citet[p.~12]{BlackburnBos:2005} assemelham as funções de atribuição a ``contextos'', comparando-as a pronomes indefinidos: se uma variável é um termo que, em princípio, não está relacionado a um objeto em específico, essa relação pode ser definida pelo contexto.
+
+%Como uma variável não é um elemento independente do mundo (como uma constante é), mas sim algo a ser substituído por um ``verdadeiro objeto'', elas não estão representadas na definição \ref{def:modelo}.
+
+\begin{defn}[Atribuição e $x$-variante] \label{def:atribuicao}
 Uma (função de) atribuição $g$ em um modelo $(D,F)$ é uma função das variáveis no domínio $D$. Se $x$ for uma variável, uma atribuição $g'$ é dita uma $x$-variante quando, para toda variável $y$ distinta de $x$, $g'(y) = g(y)$.
 \end{defn}
+\updated{$x$-variantes}
 
 Com modelos e funções de atribuição correspondentes, podemos montar a interpretação dos termos, associando cada termo a um objeto: um elemento do domínio. 
 
@@ -107,42 +113,41 @@ Sejam $M = (D,F)$ um modelo, $g$ uma atribuição em M e $\phi$ e $\psi$ fórmul
 \item $M,g \models \neg \phi$ se e somente se não for verdade que $M, g \models \phi$.
 \item $M,g \models \phi \land \psi$ se e somente se $M, g \models \phi$ e $M, g \models \psi$.
 \item $M,g \models \phi \lor \psi$ se e somente se $M, g \models \phi$ ou $M, g \models \psi$.
-\item $M,g \models \phi \rightarrow \psi$ se e somente se não for o caso tanto que $M,g \models \phi$ quanto que $M,g \not \models \psi$.
+\item $M,g \models \phi \rightarrow \psi$ se e somente se  não for verdade que $M,g \models \phi$ ou for verdade que $M,g \models \psi$.
 \item $M,g \models \exists x (\phi)$ se e somente se existir uma $x$-variante $g'$ de $g$ tal que $M,g' \models \phi$.
 \item $M,g \models \forall x (\phi)$ se e somente se para toda $x$-variante $g'$ de $g$, $M,g' \models \phi$.
 \end{enumerate}
 \end{defn}
+\updated{Mudei o item 6. \\ Já as $x$ variantes já estavam definidas em \ref{def:atribuicao}, mas destaquei isto lá.}
 
-\update
 
 \subsection{Sintaxe e representação de expressões}
 
-Ainda que tenhamos escolhido a lógica de primeira ordem para ser a linguagem das representações semânticas para frases, isto não nos informa qual deve ser a representação semântica de palavras e expressões menores. Fórmulas desta lógica definem sentenças completas (no máximo, abertas à interpretação de variáveis livres). Talvez algumas possibilidades poderiam ser feitas através de termos, mas não está de todo claro qual seria o significado de uma expressão como \expreng{to run} (\expr{correr}) ou \expreng{that walks} (\expr{que anda}).
+Ainda que tenhamos escolhido a lógica de primeira ordem para ser a linguagem das representações semânticas para frases, isto não nos informa qual deve ser a representação semântica de palavras e expressões menores. Frases completas podem ser correspondidas a fórmulas, mas isto é insuficiente. Talvez algumas possibilidades poderiam ser feitas através de termos, mas não está de todo claro qual seria o significado de uma expressão como \expreng{to run} (\expr{correr}) ou \expreng{that walks} (\expr{que anda}).
+\update
 
+Presente já no desenvolvimento inicial da semântica formal, adotaremos o \textit{Princípio da Composicionalidade}, usualmente atribuído a Gottlob Frege \citep[p.~94]{BlackburnBos:2005}.
 
-Presente já no desenvolvimento inicial da semântica formal, adotaremos o \textit{Princípio da Composicionalidade}, usualmente atribuído a Gottlob Frege \cite[p.~94]{BlackburnBos:2005}.
-%
-\updated{A ambigüidade anterior era se o pressuposto era original ou já anterior, correto? Assim fica melhor?}
-%
-Segundo o mesmo, o significado de expressões complexas é função das expressões mais simples que a compõem. Em um exemplo como \expreng{Caim kills Abel}, isto nos informa que o significado desta frase depende do significado de \expreng{Caim}, \expreng{kills} e \expreng{Abel}. Entretanto, isto não nos diz como funciona esta dependência, ou a função que leva o significado das expressões simples ao da expressão complexa.
+Segundo este princípio, o significado de expressões complexas é função das expressões mais simples que a compõem. Em um exemplo como \expreng{Caim kills Abel}, isto nos informa que o significado desta frase depende do significado de \expreng{Caim}, \expreng{kills} e \expreng{Abel}. Entretanto, isto não nos diz como funciona esta dependência, ou a função que leva o significado das expressões simples ao da expressão complexa.
 
 Por exemplo, podemos entender que o significado de \expreng{kills} é o predicado binário \code{kill(\dots , \dots)}, onde convencionamos que o primeiro argumento é o agressor (isto é, aquele que mata) e o segundo argumento é a vítima (aquele que é morto). Também podemos entender os significados de \expreng{Caim} e \expreng{Abel} como as constantes \code{caim} e \code{abel}, respectivamente. Assim, apesar de \code{kill(abel,caim)} ser formada com o significado destes três termos, respeitando a composicionalidade, esta não é a expressão que queremos, e sim \code{kill(caim,abel)}.
 
 O que nos falta é a \textit{sintaxe}. A sintaxe é o conjunto de regras e processos que organizam a estrutura de frases \citep[p.~2]{vanEijck:2010}. Assim, as palavras em uma frase existem em relação a uma certa estrutura, que é essencial para capturar o significado. No inglês, com a estrutura usual de \textit{Sujeito - Verbo - Predicado}, entendemos que \expreng{Caim kills Abel} significa \code{kill(caim,abel)}, e não \code{kill(abel,caim)}.
 
-Para nos atermos mais nos desenvolvimentos semânticos, 
-%
-\updated{Não me parece exagero dizer que o foco não é na sintaxe. O próprio Bos afirma que uma desvantagem de tal abordagem é que o leitor não aprenderá nada interessante sobre sintaxe. De todo modo, alterei. O que acha?}
-%
-utilizamos uma sintaxe simples: a gramática é implementada pelo mecanismo de Gramática de Cláusulas Definidas (\textit{Definite Clause Grammar} - DCG). A análise sintática é feita na forma de uma árvore cujos nós que são folhas são categorias sintáticas básicas (tais como sujeito (\teng{noun}), verbo transitivo (\teng{transitive verb}) e quantificador (\teng{quantifier}, considerado caso particular de \teng{determiner}). Já os nós que não são folhas representam categorias sintáticas complexas (tais como sintagma nominal (\teng{noun phrase}) ou sintagma verbal (\teng{verb phrase}) \cite[p.~58]{BlackburnBos:2005}. %Fossem apenas as classes gramaticais, seria uma Gramática Livre de Contexto. Porém, a Gramática de Cláusulas Definidas aceita o uso de algumas restrições, indo além de tal formalismo,como restrições de concordância de número. %Talvez mesmo assim seja possível converter em uma Context Free Grammar (CFG).
+Para nos atermos mais nos desenvolvimentos semânticos, utilizamos uma sintaxe simples: a gramática é implementada pelo mecanismo de Gramática de Cláusulas Definidas (\textit{Definite Clause Grammar} - DCG). A análise sintática é feita na forma de uma árvore cujos nós que são folhas são categorias sintáticas básicas (tais como sujeito (\teng{noun}), verbo transitivo (\teng{transitive verb}) e quantificador (\teng{quantifier}, considerado caso particular de \teng{determiner}). Já os nós que não são folhas representam categorias sintáticas complexas (tais como sintagma nominal (\teng{noun phrase}) ou sintagma verbal (\teng{verb phrase}) \cite[p.~58]{BlackburnBos:2005}. %Fossem apenas as classes gramaticais, seria uma Gramática Livre de Contexto. Porém, a Gramática de Cláusulas Definidas aceita o uso de algumas restrições, indo além de tal formalismo,como restrições de concordância de número. %Talvez mesmo assim seja possível converter em uma Context Free Grammar (CFG).
 
-Um exemplo de tal árvore, para a frase \expreng{\teng{Caim kills Abel}}, seria:
+Um exemplo de tal árvore, para a frase \expreng{\teng{Caim kills Abel}}, seria como na figura \ref{tree:dcg-syntax}.
 
+\begin{figure}[h]
+\centering
 \Tree [.{\teng{Caim kills Abel} (\teng{Sentence}) } 
 [.{\teng{Caim} (\teng{NP})} {\teng{Caim} (\teng{PN})} ]
 [.{\teng{kills Abel} (\teng{VP})}
 {\teng{kills} (\teng{TV})} [.{\teng{Abel} (\teng{NP})} {\teng{Abel} (\teng{PN})} ] ]
 ] \\
+\caption{}
+ \label{tree:dcg-syntax}
+\end{figure}
 
 Aqui, temos as classes sintáticas:\\
 \teng{NP} -- \teng{noun phrase} (sintagma nominal)\\
@@ -150,7 +155,8 @@ Aqui, temos as classes sintáticas:\\
 \teng{VP} -- \teng{verb phrase} (sintagma verbal)\\
 \teng{TV} -- \teng{transitive verb} (verbo transitivo)
 
-A decomposição parece lingüisticamente razoável, bem como útil para a compreensão do significado. Resta saber, assim, como podemos elaborar a construção da semântica de uma frase completa a partir de tal análise sintática e dos significados dos termos mais elementares. Portanto, devemos construir nossa gramática.
+A decomposição sintática parece lingüisticamente razoável. Resta saber, assim, como podemos elaborar a construção da semântica de uma frase completa a partir de tal análise sintática e dos significados dos termos mais elementares. No exemplo, a decomposição da frase no sintagma nominal \expreng{Caim} e no sintagma verbal \expreng{kills Abel} deve ser associada com $caim$ ser o primeiro argumento em $kill(caim,abel)$. Ou seja, devemos construir a contraparte semântica de nossa gramática.
+\update
 
 %Essa idéia nos seguirá pelo restante do trabalho, permitindo separar nossas análises, bem como nossos códigos, pelo seguinte norte: a sintaxe da nossa linguagem natural objeto pode ser separada em léxico -- a análise de palavras ou expressões em si, como unidades básicas -- e em regras gramaticais -- a análise de como as classes sintáticas se compõem para formar novas, bem como outras relações de concordância (como concordância de gênero ou de número). Já a semântica também pode ser tratada a nível de léxico -- em que cada classe sintática básica terá um modelo próprio de interpretação semântica -- bem como a nível de regras -- em que a semântica de uma expressão complexa será formada por uma forma de composição entre as semânticas das expressões que a constituem.
 
@@ -160,7 +166,7 @@ A decomposição parece lingüisticamente razoável, bem como útil para a compr
 	
 	Para seguí-los, o método usado foi dividir a gramática segundo dois critérios: se o componente trata do léxico ou de regras gramaticais (isto é, combinando expressões para criar outras maiores) e se é sintático ou semântico. Assim, um dos componentes da gramática é um léxico que enumera as palavras e expressões aceitas, afirmando determinadas propriedades. Um segundo trata da semântica dos léxicos, isto é, da representação semântica dada a palavras individualmente ou expressões básicas (aqui, isto é principalmente feito se utilizando da classificação sintática, isto é, a classe sintática e a palavra em si determinam a semântica). Um terceiro item trata das regras da sintaxe, isto é, da classificação sintática de expressões complexas a partir da classificação de termos menos (incluindo aspectos como concordância de gênero ou número). Ademais, um quarto componente trata das regras semânticas, isto é, como combinar o significado de expressões menores para formar o significado de expressões maiores. Por fim, utilizamos uma quinta parte que se utiliza de todas as anteriores para fazer a relação entre o texto recebido e a representação semântica desejada. Um exemplo pode ser visto na tabela \ref{curt-gramatica}, tratando do exemplo da representação semântica mais simples, a do cálculo lambda, que veremos a seguir.
 	
-	\todo[color=yellow,inline]{De fato é assim que o código será organizado, mas o lambda.pl é apenas o mais simples, então não deixa de ser um exemplo. O mecanismo completo não usará o lambda.pl. Mais detalhes do projeto, link e deixar o código livre eu deixei para o capítulo de Curt, ou então posso colocar na introdução}
+%	\todo[color=yellow,inline]{De fato é assim que o código será organizado, mas o lambda.pl é apenas o mais simples, então não deixa de ser um exemplo. O mecanismo completo não usará o lambda.pl. Mais detalhes do projeto, link e deixar o código livre eu deixei para o capítulo de Curt, ou então posso colocar na introdução}
 	
 	\begin{table}[h]
 		\centering
@@ -184,8 +190,6 @@ A decomposição parece lingüisticamente razoável, bem como útil para a compr
 	
 	Do segundo grupo, veremos a \teng{hole semantics}, um formalismo essencialmente diferente, baseado em restrições, devido a \citet{HoleSem}.
 
-	\todo[color=yellow,inline]{atualizei com uma descrição das diferentes técnicas, bem como dizendo que seguiremos as diferentes técnicas}
-
 \subsection{Cálculo Lambda}
 
 Para realizar um método sistemático de composição dos significados, é introduzido o formalismo do \textit{cálculo lambda}. Aqui, ele será uma extensão da linguagem da lógica de primeira ordem. Dois símbolos novos serão introduzidos: o símbolo de abstração \expr{$\lambda$} e o de aplicação \expr{$@$}.
@@ -196,7 +200,7 @@ Por sua vez, o símbolo \expr{$@$}, que conecta duas fórmulas de cálculo lambd
 
 Uma expressão de aplicação funcional representa o comando de aplicar o argumento no funtor, que usualmente será prefixado por uma abstração. A interpretação desse comando é: retire o prefixo de abstração do funtor e, em toda ocorrência da variável abstraída, a substitua pelo argumento da aplicação. Por exemplo, em \code{(\lambda x. man(x))@john}, o funtor é \code{\lambda x. man(x)} e a interpretação do comando é de retirar o prefixo \code{\lambda x.} e substituir toda ocorrência de \code{x} no funtor pelo argumento \code{john}, o que produz o resultado de \code{man(john)}. Transformar uma aplicação em sua fórmula resultante após o processo de aplicação é uma operação chamada de \textit{$\beta$-redução}, \textit{$\beta$-conversão} ou \textit{$\lambda$-conversão} \citep[p.~67]{BlackburnBos:2005}.
 
-Destacamos que aplicações podem ser subfórmulas de outras fórmulas, com a $\beta$-redução da fórmula maior sendo a $\beta$-redução de suas subfórmulas, bem como que não é necessário ser um termo ou uma variável para ser um argumento de uma aplicação. Ademais, convencionaremos que o operador \code{@} possui precedência em relação ao operador \code{\lambda}. Outra convenção será a de que o operador \code{@} se associa à direita. Deste modo, devemos ler $\lambda P. P@z$ como $\lambda P.(P@z)$, enquanto $(\lambda P. \lambda Q. P)@x@y$ deve ser lido como $((\lambda P. \lambda Q. P)@x)@y$. \updated{Precedência. O Bos não explicita o critério dele, então elegi esse.}
+Destacamos que aplicações podem ser subfórmulas de outras fórmulas, com a $\beta$-redução da fórmula maior sendo a $\beta$-redução de suas subfórmulas, bem como que não é necessário ser um termo ou uma variável para ser um argumento de uma aplicação. Ademais, convencionaremos que o operador \code{@} possui precedência em relação ao operador \code{\lambda}. Outra convenção será a de que o operador \code{@} se associa à direita. Deste modo, devemos ler $\lambda P. P@z$ como $\lambda P.(P@z)$, enquanto $(\lambda P. \lambda Q. P)@x@y$ deve ser lido como $((\lambda P. \lambda Q. P)@x)@y$. 
 
 Veja este exemplo:
 É bem formada a fórmula $(\lambda P. P@mia)@(\lambda x.woman(x))$. Em uma primeira etapa de $\beta$-redução, chegamos à fórmula $(\lambda x.woman(x))@mia$ e aí, mais uma vez realizando a operação, chegamos à sua $\beta$-redução final $woman(mia)$.
@@ -231,7 +235,7 @@ Apesar deste método produzir resultados interessantes, ele não é suficiente. 
 
 Em primeiro lugar, as ambigüidades lexicais podem ser tratadas colocando em nosso sistema todos os sentidos possíveis de determinada expressão. Assim, homógrafos (palavras com a mesma grafia mas significados distintos) podem ser considerados como entradas distintas em nosso banco de dados da semântica lexical. Devido ao mecanismo de \teng{\textit{backtracking}} da linguagem Prolog, todas as possibilidades são facilmente geradas, fazendo com que a simples adição da entrada lexical é suficiente para que este tipo de ambigüidade seja capturado. De fato, é disto que nos beneficiamos em nossa integração com a Wordnet, explorada na seção \ref{sec:wordnet}.
 
-Em segundo lugar, ambigüidades por diferentes possibilidades de decomposição sintática de uma mesma frase também podem ser tratadas pelo modelo até então. Novamente, a implementação se beneficia do mecanismo de \teng{\textit{backtracking}} do Prolog, de modo que diferentes decomposições sintáticas e seus significados associados podem ser gerados sucessivamente\footnote{Para um exemplo, pode ser testada a frase \expreng{If John walks then John dances and Mia smokes} usando \textsc{kellerStorage.pl}. Modificamos a gramática para que esse tipo de exemplo pudesse ser analisado, sendo a ambigüidade capturada pela diferença na análise sintática. São gerados dois resultados: $and(imp(walk(john),dance(john)),smoke(mia))$ e $imp(walk(john),and(dance(john),smoke(mia)))$.}.\update
+Em segundo lugar, ambigüidades por diferentes possibilidades de decomposição sintática de uma mesma frase também podem ser tratadas pelo modelo até então. Novamente, a implementação se beneficia do mecanismo de \teng{\textit{backtracking}} do Prolog, de modo que diferentes decomposições sintáticas e seus significados associados podem ser gerados sucessivamente\footnote{Para um exemplo, pode ser testada a frase \expreng{If John walks then John dances and Mia smokes} usando \textsc{kellerStorage.pl}. Modificamos a gramática para que esse tipo de exemplo pudesse ser analisado, sendo a ambigüidade capturada pela diferença na análise sintática. São gerados dois resultados: $and(imp(walk(john),dance(john)),smoke(mia))$ e $imp(walk(john),and(dance(john),smoke(mia)))$.}.
 
 Entretanto, podemos apontar um tipo de ambigüidade que, até então, nosso modelo é incapaz de tratar: as ditas \textit{ambigüidades de escopo} \citep[p.~105-109]{BlackburnBos:2005}. As ambigüidades de escopo são melhor explicadas através de exemplos.
 
@@ -242,7 +246,7 @@ Analisemos a frase:
 
 Esta frase parece ter duas interpretações possíveis: na primeira, para cada homem existe uma mulher amada por aquele. Possivelmente, são mulheres distintas. Já na segunda leitura, existe uma mulher específica que é amada por todos os homens.
 
-\update Essa dúvida parece ser gerada pelo \textit{escopo} dos quantificadores \expreng{every} e \expreng{a}. Caso o quantificador \expreng{every} seja \textit{mais externo} (ou \textit{\teng{out-scoping}}) ao quantificador \expreng{a}, então teremos a primeira leitura. Neste caso, também dizemos que o quantificador \expreng{every} tem \textit{escopo sobre} o quantificador \expreng{a}. Por outro lado, caso o quantificador \expreng{a} tenha escopo sobre o quantificador \expreng{every}, a leitura será a segunda. Isto é, em nossa semântica, a primeira leitura seria representada por
+Essa dúvida parece ser gerada pelo \textit{escopo} dos quantificadores \expreng{every} e \expreng{a}. Caso o quantificador \expreng{every} seja \textit{mais externo} (ou \textit{\teng{out-scoping}}) ao quantificador \expreng{a}, então teremos a primeira leitura. Neste caso, também dizemos que o quantificador \expreng{every} tem \textit{escopo sobre} o quantificador \expreng{a}. Por outro lado, caso o quantificador \expreng{a} tenha escopo sobre o quantificador \expreng{every}, a leitura será a segunda. Isto é, em nossa semântica, a primeira leitura seria representada por
 
 \begin{align*}
 \forall x (man(x) \rightarrow \exists y (woman(y) \land love(x,y)))
@@ -291,7 +295,7 @@ Com mais detalhes, \textit{a priori} as representações não diferem muito de c
 Caso o nó não-terminal não seja um sintagma nominal quantificado, a represnetação ``usual'' é a sua única possível. Entretanto, o processo possui uma diferença quando o nó não-terminal é um sintagma nominal quantificado. Além da composição ``usual'' para outros nós, há uma segunda representação possível. Isso merece ser destacado:
 
 \begin{oframed}\textbf{Armazenagem (Cooper)}\\
-Seja o armazenamento $\langle\phi, (\beta, j), \dots, (\beta', k)\rangle$ a representação semântica ``usual'' para um sintagma nominal quantificado. O armazenamento $\langle\lambda u.(u@z_i), (\phi, i), (\beta, j), \dots, (\beta', k)\rangle $, onde $i$ é um índice único\footnotemark também é uma representação para este sintagma nominal quantificado.
+Seja o armazenamento $\langle\phi, (\beta, j), \dots, (\beta', k)\rangle$ a representação semântica ``usual'' para um sintagma nominal quantificado. O armazenamento $\langle\lambda u.(u@z_i), (\phi, i), (\beta, j), \dots, (\beta', k)\rangle $, onde $i$ é um índice único\footnotemark{} também é uma representação para este sintagma nominal quantificado.
 \end{oframed}
 \footnotetext{{isto é, não utilizado até então}}
 
@@ -347,25 +351,51 @@ Agora, o que resta é converter o armazenamento representativo da frase completa
 
 Assim, chegamos a uma das duas interpretações: a de que todos os homens amam uma mesma mulher. Se resgatarmos o operador de ligação 2 e só depois resgatarmos o operador de ligação 1, teremos a outra leitura: $\forall y(man(y) \rightarrow \exists x (woman (x) \land love(y,x)))$, isto é, para cada homem, existe alguma mulher tal que ele a ame.
 
-Portanto, desenvolvemos um método sistemático que pode capturar as ambigüidades de escopo, produzindo as leituras possíveis. O que nos resta agora é a pergunta: será que nosso método é de fato capaz de capturar todas as ambigüidades de escopo? Infelizmente, iremos apontar duas frases nas quais o método não é suficiente. \fixed{De fato não estava nada claro! Retirei a afirmação.}
+Portanto, desenvolvemos um método sistemático que pode capturar as ambigüidades de escopo, produzindo as leituras possíveis. O que nos resta agora é a pergunta: será que nosso método é de fato capaz de capturar todas as ambigüidades de escopo? Infelizmente, iremos apontar duas frases nas quais o método não é suficiente. 
 
 \subsubsection{Dificuldades}
 
 A primeira frase é: \expreng{Every criminal with a gun is dangerous.} Aplicando nosso método, teremos os seguintes resultados:
 \begin{enumerate}
-\item $\forall x((criminal(x) \land \exists y (gun(y) \land with(x,y))) \rightarrow smoke(x))$
-\item $\exists y(gun(y) \land \forall x(criminal(x) \land with(x,y) \rightarrow smoke(x)))$
-\item $\forall x((criminal(x) \land with(x,y)) \rightarrow \exists z(gun(z) \land smoke(x))) $
+\item $\forall x((criminal(x) \land \exists y (gun(y) \land with(x,y))) \rightarrow dangerous(x))$
+\item $\exists y(gun(y) \land \forall x(criminal(x) \land with(x,y) \rightarrow dangerous(x)))$
+\item $\forall x((criminal(x) \land with(x,y)) \rightarrow \exists z(gun(z) \land dangerous(x))) $
 \end{enumerate}
 
-Apesar dos resultados 1 e 2 serem perfeitamente razoáveis, sendo as interpretações que desejávamos, a interpretação 3 possui uma variável livre, não sendo uma sentença de primeira ordem. Isso nos mostra que há um problema com o nosso método. Como isso surgiu?
+\fixd
+Apesar dos resultados 1 e 2 serem perfeitamente razoáveis, sendo as interpretações que desejávamos, a interpretação 3 possui uma variável $x$ que não está dentro do escopo do quantificador universal $\forall x$. Assim, em $dangerous(x)$, ao fim da fórmula, tal $x$ não está formalmente identificado com o $x$ quantificado que ocorre em $criminal(x)$, perdendo o conteúdo semântico de que o criminoso seria perigoso. \updated{É melhor esta reformulação, em que apresento diretamente o problema intuitivo do resultado, ou deixa como estava, porém adicionando (na seção em que introduzo a lógica) uma definição formal de variável livre e de sentença?}   Isso nos mostra que há um problema com o nosso método. Como isso surgiu? \updated{Estava faltando a explicação abaixo}
 
-Realizando nosso procedimento e optando sempre por colocar a representação do sintagma nominal no armazenamento, montaremos a árvore: 
-%(.......)
+Realizando nosso procedimento e optando sempre por colocar a representação do sintagma nominal no armazenamento, ficaremos com a seguinte representação:
 
-%Isto nos mostra o problema de sintagmas nominais aninhados ....
+\begin{align*}
+	&\langle dangerous(z_2),
+	\\ & (\lambda P. \exists x ( gun(x) \land P@x, 1))
+	\\ & (\lambda Q. \forall x ( (criminal(x) \land with(x,z_1)) \rightarrow Q@x, 2)
+	\rangle
+\end{align*}
 
-Por sua vez, a segunda frase é:  \expreng{Every man doesn't love a woman}. A presença da negação traz elementos interessantes. Em primeiro lugar, ela em si é uma fonte possível de ambigüidades de escopo. Entretanto, o método de armazenamento de Cooper não tratou a negação de nenhum modo especial. Além disso, esse exemplo mostra o interesse em manter a operação de armazenamento como opcional. Esta frase pode ser interpretado de seis modos:
+Se resgatarmos antes a representação de \expreng{a gun}, isto é, o operador de ligação indexado por $1$, teremos, após a beta-redução:
+
+\begin{align*}
+	& \langle \exists x ( gun(x) \land dangerous(z_2)),
+	\\ & ( \lambda Q. \forall x ( (criminal(x) \land with(x,z_1)) \rightarrow Q@x, 2 )
+	\rangle
+\end{align*}
+
+Ao realizar a redução manualmente, já é possível perceber que há algo errado, pois a aplicação $P@x$ no operador de ligação indexado por $1$ ocorre de modo trivial, não havendo variáveis a substituir. Dito de outro modo, a variável $z_1$ apenas ocorre dentro do operador de ligação indexado por $2$, que ainda não foi resgatado, de modo que o resgate anterior do operador indexado por $1$ se torna defeituoso.
+
+Podemos conferir que ocorreu um problema, pois levando até o fim iremos aplicar o operador de ligação restante e chegaremos ao resultado inadequado.
+
+\begin{align*}
+	& \langle \forall x ( (criminal(x) \land with(x,z_1)) \rightarrow \exists y ( gun(y) \land dangerous(x))))
+	\rangle
+\end{align*}
+
+Isto nos mostra o problema de sintagmas nominais aninhados, que proíbe que a ordem dos resgates seja feita de modo arbitrário.
+
+Por sua vez, a segunda frase é:  \expreng{Every man doesn't love a woman}. A presença da negação traz elementos interessantes. Em primeiro lugar, ela em si é uma fonte possível de ambigüidades de escopo. Por exemplo, uma interpretação possível é a de que, para cada homem, não é verdade que existe uma mulher a qual ele ame. Ou seja, nesta interpretação, cada homem não ama todas as mulheres. Outra interpretação é aquela de que, para cada homem, existe uma mulher a qual ele não ame. Isto quer dizer que para todo homem há ao menos uma mulher não amada por ele. Nestas duas interpretações, a quantificação \expr{todo homem} possui escopo mais externo. Entretanto, na primeira, a negação tem um escopo mais externo do que o quantificador existencial \expr{uma mulher}, sendo uma negação da existência. Já na segunda interpretação, ao contrário, o quantificador existencial de \expr{mulher} é mais externo que a negação, sendo a afirmação de existência de uma mulher satisfazendo a negação de uma propriedade (qual seja, ser amada). Portanto, a negação também gera ambigüidades de escopo.
+
+Entretanto, o método de armazenamento de Cooper não tratou a negação de nenhum modo especial. Além disso, esse exemplo mostra o interesse em manter a operação de armazenamento como opcional. Esta frase pode ser interpretado de seis modos:
 \begin{enumerate}
 \item $\neg \forall x (man(x) \rightarrow \exists y (woman(y) \land love(x,y))) $
 \item $\neg \exists y(woman(y) \land \forall x(man(x) \rightarrow love(x,y)))$
@@ -419,7 +449,7 @@ Assim, o problema dos sintagmas nominais é resolvido. Apesar disso, o segundo p
 
 \subsection{\teng{Hole Semantics}}
 
-Apesar de ser possível criar um novo mecanismo para capturar a ambigüidade de escopo gerada pela negação\footnote{Com efeito, em nosso repositório apresentamos no arquivo \textsc{negationKellerStorage.pl} uma alteração neste sentido. \todo[inline,color=yellow]{atualizado}}, abordagens \textit{ad hoc} para novas dificuldades fere a extensibilidade da gramática, criando uma falta de harmonização dos métodos usados, possivelmente proliferando uma diversidade de construções muito distintas entre si. Precisamos, então, de uma abordagem mais uniforme. 
+Apesar de ser possível criar um novo mecanismo para capturar a ambigüidade de escopo gerada pela negação\footnote{Com efeito, em nosso repositório apresentamos no arquivo \textsc{negationKellerStorage.pl} uma alteração neste sentido.}, abordagens \textit{ad hoc} para novas dificuldades fere a extensibilidade da gramática, criando uma falta de harmonização dos métodos usados, possivelmente proliferando uma diversidade de construções muito distintas entre si. Precisamos, então, de uma abordagem mais uniforme. 
 % %  Na realidade, não apenas a negação traz ambigüidades de escopo. Por exemplo, uma frase como \expreng{If a man walks then he jumps and a woman is happy} é ambígua \citep{HoleSem}. Podemos imaginar uma interpretação na qual \expreng{a woman is happy} é parte do conseqüente da implicação e outra na qual não o é, sendo uma afirmação separada da implicação.\footnote{Este tipo de construção não ocorre no programa original de \citet{BlackburnBos:2005}, por não haver orações coordenadas com \expreng{and}, nem coordenação com orações já coordenadas com outras. O código foi modificado para que isso fosse}\todo{AJUSTAR - ambigüidade semântica ou sintática?} Em razão destas dificuldades, e também de modo a ganhar maior flexibilidade na representação, analisaremos uma outra forma de representação semântica, não baseada em armazenamentos.  % % %  Exemplo ruim, não convencido de que isto é realmente uma ambigüidade de escopo. Este tipo de exemplo não aparece em \cite{BlackburnBos:2005}. Duvidoso.
 Além disto, nos falta um modo mais flexível de representar os sentidos possíveis. O método do armazenamento possibilita a representação de diversos sentidos de modo compacto, mas não nos permite adicionar restrições arbitrárias em cima dos sentidos possíveis. Tal método foi limitado às possibilidades criadas pelos quantificadores. Contudo, podemos precisar de algo mais geral. Em razão destas dificuldades, analisaremos uma outra forma de representação semântica, não baseada em armazenamentos, denominada \teng{Hole Semantics}.
 
@@ -455,7 +485,7 @@ Agora, iremos definir as USRs básicas:
 
 %\begin{defn}[USR básica] \leavevmode
 \begin{enumerate}
-\item Se $l$ é um rótulo e $h$ é um buraco, então $l \leq h$ é uma USR básica. \label{om-const}
+\item Se $l$ é um rótulo e $h$ é um buraco, então $l \leq h$ é uma USR básica. \label{dom-const}
 \item Se $l$ é um rótulo e $n$ e $n'$ são nós, então $l\textsc{:not}(n)$, $l\textsc{:imp}(n,n')$, $l\textsc{:and}(n,n')$ e $l\textsc{:or}(n,n')$ são USRs básicas.
 \item Se $l$ é um rótulo enquanto $t$ e $t'$ são meta-termos, então $l\textsc{:eq}(t,t')$ é uma USR básica.
 \item Se $l$ é um rótulo, $S$ é um símbolo $n$-ário na linguagem SRL e $t_1$, \dots, $t_n$ são meta-termos, então $l\textsc{:S}(t_1,\dots, t_n)$ é uma USR básica.
@@ -478,8 +508,9 @@ Observe aqui que o espaço a mais criado pela subida de aridade nos predicados e
 
 É de ser notado que nem todos os conectivos e formas da lógica da primeira ordem foram empregados nesta definição. Na realidade, apenas são fórmulas conjuntos pequenos de formas conjuntivas e existencialmente fechadas. Entretanto, esse fragmento da linguagem é suficiente para nossos propósitos \citep[p.~131]{BlackburnBos:2005}.
 
-Podemos avançar então para um exemplo. Consideremos a frase \expreng{Mia does not love a man}. Uma interpretação é aquela na qual Mia não ama um homem específico, que pode ser formalizada como $\exists x: man(x) \land \neg love(mia,x)$. Outra, é aquela na qual Mia não ama homem algum, isto é, $\neg (\exists x: man(x) \land love(mia,x))$. Suas árvores são:
+Podemos avançar então para um exemplo. Consideremos a frase \expreng{Mia does not love a man}. Uma interpretação é aquela na qual Mia não ama um homem específico, que pode ser formalizada como $\exists x: man(x) \land \neg love(mia,x)$. Outra, é aquela na qual Mia não ama homem algum, isto é, $\neg (\exists x: man(x) \land love(mia,x))$. Suas árvores estão representadas na figura \ref{tree:holesem-neg}.
 
+\begin{figure}[h]
 \begin{center}
 \begin{tikzpicture}[sibling distance=25mm]
 \node at (-4,0) {$\exists x$}
@@ -495,6 +526,9 @@ Podemos avançar então para um exemplo. Consideremos a frase \expreng{Mia does 
    child {node {$love(mia,x)$}}}};
 \end{tikzpicture}
 \end{center}
+\caption{}
+\label{tree:holesem-neg}
+\end{figure}
 
 Já a representação subespecificada busca capturar o que há em comum entre as árvores possíveis. A USR desta frase é: 
 
@@ -502,8 +536,8 @@ Já a representação subespecificada busca capturar o que há em comum entre as
 &\exists h_0 \exists h_1 \exists h_2 \exists l_1 \exists l_2 \exists l_3 \exists l_4 \exists l_5 \exists v_1 \\& ({l_1\textsc{:not}(h_1)} \land l_2\textsc{:love}(mia,v_1) \land l_3\textsc{:some}(v_1,l_4) \land l_4\textsc{:and}(l_5, h_2) \land l_5\textsc{:man}(v_1))
 \end{flalign*}
 
-Porém, as USRs se tornam melhor compreensíveis através de sua representação gráfica, estando abaixo aquela relativa à nossa frase considerada:
-
+Porém, as USRs se tornam melhor compreensíveis através de sua representação gráfica, estando na figura \ref{fig:usr} aquela relativa à nossa frase considerada.
+\begin{figure}[h]
 \begin{center}
 \begin{tikzpicture}
 [node distance = 3cm, auto, thick, inner sep=2mm, def/.style={circle,draw}]
@@ -528,7 +562,9 @@ Porém, as USRs se tornam melhor compreensíveis através de sua representação
 
 \end{tikzpicture}
 \end{center}
-
+\caption{}
+\label{fig:usr}
+\end{figure}
 
 Podemos ver a intuição desta representação. É criado um buraco $h_0$ correspondente ao nó mais alto da árvore. As linhas pontilhadas representam restrições de dominância entre buracos e nós. Por sua vez, as linhas preenchidas mostram quais nós são pais de outros. A relação de parentesco também representa dominância: se um nó é pai de outro, é certo que o filho não pode ter escopo mais externo que o pai, uma vez que deve ser subfórmula do mesmo. Entretanto, neste caso a posição está fixa: necessariamente a relação de parentesco será aquela. Por sua vez, na dominância entre buracos e nós, não é isto que occore. Basta que o nó dominado esteja no escopo do nó dominante, não necessariamente sendo filho do mesmo. Ou seja, basta ser descendente.
 
@@ -586,4 +622,4 @@ Assim, duas árvores são formadas, cada uma gerando uma interpretação possív
 
 Com efeito, estas são de fato as árvores que havíamos construído antes, para cada interpretação.
 
-\todo[color=Green,inline]{Grafos e árvores colocados como figures flutuantes.}
+

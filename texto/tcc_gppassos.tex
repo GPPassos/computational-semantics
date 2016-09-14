@@ -8,7 +8,7 @@
 \usepackage{indentfirst}
 \usepackage[noload]{qtree}
 \usepackage{hyperref}
-\usepackage[disable,colorinlistoftodos, textwidth=\marginparwidth]{todonotes}
+\usepackage[colorinlistoftodos, textwidth=\marginparwidth]{todonotes}
 
 \usepackage{wrapfig}
 \usepackage{graphicx}
@@ -21,7 +21,7 @@
 \usepackage{times}
 
 \usepackage{caption} % deixa figuras sem caption como "Figura 1" ao invés de "Figura 1:"
-
+\usepackage[section]{placeins}  % impede que floats de uma seção sejam colocados em outra
 \usepackage{fancyvrb} % Verbatim fancy para exibir melhor códigos
 
 %\makeatletter
@@ -84,7 +84,7 @@
  
   \vspace{55 mm}
 
-  {\bf \large \usetitle}\update \\[1.2cm]
+  {\bf \large \usetitle} \\[1.2cm]
 
   { por}\\[0.6cm]
   {\large {\theauthor}}\\[0.1cm]
@@ -162,9 +162,7 @@ realizá-lo a não ser nos casos e para os fins autorizados pelo professor orien
 \end{titlepage}
 
 \newpage\null\thispagestyle{empty}\newpage
-%todo: Ver onde colocar epígrafe, dedicatória e agradecimentos
 %----
-%todo: Ver todos do tcc1.tex
 
 % --- Dedicatória
 \newpage
@@ -270,7 +268,7 @@ Aos demais colegas e amigos que me encorajaram e estiveram presentes para divert
 %
 %
 
-\newpage
+\clearpage
 % % %
 
 \section{Introdução}
@@ -278,7 +276,7 @@ Aos demais colegas e amigos que me encorajaram e estiveram presentes para divert
 \label{sec:intro}
 \input{introducao.tex}
 
-\newpage
+\clearpage
 \section{Representação semântica}
 \label{sec:rep}
 \input{representacao.tex}
@@ -287,18 +285,16 @@ Aos demais colegas e amigos que me encorajaram e estiveram presentes para divert
 %\section{Inferência}
 %\label{sec:inf}
 
-\newpage
+\clearpage
 \section{Curt -- Sistema de Diálogo e Wordnet}
 \label{sec:curt}
 \input{curt}
-
-
-\newpage
+\clearpage
 \section{Conclusão}
 \label{sec:conclusao}
 \input{conclusao}
 
-\newpage
+\clearpage
 \bibliographystyle{plainnat-br}
 \bibliography{tcc_gppassos}
 

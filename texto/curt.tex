@@ -15,7 +15,9 @@
 	
 	É importante de se notar que as duas últimas tarefas são interdefiníveis. Uma fórmula $\phi$ é consistente se e somente se $\neg \phi$ é informativa (isto é, logicamente inválida), ao mesmo tempo que $\phi$ é informativa se e somente se $\neg \phi$ é consistente.
 	
-	Computacionalmente, a tarefa de consulta é a mais fácil das três. Ela é decidível, o que significa que existem métodos capazes de resolver o problema. Infelizmente, isto não significa que seja tão fácil: na realidade, é um problema da classe de complexidade PSPACE. \updated{Mesmo para FOL. A referência estava no fim do parágrafo, mas a adiantei} Já as outras duas tarefas, interdefiníveis, na realidade são \textit{indecidíveis}. Do ponto de vista da tarefa de consistência, uma vez que existe um número infinito de modelos possíveis, a maioria deles sendo infinito, temos um problema de busca computacionalmente complicado. \citep[pp.~50--54]{BlackburnBos:2005} Isto é um fato que teremos de aceitar: nossos métodos não serão capazes de confirmar a consistência e a informatividade em todos os casos. Isto não será um impedimento para nossos exemplos, mas outras abordagens foram desenvolvidas em lógicas menos complexas, algumas decidíveis, que podem ser vistos como fragmentos da lógica de primeira ordem, como lógicas modais ou lógicas de descrição\footnote{Para uma referência a respeito de lógicas de descrição, apontamos o livro de \citet{description-logic}.}.
+	Computacionalmente, a tarefa de consulta é a mais fácil das três. Ela é decidível, o que significa que existem métodos capazes de resolver o problema.  Infelizmente, isto não significa que seja tão fácil: na realidade, é um problema da classe de complexidade PSPACE \citep[p.~52]{Kolaitis2007}. \update
+	
+	Já as outras duas tarefas, interdefiníveis, na realidade são \textit{indecidíveis}. Do ponto de vista da tarefa de consistência, uma vez que existe um número infinito de modelos possíveis, a maioria deles sendo infinito, temos um problema de busca computacionalmente complicado \citep[pp.~50--54]{BlackburnBos:2005}. Isto é um fato que teremos de aceitar: nossos métodos não serão capazes de confirmar a consistência e a informatividade em todos os casos. Isto não será um impedimento para nossos exemplos, mas outras abordagens foram desenvolvidas em lógicas menos complexas, algumas decidíveis, que podem ser vistos como fragmentos da lógica de primeira ordem, como lógicas lógicas de descrição\footnote{Para uma referência a respeito de lógicas de descrição, apontamos \citet{description-logic}.}.
 	
 	Para resolver o par difícil de problemas, teremos duas ferramentas: provadores de teorema e construtores de modelos. Provadores de teorema verificam validade: eles são capazes de achar demonstrações e, caso achem a demonstração de uma fórmula, está será válida. Entretanto, eles nada dizem sobre invalidade. Por sua vez, construtores de modelo tentam encontrar um modelo que satisfaça a fórmula a ele apresentada. Contudo, a incapacidade de encontrar um modelo não garante que tal modelo não exista (por exemplo, o modelo pode ser infinito ou maior do que considerado pelo construtor).
 	%
@@ -27,15 +29,62 @@
 		
 		Isto é, provadores de teorema podem fornecer respostas negativas para o teste de informatividade e para o teste de consistência, enquanto construtores de modelos podem fornecer respostas positivas. Há muitos provadores de teorema disponíveis, tais como \textsc{Vampire} de \citet{vampire} e \textsc{E} de \citet{e-prover}. Neste trabalho, usamos um provador de teoremas e um construtor de modelos prontos, chamados de \textsc{otter} e \textsc{mace2}, respectivamente, já utilizados por \citet{BlackburnBos:2005}. Decidimos também integrar as encarnações mais novas destas ferramentas: \textsc{prover9} e \textsc{mace4}. \citep{prover9-mace4}
 	
-	Estabelecidas as tarefas que desejamos cumprir e como realizá-las com nossas representações semânticas, apresentaremos como fazer isto através do sistema Curt, de \citet{BlackburnBos:2005}. Curt significa \expreng{clever use of reasoning tools} (\expr{uso esperto de ferramentas de raciocínio}). É um sistema no qual o usuário pode fazer afirmações em inglês que serão avaliadas pelo programa. Ele será capaz de fazer nossas tarefas inferenciais, notificando caso haja algum problema, bem como de construir modelos das informações passadas e de responder algumas perguntas simples.
+\subsection{Wordnet}	
+	% -- Descrição da Wordnet
+	
+	A Wordnet considera quatro categorias sintáticas de palavras: substantivos, verbos, adjetivos e advérbios \citep[p.~5]{Fellbaum:wordnet}. Dentro de cada categoria, os conceitos são distribuídos em conjuntos de sinônimos (\teng{synsets}, de \expreng{synonym sets}). Entre estes são definidas relações semânticas, como hiponímia (relação de subconjunto), meronímia (relação de ser parte) e implicação. Felizmente, a Wordnet pode ser baixada em um formato já preparado para a linguagem Prolog.
+%
+\updated{Fiz essa subseção apresentando a Wordnet, depois falo de Curt e então explico como foi integrado}
+	
+		Por exemplo, o arquivo \textsc{wn\_s.pl} apresenta um predicado no formato
+		\begin{center}
+		\Verb[fontseries=b]|s(synset_id,w_num,"word",ss_type,sense_number,tag_count)|.
+		\end{center}
+		
+			Cada cláusula corresponde a um significado de uma palavra. Os argumentos relevantes para nossa análise são o \Verb[fontseries=b]|synset_id|, que identifica a qual synset aquele sentido da palavra pertence, \Verb[fontseries=b]|w_num|, que diz qual o número daquela palavra dentro do synset, \Verb[fontseries=b]|"word"|, que diz qual palavra é e \Verb[fontseries=b]|ss_type|, que diz a qual categoria sintática aquele synset pertence.
+			
+			Um pequeno trecho do arquivo é este:
+		
+		\begin{Verbatim}[fontseries=b,gobble=1]
+	s(104565375,1,`weapon',n,1,29).
+	s(104565375,2,`arm',n,3,1).
+	s(105563770,1,`arm',n,1,104).
+		\end{Verbatim}	
+		
+		Notamos aqui a palavra \expreng{arm} tendo um sentido que pertence ao \teng{synset} 104565375, que é o mesmo de um sentido de \teng{weapon}, bem como tendo um outro sentido que pertence ao \teng{synset} 105563770. Consultando o arquivo \textsc{wn\_g.pl}, temos a glosa sobre cada \teng{synset}, isto é, um comentário. O trecho relativo é:
+		
+		\begin{Verbatim}[fontseries=b,gobble=1]
+ g(104565375,`any instrument or instrumentality used in fighting
+	or hunting; ``he was licensed to carry a weapon"').
+
+ g(105563770,`a human limb; technically the part of the superior limb
+	between the shoulder and the elbow but commonly
+	used to refer to the whole superior limb').
+		\end{Verbatim}
+		
+		Ou seja, os \expreng{synsets} correspondem, respectivamente, às palavras \expr{arma} e \expr{braço}, que são dois sentidos possíveis de \expreng{arm}. Um outro exemplo é:
+		
+		\begin{Verbatim}[fontseries=b,gobble=1]
+	s(110388924,1,`owner',n,1,15).
+	s(110388924,2,`proprietor',n,1,11).
+	s(110389398,1,`owner',n,2,9).
+	s(110389398,2,`possessor',n,1,0).
+		\end{Verbatim}
+		
+		A palavra \expreng{owner} possui ao menos dois sentidos: o de \expreng{proprietor}, representado no \teng{synset} 110388924, bem como o de \expreng{possessor}, representado no \teng{synset} 110389398. Esta diferenciação também existe no português, onde \expr{dono} pode significar tanto \expr{proprietário} quanto \expr{possuidor}.
+	
 
 \subsection{Arquitetura do Curt}
 
-	O Curt integra as ferramentas de representação com as de inferência. A arquitetura da leitura e representação é como descrevemos na seção \ref{sec:arquitetura}. Já a tarefa de inferência é principalmente organizada no arquivo \textsc{callInference.pl}, colocando o problema em um formato lido pelo provador de teoremas e pelo construtor de modelos.
+	Estabelecidas as tarefas que desejamos cumprir e como realizá-las com nossas representações semânticas, apresentaremos como fazer isto através do sistema Curt, de \citet{BlackburnBos:2005}. Os exemplos abaixo são de execuções do sistema já integrado à Wordnet, para utilizarmos o vocabulário expandido, mas apenas na seção seguinte explicaremos como tal integração foi feita. \update
+	
+	Curt significa \expreng{clever use of reasoning tools} (\expr{uso esperto de ferramentas de raciocínio}). É um sistema no qual o usuário pode fazer afirmações em inglês que serão avaliadas pelo programa. Ele será capaz de fazer nossas tarefas inferenciais, notificando caso haja algum problema, bem como de construir modelos das informações passadas e de responder algumas perguntas simples.
+
+	Curt integra as ferramentas de representação com as de inferência. A arquitetura da leitura e representação é como descrevemos na seção \ref{sec:arquitetura}. Já a tarefa de inferência é principalmente organizada no arquivo \textsc{callInference.pl}, colocando o problema em um formato lido pelo provador de teoremas e pelo construtor de modelos.
 	
 %	\citet{BlackburnBos:2005} desenvolve o Curt passo a passo, de modo didático. Mostraremos aqui apenas algumas características gerais do \textit{Knowledgeable Curt}.
 
-	O Curt é um sistema de diálogo rudimentar, no qual o usuário pode fazer afirmações em linguagem natural a serem avaliadas. A cada afirmação, Curt encontra os sentidos possíveis para a frase e tenta integrá-la ao restante de sua leitura do diálogo. Esta é uma fórmula de primeira ordem: quando uma nova frase é dita, para cada interpretação possível é formada uma nova leitura pela conjunção da leitura anterior com a interpretação da nova frase. Além disso, são encontrados modelos possíveis para cada leitura. Posteriormente, todas as leituras alternativas são descartadas, sendo mantida uma única. Do mesmo modo, apenas é mantido um modelo.
+	Curt é um sistema de diálogo rudimentar, no qual o usuário pode fazer afirmações em linguagem natural a serem avaliadas. A cada afirmação, Curt encontra os sentidos possíveis para a frase e tenta integrá-la ao restante de sua leitura do diálogo. Esta é uma fórmula de primeira ordem: quando uma nova frase é dita, para cada interpretação possível é formada uma nova leitura pela conjunção da leitura anterior com a interpretação da nova frase. Além disso, são encontrados modelos possíveis para cada leitura. Posteriormente, todas as leituras alternativas são descartadas, sendo mantida uma única. Do mesmo modo, apenas é mantido um modelo.
 	
 	Alguns comandos são possíveis, como \Verb[fontseries=b]|history|, que apresenta a lista das afirmações feitas até então; \Verb[fontseries=b]|readings|, que apresenta as leituras possíveis do diálogo até então; \Verb[fontseries=b]|new|, que recomeça o diálogo, \Verb[fontseries=b]|select|, que permite a escolha de uma das leituras possíveis para ser mantida pelo sistema e \Verb[fontseries=b]|models|, que mostra os modelos construídos para o diálogo.
 	
@@ -263,49 +312,14 @@
 %\end{verbatim}
 %\end{framed}
 
+%		\subsection{Helpful Curt}
+	Adicionalmente, podemos usar o Curt mais avançado, Helpful Curt, a fim de utilizar seu mecanismo de responder perguntas. Este mecanismo não foi aprimorado ou modificado neste trabalho, mas pode ser utilizado para testar a integração com a Wordnet.
+	
+	Podem ser respondidas por ele perguntas ditas \teng{wh-questions}, como \expreng{who} (``quem''), \expreng{what} (``o quê'') e \expreng{which} (``qual''). A técnica utilizada envolve utilizar uma representação quase-lógica para as perguntas: uma vez que perguntas não possuem valor-verdade (não sendo declarativas), não podemos atribuir a elas uma verdadeira expressão lógica. A técnica utilizada no Helpful Curt é uma de lacunas, mas não entraremos aqui em mais detalhes a respeito dela ou da semântica de questões. Para mais informações sobre estes tópicos, leitor pode consultar o original \citep[pp.~293--300, 303--304]{BlackburnBos:2005} e os trabalhos referenciados no mesmo. \updated{Trouxe para cá, eliminando a seção que existia. Deixo esse conteúdo ou elimino?}
+
 \subsection{Integrando à Wordnet}
 \label{sec:wordnet}
-% -- Descrição da Wordnet
 
-A Wordnet considera quatro categorias sintáticas de palavras: substantivos, verbos, adjetivos e advérbios \citep[p.~5]{Fellbaum:wordnet}. Dentro de cada categoria, os conceitos são distribuídos em conjuntos de sinônimos (\teng{synsets}, de \expreng{synonym sets}). Entre estes são definidas relações semânticas, como hiponímia (relação de subconjunto), meronímia (relação de ser parte) e implicação. Felizmente, a Wordnet pode ser baixada em um formato já preparado par a linguagem Prolog.
-
-	Por exemplo, o arquivo \textsc{wn\_s.pl} apresenta um predicado no formato
-	\begin{center}
-	\Verb[fontseries=b]|s(synset_id,w_num,"word",ss_type,sense_number,tag_count)|.
-	\end{center}
-	
-		Cada cláusula corresponde a um significado de uma palavra. Os argumentos relevantes para nossa análise são o \Verb[fontseries=b]|synset_id|, que identifica a qual synset aquele sentido da palavra pertence, \Verb[fontseries=b]|w_num|, que diz qual o número daquela palavra dentro do synset, \Verb[fontseries=b]|"word"|, que diz qual palavra é e \Verb[fontseries=b]|ss_type|, que diz a qual categoria sintática aquele synset pertence.
-		
-		Um pequeno trecho do arquivo é este:
-	
-	\begin{Verbatim}[fontseries=b,gobble=1]
-	s(104565375,1,`weapon',n,1,29).
-	s(104565375,2,`arm',n,3,1).
-	s(105563770,1,`arm',n,1,104).
-	\end{Verbatim}	
-	
-	Notamos aqui a palavra \expreng{arm} tendo um sentido que pertence ao \teng{synset} 104565375, que é o mesmo de um sentido de \teng{weapon}, bem como tendo um outro sentido que pertence ao \teng{synset} 105563770. Consultando o arquivo \textsc{wn\_g.pl}, temos a glosa sobre cada \teng{synset}, isto é, um comentário. O trecho relativo é:
-	
-	\begin{Verbatim}[fontseries=b,gobble=1]
-	g(104565375,`any instrument or instrumentality used in fighting
-		or hunting; ``he was licensed to carry a weapon"').
-	
-	g(105563770,`a human limb; technically the part of the superior limb
-		between the shoulder and the elbow but commonly
-		used to refer to the whole superior limb').
-	\end{Verbatim}
-	
-	Ou seja, os \expreng{synsets} correspondem, respectivamente, às palavras \expr{arma} e \expr{braço}, que são dois sentidos possíveis de \expreng{arm}. Um outro exemplo é:
-	
-	\begin{Verbatim}[fontseries=b,gobble=1]
-	s(110388924,1,`owner',n,1,15).
-	s(110388924,2,`proprietor',n,1,11).
-	s(110389398,1,`owner',n,2,9).
-	s(110389398,2,`possessor',n,1,0).
-	\end{Verbatim}
-	
-	A palavra \expreng{owner} possui ao menos dois sentidos: o de \expreng{proprietor}, representado no \teng{synset} 110388924, bem como o de \expreng{possessor}, representado no \teng{synset} 110389398. Esta diferenciação também existe no português, onde \expr{dono} pode significar tanto \expr{proprietário} quanto \expr{possuidor}.
-	
 % -- Efetivamente integrando
 
 	Há dois pontos distintos no qual precisamos integrar a Wordnet à nossa arquitetura. O primeiro é na extensão do vocabulário, isto é, fazer com que nosso leitor de entradas seja capaz de aceitar frases que, respeitando as regras sintáticas entendidas pelo mesmo, usem palavras contidas na lista da Wordnet. O segundo ponto é na utilização das relações semânticas entre \teng{synsets} para complementar o conhecimento prévio do Curt. Iremos especificar como realizamos cada passo.
@@ -352,7 +366,7 @@ A Wordnet considera quatro categorias sintáticas de palavras: substantivos, ver
 	1 some(G,and(dinosaur101699831(G),eq(G,vincent)))
 	\end{Verbatim}
 	
-	Apesar de cumprir o objetivo e adequado à arquitetura, infelizmente este método não é adequado: ele é extremamente lento. Investigando, a causa não é de todo surpreendente: a decomposição sintática é feita testando possibilidades. Encontrando um candidato a substantivo, o único modo não só de achar a entrada léxica, caso seja, mas de refutar essa possibilidade é percorrendo toda a lista da Wordnet. Isto faz com que a decomposição sintática seja imensamente demorada, com várias consultas ao banco de dados léxicos, que é extenso. Assim, desenvolvemos uma abordagem alternativa. \updated{Acho que vale a pena dizer como falhou pois o outro modo era mais natural, ou parecia mais de acordo com a modularidade.}
+	Apesar de cumprir o objetivo e adequado à arquitetura, infelizmente este método não é adequado: ele é extremamente lento. Investigando, a causa não é de todo surpreendente: a decomposição sintática é feita testando possibilidades. Encontrando um candidato a substantivo, o único modo não só de achar a entrada léxica, caso seja, mas de refutar essa possibilidade é percorrendo toda a lista da Wordnet. Isto faz com que a decomposição sintática seja imensamente demorada, com várias consultas ao banco de dados léxicos, que é extenso. Assim, desenvolvemos uma abordagem alternativa. 
 	
 	O lampejo está em se pensar quantas consultas à Wordnet são necessárias para a leitura de uma frase. Podemos imaginar um modo de, conhecida a lista de palavras da frase (normalmente, uma lista bastante pequena), identificar os synsets necessários percorrendo a Wordnet apenas uma vez: basta avançar na Wordnet, verificando a cada etapa se a palavra é igual à forma sintática desejada. Sendo igual, podemos criar uma entrada no léxico com esta informação. \footnote{Um problema deste método é que, do modo descrito, não captura adequadamente palavras compostas. Entretanto, soluções podem ser pensadas, como utilizar não apenas as palavras individualmente, mas também pares de palavras adjacentes, na ordem da frase.}
 	
@@ -506,7 +520,3 @@ A Wordnet considera quatro categorias sintáticas de palavras: substantivos, ver
 	Com isso, está completa nossa integração com a Wordnet em relação aos substantivos, para as relações de sinonímia e de hiponímia.
 
 	É importante destacar que, com a incorporação de substantivos, verbos e adjetivos da Wordnet, o número de interpretações se torna bem grande, tornando a execução lenta. Por exemplo, para a frase \expreng{A king loves a dying dragon}, Curt encontra 60 interpretações diferentes, enquanto para \expreng{A man is not a woman}, 165 interpretações distintas.
-
-	\subsection{Helpful Curt}
-
-	Podemos usar o Curt mais avançado, Helpful Curt, a fim de utilizar seu mecanismo de responder perguntas. Podem ser respondidas por ele perguntas ditas \teng{wh-questions}, como \expreng{who} (``quem''), \expreng{what} (``o quê'') e \expreng{which} (``qual''). A técnica utilizada envolve utilizar uma representação quase-lógica para as perguntas: uma vez que perguntas não possuem valor-verdade (não sendo declarativas), não podemos atribuir a elas uma verdadeira expressão lógica. A técnica utilizada no Helpful Curt é uma de lacunas, mas não entraremos aqui em mais detalhes a respeito dela ou da semântica de questões. Para mais informações sobre estes tópicos, leitor pode consultar o original \citep[pp.~293--300, 303--304]{BlackburnBos:2005} e os trabalhos referenciados no mesmo.
