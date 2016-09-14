@@ -102,7 +102,9 @@ Por fim, no capítulo \ref{sec:conclusao}, apresentaremos conclusões e próximo
 \FloatBarrier
 	% Prolog
 		\updated{Explicação básica sobre Prolog}
-	Prolog é uma linguagem baseada no paradigma de programação em lógica.  Um programa Prolog é uma coleção de \textit{fatos} e \textit{regras}, descrevendo algumas relações relevantes \cite[p.~7]{prolog-learnnow}. Um exemplo de programa Prolog pode ser visto na figura \ref{fig:prolog-programa}. Partes desse programa são fatos, como \Verb[fontseries=b]+deus(zeus)+, que afirma que Zeus é um deus. Há também uma regra,  \Verb[fontseries=b]+poderoso(X) :- deus(X)+, segundo a qual se algo for um deus, então é poderoso.
+	Prolog é uma linguagem baseada no paradigma de programação em lógica. A implementação de Prolog que utilizamos foi SWI-Prolog \citep{prolog-swi}.
+	
+	Um programa Prolog é uma coleção de \textit{fatos} e \textit{regras}, descrevendo algumas relações relevantes \cite[p.~7]{prolog-learnnow}. Um exemplo de programa Prolog pode ser visto na figura \ref{fig:prolog-programa}. Partes desse programa são fatos, como \Verb[fontseries=b]+deus(zeus)+, que afirma que Zeus é um deus. Há também uma regra,  \Verb[fontseries=b]+poderoso(X) :- deus(X)+, segundo a qual se algo for um deus, então é poderoso.
 	
 	\begin{figure}
 	\begin{Verbatim}[fontseries=b,gobble=1]
